@@ -1,0 +1,4 @@
+
+
+class DataObjectNotRegistered(Exception):
+    pass
