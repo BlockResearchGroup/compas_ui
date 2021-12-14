@@ -43,7 +43,9 @@ class Controller(object):
     # -------------------------------------------------------------------------
 
     def mesh_from_meshgrid(self):
-        mesh = Mesh.from_meshgrid(dx=10, nx=10)
+        dx = self.app.ui.get_real(message='dx', default=10, minimum=1, maximum=100)
+        dy = self.app.ui.get_real(message='dy', default=10, minimum=1, maximum=100)
+        mesh = Mesh.from_meshgrid(dx=dx, nx=10, dy=dy, ny=10)
         self.app.scene.add(mesh)
         self.app.scene.update()
         self.app.session.data['mesh'] = mesh

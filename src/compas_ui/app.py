@@ -7,6 +7,7 @@
 from .session import Session
 from .controller import Controller
 from .scene import Scene
+from .ui import UserInterface
 
 # from .view import View
 # from .forms import FilepathForm
@@ -23,6 +24,7 @@ class App(object):
             self.session = Session(name)
             self.controller = Controller(self)
             self.scene = Scene(self)
+            self.ui = UserInterface(self)
             self.cloud = None
             cls._instance = self
         return cls._instance
