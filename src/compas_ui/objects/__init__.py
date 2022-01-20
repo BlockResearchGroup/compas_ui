@@ -9,6 +9,7 @@ from .object import Object
 from .meshobject import MeshObject
 
 Object.register(Mesh, MeshObject, context='Rhino')
+Object.register(Mesh, MeshObject, context='Web')
 
 
 __all__ = [

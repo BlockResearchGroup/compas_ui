@@ -57,7 +57,7 @@ class Object(object):
 
     __OBJECTS_REGISTERED = False
 
-    AVAILABLE_CONTEXTS = ['Rhino', 'Blender', 'Viewer']
+    AVAILABLE_CONTEXTS = ['Rhino', 'Blender', 'Viewer', 'Web']
     CONTEXT = None
     ITEM_OBJECT = defaultdict(dict)
 

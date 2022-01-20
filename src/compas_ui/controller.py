@@ -1,4 +1,4 @@
-from compas.artists import Artist
+from compas.artists import Artist  # noqa F401
 from compas.datastructures import Mesh
 
 

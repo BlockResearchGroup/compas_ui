@@ -17,7 +17,7 @@ class MeshObject(Object):
     @property
     def artist(self):
         if not self._artist:
-            self._artist = Artist(self.item)
+            self._artist = Artist(self.item, context=self.CONTEXT)
         return self._artist
 
     @property
@@ -27,7 +27,7 @@ class MeshObject(Object):
     @item.setter
     def item(self, item):
         self._item = item
-        self._artist = Artist(item)
+        self._artist = Artist(item, context=self.CONTEXT)
 
     def draw(self):
         self.guids = self.artist.draw()

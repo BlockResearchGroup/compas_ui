@@ -1,4 +1,4 @@
-from .camera import Camera
+from .camera import Camera  # noqa F401
 
 
 class View(object):

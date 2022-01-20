@@ -26,6 +26,8 @@ class Scene(object):
         self.settings = settings
 
     def add(self, item, **kwargs):
+        if self.app.CONTEXT:
+            kwargs['context'] = self.app.CONTEXT
         node = Object(item, **kwargs)
         guid = uuid4()
         self.nodes[guid] = node

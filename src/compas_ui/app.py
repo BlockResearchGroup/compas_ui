@@ -16,6 +16,7 @@ from .ui import UserInterface
 class App(object):
 
     _instance = None
+    CONTEXT = None
 
     def __new__(cls, name, *args, **kwargs):
         if not cls._instance:
@@ -25,12 +26,14 @@ class App(object):
             self.controller = Controller(self)
             self.scene = Scene(self)
             self.ui = UserInterface(self)
-            self.cloud = None
             cls._instance = self
         return cls._instance
 
-    def __init__(self, name):
-        pass
+    def __init__(self, name, context=None):
+        self.CONTEXT = context
+        if context == 'Web':
+            from .web import WebApp
+            self.webapp = WebApp(self)
 
     def start(self):
         pass
