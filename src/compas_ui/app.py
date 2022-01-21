@@ -16,6 +16,7 @@ from .ui import UserInterface
 class App(object):
 
     _instance = None
+    WEBAPP = None
     CONTEXT = None
 
     def __new__(cls, name, *args, **kwargs):
@@ -33,10 +34,11 @@ class App(object):
         self.CONTEXT = context
         if context == 'Web':
             from .web import WebApp
-            self.webapp = WebApp(self)
+            App.WEBAPP = WebApp(self)
 
     def start(self):
-        pass
+        if self.CONTEXT == 'Web':
+            self.WEBAPP.start()
 
     def restart(self):
         pass

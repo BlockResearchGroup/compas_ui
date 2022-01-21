@@ -6,10 +6,10 @@ class MeshArtist(MeshArtist):
 
     def __init__(self, *args, **kwargs):
         super(MeshArtist, self).__init__(*args, **kwargs)
-        self.webapp = App('').webapp
 
     def draw(self):
-        self.webapp.draw(self.mesh.data)
+        print('draw with', App.WEBAPP)
+        App.WEBAPP.draw(self.mesh.data)
 
     def draw_vertices(self, vertices=None, color=None, text=None):
         """Draw the vertices of the mesh.
