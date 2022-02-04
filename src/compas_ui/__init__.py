@@ -36,5 +36,7 @@ __all__ = ["HOME", "DATA", "DOCS", "TEMP"]
 __all_plugins__ = [
     'compas_ui.rhino.install',
     'compas_ui.rhino.scene',
-    'compas_ui.rhino.prompt'
+    'compas_ui.rhino.prompt',
+    'compas_ui.viewer.input',
+    'compas_ui.viewer.scene',
 ]

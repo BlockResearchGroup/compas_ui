@@ -3,10 +3,15 @@ from __future__ import division
 from __future__ import print_function
 
 from compas.artists import Artist
+from compas.colors import Color
 from .object import Object
+
+from compas_ui.attributes.color import ColorAttribute
 
 
 class MeshObject(Object):
+
+    color = ColorAttribute(Color.from_hex('#0092D2'))
 
     def __init__(self, item, *args, **kwargs):
         self._artist = None
@@ -30,7 +35,10 @@ class MeshObject(Object):
         self._artist = Artist(item)
 
     def draw(self):
-        self.guids = self.artist.draw()
+        self.guids = []
+        self.guids += self.artist.draw_vertices()
+        self.guids += self.artist.draw_edges()
+        self.guids += self.artist.draw_faces()
 
     def clear(self):
         pass

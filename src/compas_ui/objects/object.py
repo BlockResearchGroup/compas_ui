@@ -51,9 +51,21 @@ def _get_object_cls(data, **kwargs):
     return cls
 
 
+class DescriptorProtocol(type):
+    """Meta class to provide support for the descriptor protocol in Python versions lower than 3.6"""
+
+    def __init__(cls, name, bases, attrs):
+        for k, v in iter(attrs.items()):
+            print()
+            if hasattr(v, '__set_name__'):
+                v.__set_name__(cls, k)
+
+
 class Object(object):
     """Base class for all objects.
     """
+
+    __metaclass__ = DescriptorProtocol
 
     __OBJECTS_REGISTERED = False
 
@@ -79,4 +91,26 @@ class Object(object):
 
     @abstractmethod
     def draw(self):
+        raise NotImplementedError
+
+    # @abstractmethod
+    def edit(self):
+        """Edit an object by providing the user with a form containing fields for all attributes that are editable.
+
+        Editable attributes are created with descriptors.
+        Descriptors provide typing, initialization, validation, coercion, ...
+
+        With every descriptor, a UI element is associated.
+        For example, if a descriptor represents an int with a given step and min/max range, then the associated UI element could be a slider or a spinbox.
+        If a descriptor represents a color, the associated UI field could be a button linking to a color picker.
+
+        """
+        raise NotImplementedError
+
+    # @abstractmethod
+    def view_repr(self):
+        raise NotImplementedError
+
+    # @abstractmethod
+    def view_data(self):
         raise NotImplementedError
