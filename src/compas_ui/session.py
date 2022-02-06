@@ -13,38 +13,46 @@ from compas.data import json_dumps
 def autosave():
     """Automatically save the session to a file by registering this function with `atexit`."""
     session = Session()
-    session.store()
+    session.save()
 
 
 class Session(object):
     """Session singleton.
-    
+
     Parameters
     ----------
     name : str, optional
         Name of the session.
         Defaults to the name of the session class.
-    extension : str, optional
-        The extension used for saving the session to disk.
     directory : str, optional
         The directory where the session should be saved.
         Defaults to the directory containing the script running the session.
-    depth : int, optional
-        The number of changes in the session data to keep track of.
-        As in the "depth" of the session history...
+    extension : str, optional
+        The extension used for saving the session to disk.
     autosave : bool, optional
         If True, automatically save the session to file at interpreter shutdown.
-    
+
+    Attributes
+    ----------
+    dataschema : schema.Schema
+        The schema of the session data.
+    historyschema : schema.Schema
+        The schema of the session data history.
+    filename : str
+        Name of the session file used for persistent storage.
+    filepath : str
+        Full path to the session file used for persistent storage.
+
     """
 
     _instance = None
 
-    def __new__(cls, name=None, directory=None, extension='json', depth=10, autosave=True):
+    def __new__(cls, name=None, directory=None, extension='json', autosave=True):
         if not cls._instance:
             self = super(Session, cls).__new__(cls)
+            self._history = deque()
+            self._current = 0
             self.data = {}
-            self.history = deque()
-            self.depth = depth
             self.directory = directory or os.path.realpath(sys.path[0])
             self.name = name or self.__class__.__name__
             self.extension = extension
@@ -65,7 +73,7 @@ class Session(object):
         # apparently this is not a good idea
         # https://stackoverflow.com/questions/23422188/why-am-i-getting-nameerror-global-name-open-is-not-defined-in-del/29737870
         pass
-    
+
     def __getitem__(self, key):
         return self.data[key]
 
@@ -73,49 +81,129 @@ class Session(object):
         self.data[key] = value
 
     @property
-    def schema(self):
+    def dataschema(self):
         from schema import Schema
-        return Schema({
-            'data': dict,
-            'history': [str]
-        })
+        return Schema(dict)
 
     @property
-    def basename(self):
+    def historyschema(self):
+        raise NotImplementedError
+
+    @property
+    def filename(self):
         return '{}.{}'.format(self.name, self.extension)
 
     @property
     def filepath(self):
-        return os.path.join(self.directory, self.basename)
+        return os.path.join(self.directory, self.filename)
+
+    @property
+    def history(self):
+        return self._history
 
     def record(self):
-        while len(self.history) > self.depth:
-            data = self.history.popleft()
-            del data
-        self.history.append(json_dumps(self.data))
+        """Add the current data to recorded history making it available for undo/redo.
 
-    def back(self):
-        self.data = json_loads(self.history.pop())
+        Returns
+        -------
+        None
 
-    def forward(self):
-        self.data = json_loads(self.history.pop())
+        """
+        if self._current != 0:
+            self._history = deque(list(self._history)[self._current + 1:])
+        self._history.appendleft(json_dumps(self.data))
 
-    def save(self, filepath=None):
-        filepath = filepath or self.filepath
-        session = {'data': self.data, 'history': list(self.history)}
+    def undo(self):
+        """Undo recent changes by reverting the data to the version recorded before the current one.
+
+        Returns
+        -------
+        None
+
+        """
+        if self._current == len(self._history) - 1:
+            print("Nothing more to undo!")
+            return
+        self._current += 1
+        self.data = json_loads(self._history[self._current])
+
+    def redo(self):
+        """Redo recent changes by reverting the data to the version recorded after the current one.
+
+        Returns
+        -------
+        None
+
+        """
+        if self._current == 0:
+            return
+        self._current -= 1
+        self.data = json_loads(self._history[self._current])
+
+    def save(self):
+        """Save the session data to the current file.
+
+        Returns
+        -------
+        None
+
+        """
+        session = {'data': self.data, 'history': list(self._history)}
+        json_dump(session, self.filepath)
+
+    def saveas(self, filepath):
+        """Save the session to a new file.
+
+        Parameters
+        ----------
+        filepath : str
+            Path to a file for saving the session data.
+
+        Returns
+        -------
+        None
+
+        """
+        session = {'data': self.data, 'history': list(self._history)}
         json_dump(session, filepath)
 
     def load(self, filepath):
+        """Load session data from a session file.
+
+        Parameters
+        ----------
+        filepath : str
+            Path to an existing session file.
+
+        Returns
+        -------
+        None
+
+        """
         session = json_load(filepath)
         self.data = session['data']
-        self.history = deque(session['history'])
+        self._history = deque(session['history'])
 
-    def loads(self, s):
+    def validate_data(self):
+        """Validate the data against the data schema.
+
+        Returns
+        -------
+        None
+
+        """
+        data = self.schema.validate(self.data)
+        return data
+
+    def validate_history(self):
+        """Validate the data history against the data history  schema.
+
+        Returns
+        -------
+        None
+
+        """
         pass
-
-    def validate(self):
-        session = self.schema.validate({'data': self.data, 'history': list(self.history)})
-        return session
 
 
 atexit.register(autosave)

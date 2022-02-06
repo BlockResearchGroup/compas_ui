@@ -2,25 +2,22 @@ from compas_ui.session import Session
 
 s = Session('test')
 
-s['FoFin'] = {'mesh': None, 'a': 1}
-s['FoFin']['b'] = 2
+s['test'] = {}
 
-s.store()
+s.record()
 
-s['Test'] = 1
-s['FoFin']['c'] = 2
+s['test']['a'] = 1
 
-s.store()
+s.record()
 
-s['Test'] = 2
+s['test']['b'] = 2
 
-s.store()
+s.record()
 
-# s.restore()
+s.undo()
+s.undo()
+s.undo()
 
-print(s.data)
-print(s.history)
+s.record()
 
 s.save()
-
-s.validate()
