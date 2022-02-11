@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import sys
 import os
 import atexit
@@ -14,6 +18,9 @@ def autosave():
     """Automatically save the session to a file by registering this function with `atexit`."""
     session = Session()
     session.save()
+
+
+atexit.register(autosave)
 
 
 class Session(object):
@@ -204,6 +211,3 @@ class Session(object):
 
         """
         pass
-
-
-atexit.register(autosave)
