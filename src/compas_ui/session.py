@@ -39,6 +39,10 @@ class Session(object):
         The extension used for saving the session to disk.
     autosave : bool, optional
         If True, automatically save the session to file at interpreter shutdown.
+    scene : :class:`compas_ui.scene.Scene`, optional
+        The compas scene object to be saved to the session.
+    proxy : Union[:class:`compas_cloud.Proxy`, :class:`compas.rpc.Proxy`], optional
+        The compas rpc or compas_cloud Proxy object.
 
     Attributes
     ----------
@@ -109,7 +113,7 @@ class Session(object):
     @property
     def filepath(self):
         return os.path.join(self.directory, self.filename)
-    
+
     @filepath.setter
     def filepath(self, filepath):
         dirname, basename = os.path.split(filepath)
