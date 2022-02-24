@@ -17,7 +17,8 @@ from compas.data import json_dumps
 def autosave():
     """Automatically save the session to a file by registering this function with `atexit`."""
     session = Session()
-    session.save()
+    if session.autosave:
+        session.save()
 
 
 atexit.register(autosave)
@@ -53,25 +54,30 @@ class Session(object):
     """
 
     _instance = None
+    initialized = False
 
-    def __new__(cls, name=None, directory=None, extension='json', autosave=True):
+    def __new__(cls, *args, **kwargs):
         if not cls._instance:
             self = super(Session, cls).__new__(cls)
-            self._history = deque()
-            self._current = 0
-            self.data = {}
-            self.directory = directory or os.path.realpath(sys.path[0])
-            self.name = name or self.__class__.__name__
-            self.extension = extension
-            self.autosave = autosave
             cls._instance = self
         return cls._instance
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, name=None, directory=None, extension='json', autosave=False, scene=None, proxy=None):
+        if self.__class__.initialized:
+            return
+        self._history = deque()
+        self._current = 0
+        self.data = {}
+        self.directory = directory or os.path.realpath(sys.path[0])
+        self.name = name or self.__class__.__name__
+        self.extension = extension
+        self.autosave = autosave
+        self.scene = scene
+        self.proxy = proxy
+        self.__class__.initialized = True
 
     def __str__(self):
-        print(json_dumps(self.data, pretty=True))
+        return json_dumps(self.data, pretty=True)
 
     def __del__(self):
         # automatically save the session to file
@@ -103,6 +109,15 @@ class Session(object):
     @property
     def filepath(self):
         return os.path.join(self.directory, self.filename)
+    
+    @filepath.setter
+    def filepath(self, filepath):
+        dirname, basename = os.path.split(filepath)
+        filename, extension = os.path.splitext(basename)
+        extension = extension.replace('.', '')
+        self.directory = dirname
+        self.name = filename
+        self.extension = extension
 
     @property
     def history(self):
@@ -174,7 +189,7 @@ class Session(object):
         session = {'data': self.data, 'history': list(self._history)}
         json_dump(session, filepath)
 
-    def load(self, filepath):
+    def load(self, filepath=None):
         """Load session data from a session file.
 
         Parameters
@@ -187,7 +202,7 @@ class Session(object):
         None
 
         """
-        session = json_load(filepath)
+        session = json_load(filepath or self.filepath)
         self.data = session['data']
         self._history = deque(session['history'])
 
