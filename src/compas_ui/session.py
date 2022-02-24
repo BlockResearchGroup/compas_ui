@@ -25,7 +25,7 @@ atexit.register(autosave)
 
 
 class Session(object):
-    """Session singleton.
+    """The Session class that tracks states of an app.
 
     Parameters
     ----------
@@ -37,15 +37,21 @@ class Session(object):
         Defaults to the directory containing the script running the session.
     extension : str, optional
         The extension used for saving the session to disk.
+        Defaults to 'json'.
     autosave : bool, optional
         If True, automatically save the session to file at interpreter shutdown.
-    scene : :class:`compas_ui.scene.Scene`, optional
-        The compas scene object to be saved to the session.
-    proxy : Union[:class:`compas_cloud.Proxy`, :class:`compas.rpc.Proxy`], optional
-        The compas rpc or compas_cloud Proxy object.
+        Defaults to False.
 
     Attributes
     ----------
+    name : str
+        Name of the session.
+    directory : str
+        The directory where the session should be saved.
+    extension : str
+        The extension used for saving the session to disk.
+    autosave : bool
+        If True, automatically save the session to file at interpreter shutdown.
     dataschema : schema.Schema
         The schema of the session data.
     historyschema : schema.Schema
@@ -57,18 +63,7 @@ class Session(object):
 
     """
 
-    _instance = None
-    initialized = False
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            self = super(Session, cls).__new__(cls)
-            cls._instance = self
-        return cls._instance
-
-    def __init__(self, name=None, directory=None, extension='json', autosave=False, scene=None, proxy=None):
-        if self.__class__.initialized:
-            return
+    def __init__(self, name=None, directory=None, extension='json', autosave=False):
         self._history = deque()
         self._current = 0
         self.data = {}
@@ -76,9 +71,6 @@ class Session(object):
         self.name = name or self.__class__.__name__
         self.extension = extension
         self.autosave = autosave
-        self.scene = scene
-        self.proxy = proxy
-        self.__class__.initialized = True
 
     def __str__(self):
         return json_dumps(self.data, pretty=True)
