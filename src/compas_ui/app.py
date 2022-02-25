@@ -2,9 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from .singleton import Singleton
 from .session import Session
 
 
+@Singleton
 class App(object):
     """App singleton.
 
@@ -26,23 +28,7 @@ class App(object):
 
     """
 
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            self = super(App, cls).__new__(cls)
-            self._initialized = False
-            cls._instance = self
-        return cls._instance
-
     def __init__(self, scene=None, proxy=None):
-        if self._initialized:
-            return
         self.scene = scene
         self.proxy = proxy
         self.session = Session()
-        self._initialized = True
-
-    @classmethod
-    def initialized(cls):
-        return cls._instance is not None and cls._instance._initialized

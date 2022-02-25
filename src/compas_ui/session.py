@@ -12,6 +12,7 @@ from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
 from compas.data import json_dumps
+from .singleton import Singleton
 
 
 def autosave():
@@ -24,8 +25,9 @@ def autosave():
 atexit.register(autosave)
 
 
+@Singleton
 class Session(object):
-    """The Session class that tracks states of an app.
+    """The Session singleton that tracks states of an app.
 
     Parameters
     ----------

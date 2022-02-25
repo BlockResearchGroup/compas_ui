@@ -1,11 +1,6 @@
 from compas_ui.app import App
 
-print('App initialized:',App.initialized())
-
 a = App()
-
-print('App initialized:',App.initialized())
-
 b = App()
 
 assert a == b
