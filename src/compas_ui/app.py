@@ -6,8 +6,7 @@ from .singleton import Singleton
 from .session import Session
 
 
-@Singleton
-class App(object):
+class App(Singleton):
     """App singleton.
 
     Parameters

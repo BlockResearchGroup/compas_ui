@@ -25,8 +25,7 @@ def autosave():
 atexit.register(autosave)
 
 
-@Singleton
-class Session(object):
+class Session(Singleton):
     """The Session singleton that tracks states of an app.
 
     Parameters
