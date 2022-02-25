@@ -12,19 +12,22 @@ from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
 from compas.data import json_dumps
+from .singleton import Singleton
 
 
 def autosave():
     """Automatically save the session to a file by registering this function with `atexit`."""
     session = Session()
-    session.save()
+    if session.autosave:
+        session.save()
 
 
 atexit.register(autosave)
 
 
+@Singleton
 class Session(object):
-    """Session singleton.
+    """The Session singleton that tracks states of an app.
 
     Parameters
     ----------
@@ -36,11 +39,21 @@ class Session(object):
         Defaults to the directory containing the script running the session.
     extension : str, optional
         The extension used for saving the session to disk.
+        Defaults to 'json'.
     autosave : bool, optional
         If True, automatically save the session to file at interpreter shutdown.
+        Defaults to False.
 
     Attributes
     ----------
+    name : str
+        Name of the session.
+    directory : str
+        The directory where the session should be saved.
+    extension : str
+        The extension used for saving the session to disk.
+    autosave : bool
+        If True, automatically save the session to file at interpreter shutdown.
     dataschema : schema.Schema
         The schema of the session data.
     historyschema : schema.Schema
@@ -52,26 +65,17 @@ class Session(object):
 
     """
 
-    _instance = None
-
-    def __new__(cls, name=None, directory=None, extension='json', autosave=True):
-        if not cls._instance:
-            self = super(Session, cls).__new__(cls)
-            self._history = deque()
-            self._current = 0
-            self.data = {}
-            self.directory = directory or os.path.realpath(sys.path[0])
-            self.name = name or self.__class__.__name__
-            self.extension = extension
-            self.autosave = autosave
-            cls._instance = self
-        return cls._instance
-
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, name=None, directory=None, extension='json', autosave=False):
+        self._history = deque()
+        self._current = 0
+        self.data = {}
+        self.directory = directory or os.path.realpath(sys.path[0])
+        self.name = name or self.__class__.__name__
+        self.extension = extension
+        self.autosave = autosave
 
     def __str__(self):
-        print(json_dumps(self.data, pretty=True))
+        return json_dumps(self.data, pretty=True)
 
     def __del__(self):
         # automatically save the session to file
@@ -103,6 +107,15 @@ class Session(object):
     @property
     def filepath(self):
         return os.path.join(self.directory, self.filename)
+
+    @filepath.setter
+    def filepath(self, filepath):
+        dirname, basename = os.path.split(filepath)
+        filename, extension = os.path.splitext(basename)
+        extension = extension.replace('.', '')
+        self.directory = dirname
+        self.name = filename
+        self.extension = extension
 
     @property
     def history(self):
@@ -174,7 +187,7 @@ class Session(object):
         session = {'data': self.data, 'history': list(self._history)}
         json_dump(session, filepath)
 
-    def load(self, filepath):
+    def load(self, filepath=None):
         """Load session data from a session file.
 
         Parameters
@@ -187,7 +200,7 @@ class Session(object):
         None
 
         """
-        session = json_load(filepath)
+        session = json_load(filepath or self.filepath)
         self.data = session['data']
         self._history = deque(session['history'])
 
