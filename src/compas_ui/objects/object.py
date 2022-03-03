@@ -7,6 +7,8 @@ from abc import abstractmethod
 from collections import defaultdict
 
 import compas
+from compas.data import Data
+from compas.artists import Artist
 from compas_ui.objects import DataObjectNotRegistered
 from compas.plugins import pluggable
 from compas.plugins import PluginValidator
@@ -51,7 +53,7 @@ def _get_object_cls(data, **kwargs):
     return cls
 
 
-class Object(object):
+class Object(Data):
     """Base class for all objects.
     """
 
@@ -60,6 +62,7 @@ class Object(object):
     AVAILABLE_CONTEXTS = ['Rhino', 'Blender', 'Viewer']
     CONTEXT = None
     ITEM_OBJECT = defaultdict(dict)
+    SETTINGS = {}
 
     def __new__(cls, *args, **kwargs):
         if not Object.__OBJECTS_REGISTERED:
@@ -69,9 +72,28 @@ class Object(object):
         PluginValidator.ensure_implementations(cls)
         return super(Object, cls).__new__(cls)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, item, name=None, *args, **kwargs):
         super(Object, self).__init__()
         self._ids = []
+        self.name = name
+        self._item = None
+        self.item = item
+        self.settings = self.SETTINGS.copy()
+
+    @property
+    def artist(self):
+        if not self._artist:
+            self._artist = Artist(self.item)
+        return self._artist
+
+    @property
+    def item(self):
+        return self._item
+
+    @item.setter
+    def item(self, item):
+        self._item = item
+        self._artist = Artist(item)
 
     @staticmethod
     def register(item_type, object_type, context=None):
@@ -80,3 +102,30 @@ class Object(object):
     @abstractmethod
     def draw(self):
         raise NotImplementedError
+
+    @property
+    def DATASCHEMA(self):
+        import schema
+        return schema.Schema({
+            'name': str,
+            'item': Data,
+            'settings': dict,
+        })
+
+    @property
+    def JSONSCHEMANAME(self):
+        return self.__class__.__name__
+
+    @property
+    def data(self):
+        return {
+            'name': self.name,
+            'item': self.item,
+            'settings': self.settings
+        }
+
+    @classmethod
+    def from_data(cls, data):
+        obj = cls(data['item'], name=data['name'])
+        obj.settings = data['settings']
+        return obj

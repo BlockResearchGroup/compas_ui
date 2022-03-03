@@ -64,10 +64,14 @@ class Session(Singleton):
 
     """
 
-    def __init__(self, name=None, directory=None, extension='json', autosave=False):
+    def __init__(self, app=None, name=None, directory=None, extension='json', autosave=False):
         self._history = deque()
+        self.app = app
         self._current = 0
-        self.data = {}
+        self.data = {
+            'objects': {},
+            'scene': app.scene
+        }
         self.directory = directory or os.path.realpath(sys.path[0])
         self.name = name or self.__class__.__name__
         self.extension = extension
@@ -145,6 +149,7 @@ class Session(Singleton):
             return
         self._current += 1
         self.data = json_loads(self._history[self._current])
+        self.app.scene.update()
 
     def redo(self):
         """Redo recent changes by reverting the data to the version recorded after the current one.
@@ -158,6 +163,7 @@ class Session(Singleton):
             return
         self._current -= 1
         self.data = json_loads(self._history[self._current])
+        self.app.scene.update()
 
     def save(self):
         """Save the session data to the current file.

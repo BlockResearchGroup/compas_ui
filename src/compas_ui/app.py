@@ -32,14 +32,14 @@ class App(Singleton):
 
     def __init__(self, name=None, settings={}):
         if name is None:
-            raise RuntimeError('Initialized the app with a name first.')
+            raise RuntimeError('Initialized the app with a name first, for example: app = App(name="my_app")')
 
         self.name = name
         self.scene = Scene(self, settings=settings.get('scene', {}))
-        self.session = Session()
+        self.session = Session(self)
 
         cloud_settings = settings.get('cloud')
-        if cloud_settings:
+        if cloud_settings is not None:
             try:
                 from compas_cloud import Proxy
                 self.proxy = Proxy(**cloud_settings)
