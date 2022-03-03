@@ -27,8 +27,6 @@ from ._modify import mesh_move_face
 
 from ._object import BaseObject
 
-from compas.data import Data
-from compas import json_loads
 
 class MeshObject(BaseObject):
     """Class for representing COMPAS meshes in Rhino.
@@ -92,7 +90,6 @@ class MeshObject(BaseObject):
     @guids.setter
     def guids(self, guids):
         self._guids = guids
-
 
     @property
     def mesh(self):
