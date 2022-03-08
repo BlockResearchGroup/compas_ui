@@ -19,18 +19,8 @@ Classes
 """
 from __future__ import absolute_import
 
-from ._select import (  # noqa : F401 F403
-    mesh_select_vertex,
-    mesh_select_vertices,
-    mesh_select_face,
-    mesh_select_faces,
-    mesh_select_edge,
-    mesh_select_edges,
-    network_select_node,
-    network_select_nodes,
-    network_select_edge,
-    network_select_edges
-)
+from compas.plugins import plugin
+
 from ._modify import (  # noqa : F401 F403
     network_update_attributes,
     network_update_node_attributes,
@@ -45,23 +35,27 @@ from ._modify import (  # noqa : F401 F403
     mesh_move_face
 )
 
-from ._object import BaseObject
-from .meshobject import MeshObject
-from .networkobject import NetworkObject
-from .volmeshobject import VolMeshObject
+from ._object import RhinoObject
+from .meshobject import RhinoMeshObject
+# from .networkobject import NetworkObject
+# from .volmeshobject import VolMeshObject
 
 from compas.datastructures import Mesh
-from compas.datastructures import Network
-from compas.datastructures import VolMesh
+# from compas.datastructures import Network
+# from compas.datastructures import VolMesh
 
-BaseObject.register(Mesh, MeshObject, context='Rhino')
-BaseObject.register(Network, NetworkObject, context='Rhino')
-BaseObject.register(VolMesh, VolMeshObject, context='Rhino')
+
+@plugin(category='ui', requires=['Rhino'])
+def register_objects():
+    RhinoObject.register(Mesh, RhinoMeshObject, context='Rhino')
+    # RhinoObject.register(Network, NetworkObject, context='Rhino')
+    # RhinoObject.register(VolMesh, VolMeshObject, context='Rhino')
+    print('Rhino Objects registered.')
 
 
 __all__ = [
-    'BaseObject',
+    'RhinoObject',
     'MeshObject',
-    'NetworkObject',
-    'VolMeshObject'
+    # 'NetworkObject',
+    # 'VolMeshObject'
 ]

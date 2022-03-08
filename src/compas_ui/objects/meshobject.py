@@ -2,53 +2,173 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.artists import Artist
+from functools import reduce
+from operator import mul
+
+from compas.geometry import Point
+from compas.geometry import Scale
+from compas.geometry import Translation
+from compas.geometry import Rotation
+from compas.geometry import transform_points
+
 from .object import Object
 
 
 class MeshObject(Object):
+    """Base class for all scene objects representing meshes.
+    
+    Attributes
+    ----------
+    anchor : int
+        The vertex of the mesh that is anchored to the location of the object.
+    location : :class:`compas.geometry.Point`
+        The location of the object.
+        Default is the origin of the world coordinate system.
+    scale : float
+        A uniform scaling factor for the object in the scene.
+        The scale is applied relative to the location of the object in the scene.
+    rotation : list[float]
+        The rotation angles around the 3 axis of the coordinate system
+        with the origin placed at the location of the object in the scene.
+    vertex_xyz : dict[int, list[float]]
+        The view coordinates of the mesh object.
 
-    def __init__(self, item, *args, **kwargs):
-        self._artist = None
-        self._item = None
-        self.item = item
-        self.guids = None
+    """
+
+    # the color settings duplicate the colors settings of the artist
+    SETTINGS = {
+        'color.vertices': (255, 255, 255),
+        'color.edges': (0, 0, 0),
+        'color.faces': (0, 0, 0),
+        'color.mesh': (0, 0, 0),
+        'show.mesh': True,
+        'show.vertices': False,
+        'show.edges': False,
+        'show.faces': False,
+        'show.vertexlabels': False,
+        'show.facelabels': False,
+        'show.edgelabels': False,
+        'show.vertexnormals': False,
+        'show.facenormals': False,
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(MeshObject, self).__init__(*args, **kwargs)
+        self._anchor = None
+        self._location = None
+        self._scale = None
+        self._rotation = None
 
     @property
-    def artist(self):
-        if not self._artist:
-            self._artist = Artist(self.item)
-        return self._artist
+    def mesh(self):
+        return self.item
+
+    # this probably should reset the anchor, location, scale, and rotation
+    @mesh.setter
+    def mesh(self, mesh):
+        self.item = mesh
 
     @property
-    def item(self):
-        return self._item
+    def anchor(self):
+        return self._anchor
 
-    @item.setter
-    def item(self, item):
-        self._item = item
-        self._artist = Artist(item)
+    @anchor.setter
+    def anchor(self, vertex):
+        if self.mesh.has_vertex(vertex):
+            self._anchor = vertex
 
-    def draw(self):
-        self.guids = self.artist.draw()
+    @property
+    def location(self):
+        if not self._location:
+            self._location = Point(0, 0, 0)
+        return self._location
 
-    def clear(self):
-        pass
+    @location.setter
+    def location(self, location):
+        self._location = Point(*location)
+
+    @property
+    def scale(self):
+        if not self._scale:
+            self._scale = 1
+        return self._scale
+
+    @scale.setter
+    def scale(self, scale):
+        self._scale = scale
+
+    @property
+    def rotation(self):
+        if not self._rotation:
+            self._rotation = [0, 0, 0]
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, rotation):
+        self._rotation = rotation
+
+    @property
+    def vertex_xyz(self):
+        origin = Point(0, 0, 0)
+        vertices = list(self.mesh.vertices())
+        xyz = self.mesh.vertices_attributes(['x', 'y', 'z'], keys=vertices)
+
+        stack = []
+        if self.scale != 1:
+            S = Scale.from_factors([self.scale] * 3)
+            stack.append(S)
+        if self.rotation != [0, 0, 0]:
+            R = Rotation.from_euler_angles(self.rotation)
+            stack.append(R)
+        if self.location != origin:
+            if self.anchor is not None:
+                xyz = self.mesh.vertex_attributes(self.anchor, 'xyz')
+                point = Point(* xyz)
+                T1 = Translation.from_vector(origin - point)
+                stack.insert(0, T1)
+            T2 = Translation.from_vector(self.location)
+            stack.append(T2)
+
+        if stack:
+            X = reduce(mul, stack[::-1])
+            xyz = transform_points(xyz, X)
+        return dict(zip(vertices, xyz))
 
     def select_vertex(self):
-        pass
+        raise NotImplementedError
 
     def select_vertices(self):
-        pass
+        raise NotImplementedError
 
     def select_edge(self):
-        pass
+        raise NotImplementedError
 
     def select_edges(self):
-        pass
+        raise NotImplementedError
 
     def select_face(self):
-        pass
+        raise NotImplementedError
 
     def select_faces(self):
-        pass
+        raise NotImplementedError
+
+    def modify_vertices(self, vertices, names=None):
+        raise NotImplementedError
+
+    def modify_edges(self, edges, names=None):
+        raise NotImplementedError
+
+    def modify_faces(self, faces, names=None):
+        raise NotImplementedError
+
+    def move_vertex(self, vertex):
+        raise NotImplementedError
+
+    def move_vertices(self, vertices):
+        raise NotImplementedError
+
+    def move_edge(self, edge):
+        raise NotImplementedError
+
+    def move_face(self, face):
+        raise NotImplementedError

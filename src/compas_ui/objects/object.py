@@ -5,11 +5,11 @@ from __future__ import print_function
 import inspect
 from abc import abstractmethod
 from collections import defaultdict
+from uuid import uuid4
 
 import compas
-from compas.data import Data
 from compas.artists import Artist
-from compas_ui.objects import DataObjectNotRegistered
+from compas_ui.objects import ObjectNotRegistered
 from compas.plugins import pluggable
 from compas.plugins import PluginValidator
 
@@ -48,13 +48,44 @@ def _get_object_cls(data, **kwargs):
                 break
 
     if cls is None:
-        raise DataObjectNotRegistered('No object is registered for this data type: {} in this context: {}'.format(dtype, Object.CONTEXT))
+        raise ObjectNotRegistered('No object is registered for this data type: {} in this context: {}'.format(dtype, Object.CONTEXT))
 
     return cls
 
 
-class Object(Data):
+class Object(object):
     """Base class for all objects.
+
+    Parameters
+    ----------
+    item : :class:`compas.data.Data`
+        A COMPAS data object.
+    scene : :class:`compas.scenes.Scene`, optional
+        A scene object.
+    name : str, optional
+        The name of the object.
+    visible : bool, optional
+        Toggle for the visibility of the object.
+    settings : dict[str, Any], optional
+        A dictionary of settings.
+
+    Attributes
+    ----------
+    item : :class:`compas.data.Data`
+        The COMPAS data object assignd to this scene object.
+    scene : :class:`compas.scenes.Scene`
+        The scene.
+    artist : :class:`compas.artists.Artist`
+        The artist matching the type of `item`.
+    name : str
+        The name of the object.
+        This is an alias for the name of `item`.
+    visible : bool
+        Toggle for the visibility of the object in the scene.
+    settings : dict
+        A dictionary of settings related to visualisation and interaction.
+        This dict starts from the settings of the `artist`.
+
     """
 
     __OBJECTS_REGISTERED = False
@@ -72,19 +103,33 @@ class Object(Data):
         PluginValidator.ensure_implementations(cls)
         return super(Object, cls).__new__(cls)
 
-    def __init__(self, item, name=None, *args, **kwargs):
+    def __init__(self, item, scene=None, name=None, visible=True, settings=None):
         super(Object, self).__init__()
-        self._ids = []
-        self.name = name
+        self._guids = []
+        self._id = None
         self._item = None
+        self._scene = None
+        self._artist = None
         self.item = item
+        self.scene = scene
+        self.name = name
+        self.visible = visible
         self.settings = self.SETTINGS.copy()
+        self.settings.update(settings or {})
 
     @property
-    def artist(self):
-        if not self._artist:
-            self._artist = Artist(self.item)
-        return self._artist
+    def guids(self):
+        return self._guids
+
+    @guids.setter
+    def guids(self, guids):
+        self._guids = guids
+
+    @property
+    def id(self):
+        if not self._id:
+            self._id = uuid4()
+        return self._id
 
     @property
     def item(self):
@@ -93,39 +138,44 @@ class Object(Data):
     @item.setter
     def item(self, item):
         self._item = item
-        self._artist = Artist(item)
+        self._guids = []
+        self._artist = None
+
+    @property
+    def scene(self):
+        return self._scene
+
+    @scene.setter
+    def scene(self, scene):
+        self._scene = scene
+
+    @property
+    def artist(self):
+        if not self._artist:
+            self._artist = Artist(self.item)
+        return self._artist
 
     @staticmethod
     def register(item_type, object_type, context=None):
         Object.ITEM_OBJECT[context][item_type] = object_type
 
     @abstractmethod
+    def clear(self):
+        raise NotImplementedError
+
+    @abstractmethod
     def draw(self):
         raise NotImplementedError
 
-    @property
-    def DATASCHEMA(self):
-        import schema
-        return schema.Schema({
-            'name': str,
-            'item': Data,
-            'settings': dict,
-        })
+    # not sure this should exist
+    def redraw(self):
+        self.artist.redraw()
 
-    @property
-    def JSONSCHEMANAME(self):
-        return self.__class__.__name__
+    def select(self):
+        raise NotImplementedError
 
-    @property
-    def data(self):
-        return {
-            'name': self.name,
-            'item': self.item,
-            'settings': self.settings
-        }
+    def modify(self):
+        raise NotImplementedError
 
-    @classmethod
-    def from_data(cls, data):
-        obj = cls(data['item'], name=data['name'])
-        obj.settings = data['settings']
-        return obj
+    def move(self):
+        raise NotImplementedError

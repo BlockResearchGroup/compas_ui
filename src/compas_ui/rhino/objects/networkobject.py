@@ -17,10 +17,10 @@ from ._modify import network_update_node_attributes
 from ._modify import network_update_edge_attributes
 from ._modify import network_move_node
 
-from ._object import BaseObject
+from ._object import RhinoObject
 
 
-class NetworkObject(BaseObject):
+class NetworkObject(RhinoObject):
     """Class for representing COMPAS networkes in Rhino.
 
     Parameters

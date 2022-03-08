@@ -35,8 +35,8 @@ class App(Singleton):
             raise RuntimeError('Initialized the app with a name first, for example: app = App(name="my_app")')
 
         self.name = name
-        self.scene = Scene(self, settings=settings.get('scene', {}))
-        self.session = Session(self)
+        self.scene = Scene(app=self, settings=settings.get('scene', {}))
+        self.session = Session(app=self)
 
         cloud_settings = settings.get('cloud')
         if cloud_settings is not None:

@@ -2,9 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from uuid import uuid4
 from compas.plugins import pluggable
-from compas.data import Data
 from compas_ui.objects import Object
 from compas_ui.singleton import Singleton
 
@@ -19,58 +17,46 @@ def clear_scene(self):
     raise NotImplementedError
 
 
-class Scene(Data, Singleton):
+class Scene(Singleton):
 
-    def __init__(self, app=None, settings={}):
+    def __init__(self, app, settings=None):
         self.app = app
-        self.objects = set()
-        self.settings = settings
+        self.objects = {}
+        self.settings = settings or {}
+
+    @property
+    def data(self):
+        return {
+            'objects': self.objects,
+            'settings': self.settings,
+        }
+
+    # this should re-assign the object ids
+    # and reconstruct them to UUID objects
+    @data.setter
+    def data(self, data):
+        self.clear()
+        self.objects = data['objects']
+        self.settings = data['settings']
 
     def add(self, item, **kwargs):
-        node = Object(item, **kwargs)
-        guid = str(uuid4())
-        self.objects.add(guid)
-        self.app.session['objects'][guid] = node
-        return node
+        obj = Object(item, scene=self, **kwargs)
+        self.objects[str(obj.id)] = obj
+        return obj
 
     def get(self, name):
         selected = []
-        for guid in self.objects:
-            obj = self.app.session['objects'][guid]
+        for id in self.objects:
+            obj = self.objects[id]
             if name == obj.name:
                 selected.append(obj)
+        # why not just return the empty list?
         if len(selected) == 0:
             return [None]
-        else:
-            return selected
+        return selected
 
     def update(self):
         update_scene(self)
 
     def clear(self):
         clear_scene(self)
-
-    @property
-    def DATASCHEMA(self):
-        import schema
-        return schema.Schema({
-            'objects': list,
-            'settings': dict,
-        })
-
-    @property
-    def JSONSCHEMANAME(self):
-        return self.__class__.__name__
-
-    @property
-    def data(self):
-        return {
-            'objects': list(self.objects),
-            'settings': dict(self.settings)
-        }
-
-    @data.setter
-    def data(self, data):
-        self.clear()
-        self.objects = set(data['objects'])
-        self.settings = data['settings']

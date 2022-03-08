@@ -64,13 +64,13 @@ class Session(Singleton):
 
     """
 
-    def __init__(self, app=None, name=None, directory=None, extension='json', autosave=False):
+    def __init__(self, app, name=None, directory=None, extension='json', autosave=False):
         self._history = deque()
-        self.app = app
         self._current = 0
+        self.app = app
         self.data = {
             'objects': {},
-            'scene': app.scene
+            'scene': self.app.scene
         }
         self.directory = directory or os.path.realpath(sys.path[0])
         self.name = name or self.__class__.__name__
@@ -134,7 +134,7 @@ class Session(Singleton):
         """
         if self._current != 0:
             self._history = deque(list(self._history)[self._current + 1:])
-        self._history.appendleft(json_dumps(self.data))
+        self._history.appendleft(self.data)
 
     def undo(self):
         """Undo recent changes by reverting the data to the version recorded before the current one.
@@ -148,7 +148,7 @@ class Session(Singleton):
             print("Nothing more to undo!")
             return
         self._current += 1
-        self.data = json_loads(self._history[self._current])
+        self.data = self._history[self._current]
         self.app.scene.update()
 
     def redo(self):
@@ -162,7 +162,7 @@ class Session(Singleton):
         if self._current == 0:
             return
         self._current -= 1
-        self.data = json_loads(self._history[self._current])
+        self.data = self._history[self._current]
         self.app.scene.update()
 
     def save(self):

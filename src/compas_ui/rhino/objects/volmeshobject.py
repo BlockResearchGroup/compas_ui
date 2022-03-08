@@ -20,10 +20,10 @@ from ._modify import mesh_move_vertex
 from ._modify import mesh_move_vertices
 from ._modify import mesh_move_face
 
-from ._object import BaseObject
+from ._object import RhinoObject
 
 
-class VolMeshObject(BaseObject):
+class VolMeshObject(RhinoObject):
     """Class for representing COMPAS volmeshes in Rhino.
 
     Parameters
