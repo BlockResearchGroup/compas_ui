@@ -3,9 +3,9 @@ from __future__ import division
 from __future__ import print_function
 
 import inspect
-from abc import abstractmethod
+from abc import abstractmethod, abstractproperty
 from collections import defaultdict
-from uuid import uuid4
+# from uuid import uuid4
 
 import compas
 from compas.artists import Artist
@@ -105,8 +105,8 @@ class Object(object):
 
     def __init__(self, item, scene=None, name=None, visible=True, settings=None):
         super(Object, self).__init__()
-        self._guids = []
-        self._id = None
+        # self._guids = []
+        # self._id = None
         self._item = None
         self._scene = None
         self._artist = None
@@ -117,19 +117,23 @@ class Object(object):
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
 
-    @property
-    def guids(self):
-        return self._guids
+    # @property
+    # def guids(self):
+    #     return self._guids
 
-    @guids.setter
-    def guids(self, guids):
-        self._guids = guids
+    # @guids.setter
+    # def guids(self, guids):
+    #     self._guids = guids
 
-    @property
-    def id(self):
-        if not self._id:
-            self._id = uuid4()
-        return self._id
+    # @property
+    # def id(self):
+    #     if not self._id:
+    #         self._id = uuid4()
+    #     return self._id
+
+    @abstractproperty
+    def data(self):
+        raise NotImplementedError
 
     @property
     def item(self):

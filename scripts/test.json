@@ -1,1 +1,1 @@
-{"data": {"test": {}}, "history": ["{\"test\": {}}"]}
+{"data": {"test": {"a": 1, "b": 2}}, "current": 0, "history": ["{\"test\": {\"a\": 1, \"b\": 2}}", "{\"test\": {\"a\": 1}}", "{\"test\": {}}"]}

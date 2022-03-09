@@ -1,6 +1,6 @@
 from compas_ui.session import Session
 
-s = Session('test')
+s = Session(name='test')
 
 s['test'] = {}
 
@@ -14,10 +14,10 @@ s['test']['b'] = 2
 
 s.record()
 
-s.undo()
-s.undo()
-s.undo()
+# s.undo()
+# s.undo()
+# s.undo()
 
-s.record()
+# s.record()
 
 s.save()

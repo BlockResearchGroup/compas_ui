@@ -12,7 +12,7 @@ from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
 from compas.data import json_dumps
-from .singleton import Singleton
+from compas_ui.singleton import Singleton
 
 
 def autosave():
@@ -64,21 +64,17 @@ class Session(Singleton):
 
     """
 
-    def __init__(self, app, name=None, directory=None, extension='json', autosave=False):
+    def __init__(self, name=None, directory=None, extension='json', autosave=False):
         self._history = deque()
         self._current = 0
-        self.app = app
-        self.data = {
-            'objects': {},
-            'scene': self.app.scene
-        }
+        self.data = {}
         self.directory = directory or os.path.realpath(sys.path[0])
         self.name = name or self.__class__.__name__
         self.extension = extension
         self.autosave = autosave
 
     def __str__(self):
-        return json_dumps(self.data, pretty=True)
+        return json_dumps(self.snapshot, pretty=True)
 
     def __del__(self):
         # automatically save the session to file
@@ -95,13 +91,12 @@ class Session(Singleton):
         self.data[key] = value
 
     @property
-    def dataschema(self):
-        from schema import Schema
-        return Schema(dict)
+    def snapshot(self):
+        return json_dumps(self.data)
 
-    @property
-    def historyschema(self):
-        raise NotImplementedError
+    @snapshot.setter
+    def snapshot(self, snapshot):
+        self.data = json_loads(snapshot)
 
     @property
     def filename(self):
@@ -134,7 +129,7 @@ class Session(Singleton):
         """
         if self._current != 0:
             self._history = deque(list(self._history)[self._current + 1:])
-        self._history.appendleft(self.data)
+        self._history.appendleft(self.snapshot)
 
     def undo(self):
         """Undo recent changes by reverting the data to the version recorded before the current one.
@@ -148,8 +143,7 @@ class Session(Singleton):
             print("Nothing more to undo!")
             return
         self._current += 1
-        self.data = self._history[self._current]
-        self.app.scene.update()
+        self.snapshot = self._history[self._current]
 
     def redo(self):
         """Redo recent changes by reverting the data to the version recorded after the current one.
@@ -162,8 +156,7 @@ class Session(Singleton):
         if self._current == 0:
             return
         self._current -= 1
-        self.data = self._history[self._current]
-        self.app.scene.update()
+        self.snapshot = self._history[self._current]
 
     def save(self):
         """Save the session data to the current file.
@@ -173,7 +166,7 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'history': list(self._history)}
+        session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
         json_dump(session, self.filepath)
 
     def saveas(self, filepath):
@@ -189,7 +182,7 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'history': list(self._history)}
+        session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
         json_dump(session, filepath)
 
     def load(self, filepath=None):
@@ -206,26 +199,27 @@ class Session(Singleton):
 
         """
         session = json_load(filepath or self.filepath)
-        self.data = session['data']
+        self._current = session['current']
         self._history = deque(session['history'])
+        self.data = session['data']
 
-    def validate_data(self):
-        """Validate the data against the data schema.
+    # def validate_data(self):
+    #     """Validate the data against the data schema.
 
-        Returns
-        -------
-        None
+    #     Returns
+    #     -------
+    #     None
 
-        """
-        data = self.schema.validate(self.data)
-        return data
+    #     """
+    #     data = self.schema.validate(self.data)
+    #     return data
 
-    def validate_history(self):
-        """Validate the data history against the data history  schema.
+    # def validate_history(self):
+    #     """Validate the data history against the data history  schema.
 
-        Returns
-        -------
-        None
+    #     Returns
+    #     -------
+    #     None
 
-        """
-        pass
+    #     """
+    #     pass

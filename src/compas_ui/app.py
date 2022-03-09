@@ -30,18 +30,41 @@ class App(Singleton):
 
     """
 
-    def __init__(self, name=None, settings={}):
+    def __init__(self, name=None, settings=None):
         if name is None:
             raise RuntimeError('Initialized the app with a name first, for example: app = App(name="my_app")')
 
         self.name = name
-        self.scene = Scene(app=self, settings=settings.get('scene', {}))
-        self.session = Session(app=self)
+        self.settings = settings or {}
+        self.data = Session(name=self.name)
+        self.scene = Scene(settings=self.settings.get('scene') or {})
+        self.proxy = None
+        self.start_cloud()
 
-        cloud_settings = settings.get('cloud')
+    def start_cloud(self):
+        cloud_settings = self.settings.get('cloud')
         if cloud_settings is not None:
             try:
                 from compas_cloud import Proxy
                 self.proxy = Proxy(**cloud_settings)
             except ImportError:
                 raise ImportError('The compas_cloud package is not installed.')
+
+    def record(self):
+        self.data.record()
+
+    def undo(self):
+        self.data.undo()
+        self.scene.update()
+
+    def redo(self):
+        pass
+
+    def save(self):
+        pass
+
+    def saveas(self):
+        pass
+
+    def load(self):
+        pass
