@@ -19,9 +19,8 @@ app.scene.update()
 app.record()
 
 x, y, z = mesh.centroid()
-for i in range(10):
-    obj.location = Point(-x/10, -y/10, 0)
-    time.sleep(1)
+obj.location = Point(-x, -y, 0)
+time.sleep(1)
 
 time.sleep(1)
 app.scene.update()
@@ -30,5 +29,4 @@ app.record()
 time.sleep(1)
 app.undo()
 
-#app.record()
-# app.data.save()
+app.save()

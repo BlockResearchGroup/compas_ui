@@ -6,7 +6,6 @@ import inspect
 from abc import abstractmethod, abstractproperty
 from collections import defaultdict
 from copy import deepcopy
-# from uuid import uuid4
 
 import compas
 from compas.artists import Artist
@@ -107,7 +106,6 @@ class Object(object):
     def __init__(self, item, scene=None, name=None, visible=True, settings=None):
         super(Object, self).__init__()
         # self._guids = []
-        # self._id = None
         self._item = None
         self._scene = None
         self._artist = None
@@ -119,12 +117,14 @@ class Object(object):
         self.settings.update(settings or {})
 
     def __copy__(self):
+        """Make a shallow copy of the object."""
         cls = self.__class__
         result = cls.__new__(cls, self.item)
         result.__dict__.update(self.__dict__)
         return result
 
     def __deepcopy__(self, memo):
+        """Make a deep copy of the object."""
         cls = self.__class__
         result = cls.__new__(cls, self.item)
         memo[id(self)] = result
@@ -139,12 +139,6 @@ class Object(object):
     # @guids.setter
     # def guids(self, guids):
     #     self._guids = guids
-
-    # @property
-    # def id(self):
-    #     if not self._id:
-    #         self._id = uuid4()
-    #     return self._id
 
     @abstractproperty
     def data(self):

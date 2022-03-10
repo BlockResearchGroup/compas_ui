@@ -27,7 +27,7 @@ atexit.register(autosave)
 
 
 class Session(Singleton):
-    """The Session singleton that tracks states of an app.
+    """The session singleton tracks data stored in an app.
 
     Parameters
     ----------
@@ -54,10 +54,6 @@ class Session(Singleton):
         The extension used for saving the session to disk.
     autosave : bool
         If True, automatically save the session to file at interpreter shutdown.
-    dataschema : schema.Schema
-        The schema of the session data.
-    historyschema : schema.Schema
-        The schema of the session data history.
     filename : str
         Name of the session file used for persistent storage.
     filepath : str
@@ -112,6 +108,18 @@ class Session(Singleton):
     def history(self):
         return self._history
 
+    def reset(self):
+        """Reset the session to a blank state.
+
+        Returns
+        -------
+        None
+
+        """
+        self.data = {}
+        self._current = 0
+        self._history = deque()
+
     def record(self):
         """Add the current data to recorded history making it available for undo/redo.
 
@@ -122,6 +130,7 @@ class Session(Singleton):
         """
         if self._current != 0:
             self._history = deque(list(self._history)[self._current + 1:])
+            self._current = 0
         self._history.appendleft(json_dumps(self.data))
 
     def undo(self):
@@ -160,7 +169,6 @@ class Session(Singleton):
         None
 
         """
-        # session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
         json_dump(self.data, self.filepath)
 
     def saveas(self, filepath):
@@ -176,7 +184,6 @@ class Session(Singleton):
         None
 
         """
-        # session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
         json_dump(self.data, filepath)
 
     def load(self, filepath=None):
@@ -192,10 +199,6 @@ class Session(Singleton):
         None
 
         """
-        # session = json_load(filepath or self.filepath)
-        # self._current = session['current']
-        # self._history = deque(session['history'])
-        # self.data = session['data']
         self.data = json_load(filepath or self.filepath)
 
     # def validate_data(self):
