@@ -12,6 +12,7 @@ from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
 from compas.data import json_dumps
+
 from compas_ui.singleton import Singleton
 
 
@@ -91,14 +92,6 @@ class Session(Singleton):
         self.data[key] = value
 
     @property
-    def snapshot(self):
-        return json_dumps(self.data)
-
-    @snapshot.setter
-    def snapshot(self, snapshot):
-        self.data = json_loads(snapshot)
-
-    @property
     def filename(self):
         return '{}.{}'.format(self.name, self.extension)
 
@@ -129,7 +122,7 @@ class Session(Singleton):
         """
         if self._current != 0:
             self._history = deque(list(self._history)[self._current + 1:])
-        self._history.appendleft(self.snapshot)
+        self._history.appendleft(json_dumps(self.data))
 
     def undo(self):
         """Undo recent changes by reverting the data to the version recorded before the current one.
@@ -143,7 +136,7 @@ class Session(Singleton):
             print("Nothing more to undo!")
             return
         self._current += 1
-        self.snapshot = self._history[self._current]
+        self.data = json_loads(self._history[self._current])
 
     def redo(self):
         """Redo recent changes by reverting the data to the version recorded after the current one.
@@ -154,9 +147,10 @@ class Session(Singleton):
 
         """
         if self._current == 0:
+            print("Nothing more to redo!")
             return
         self._current -= 1
-        self.snapshot = self._history[self._current]
+        self.data = json_loads(self._history[self._current])
 
     def save(self):
         """Save the session data to the current file.
@@ -166,8 +160,8 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
-        json_dump(session, self.filepath)
+        # session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
+        json_dump(self.data, self.filepath)
 
     def saveas(self, filepath):
         """Save the session to a new file.
@@ -182,8 +176,8 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
-        json_dump(session, filepath)
+        # session = {'data': self.data, 'current': self._current, 'history': list(self._history)}
+        json_dump(self.data, filepath)
 
     def load(self, filepath=None):
         """Load session data from a session file.
@@ -198,10 +192,11 @@ class Session(Singleton):
         None
 
         """
-        session = json_load(filepath or self.filepath)
-        self._current = session['current']
-        self._history = deque(session['history'])
-        self.data = session['data']
+        # session = json_load(filepath or self.filepath)
+        # self._current = session['current']
+        # self._history = deque(session['history'])
+        # self.data = session['data']
+        self.data = json_load(filepath or self.filepath)
 
     # def validate_data(self):
     #     """Validate the data against the data schema.

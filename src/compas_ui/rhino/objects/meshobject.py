@@ -32,7 +32,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
     """
 
     def __init__(self, *args, **kwargs):
-        super(MeshObject, self).__init__(*args, **kwargs)
+        super(RhinoMeshObject, self).__init__(*args, **kwargs)
         self._guid_vertex = {}
         self._guid_edge = {}
         self._guid_face = {}
@@ -98,23 +98,6 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             if self.settings['show.vertexnormals']:
                 self.guids += self.artist.draw_vertexnormals(vertices=vertices, color=self.settings['color.vertices'])
 
-        if self.settings['show.mesh']:
-            self.guids += self.artist.draw(color=self.settings['color.mesh'], disjoint=True)
-
-        else:
-            if self.settings['show.faces']:
-                faces = list(self.mesh.faces())
-                guids = self.artist.draw_faces(faces=faces, color=self.settings['color.faces'])
-                self.guids += guids
-                self.guid_face = zip(guids, faces)
-
-                if self.settings['show.facelabels']:
-                    text = {face: str(face) for face in faces}
-                    self.guids += self.artist.draw_facelabels(text=text, color=self.settings['color.faces'])
-
-                if self.settings['show.facenormals']:
-                    self.guids += self.artist.draw_facenormals(faces=faces, color=self.settings['color.faces'])
-
         if self.settings['show.edges']:
             edges = list(self.mesh.edges())
             guids = self.artist.draw_edges(edges=edges, color=self.settings['color.edges'])
@@ -124,6 +107,22 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             if self.settings['show.edgelabels']:
                 text = {edge: "{}-{}".format(*edge) for edge in edges}
                 self.guids += self.artist.draw_edgelabels(text=text, color=self.settings['color.edges'])
+
+        if self.settings['show.mesh']:
+            self.guids += self.artist.draw(color=self.settings['color.faces'], disjoint=True)
+
+        elif self.settings['show.faces']:
+            faces = list(self.mesh.faces())
+            guids = self.artist.draw_faces(faces=faces, color=self.settings['color.faces'])
+            self.guids += guids
+            self.guid_face = zip(guids, faces)
+
+            if self.settings['show.facelabels']:
+                text = {face: str(face) for face in faces}
+                self.guids += self.artist.draw_facelabels(text=text, color=self.settings['color.faces'])
+
+            if self.settings['show.facenormals']:
+                self.guids += self.artist.draw_facenormals(faces=faces, color=self.settings['color.faces'])
 
     def select_vertex(self, message="Select one vertex."):
         """Select one vertex of the mesh.

@@ -21,9 +21,10 @@ class RhinoObject(Object):
 
     """
 
-    def __init__(self, *args, layer=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(RhinoObject, self).__init__(*args, **kwargs)
-        self.layer = layer
+        self._guids = []
+        self.layer = kwargs.get('layer')
 
     # ==========================================================================
     # Properties
@@ -37,10 +38,17 @@ class RhinoObject(Object):
     def layer(self, layer):
         self.artist.layer = layer
 
+    @property
+    def guids(self):
+        return self._guids
+
+    @guids.setter
+    def guids(self, guids):
+        self._guids = guids
+
     # ==========================================================================
     # Methods
     # ==========================================================================
 
     def clear_layer(self):
-        """Clear the layer of the object."""
         self.artist.clear_layer()

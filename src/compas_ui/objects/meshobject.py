@@ -10,6 +10,7 @@ from compas.geometry import Scale
 from compas.geometry import Translation
 from compas.geometry import Rotation
 from compas.geometry import transform_points
+from compas.colors import Color
 
 from .object import Object
 
@@ -37,12 +38,11 @@ class MeshObject(Object):
 
     # the color settings duplicate the colors settings of the artist
     SETTINGS = {
-        'color.vertices': (255, 255, 255),
-        'color.edges': (0, 0, 0),
-        'color.faces': (0, 0, 0),
-        'color.mesh': (0, 0, 0),
+        'color.vertices': Color.from_hex('#0092d2'),
+        'color.edges': Color.from_hex('#0092d2'),
+        'color.faces': Color.from_hex('#0092d2').lightened(50),
         'show.mesh': True,
-        'show.vertices': False,
+        'show.vertices': True,
         'show.edges': False,
         'show.faces': False,
         'show.vertexlabels': False,

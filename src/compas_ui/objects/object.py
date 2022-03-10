@@ -5,6 +5,7 @@ from __future__ import print_function
 import inspect
 from abc import abstractmethod, abstractproperty
 from collections import defaultdict
+from copy import deepcopy
 # from uuid import uuid4
 
 import compas
@@ -116,6 +117,20 @@ class Object(object):
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
+
+    def __copy__(self):
+        cls = self.__class__
+        result = cls.__new__(cls, self.item)
+        result.__dict__.update(self.__dict__)
+        return result
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls, self.item)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     # @property
     # def guids(self):

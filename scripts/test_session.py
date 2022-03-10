@@ -14,7 +14,7 @@ s['test']['b'] = 2
 
 s.record()
 
-# s.undo()
+s.undo()
 # s.undo()
 # s.undo()
 
