@@ -85,8 +85,7 @@ class RhinoVolMeshObject(RhinoObject, VolMeshObject):
         self._guid_cell = dict(values)
 
     def clear(self):
-        """Clear all objects previously drawn by this artist.
-        """
+        """Clear all objects previously drawn by this artist."""
         compas_rhino.delete_objects(self.guids, purge=True)
         self._guids = []
         self._guid_vertex = {}
@@ -95,52 +94,67 @@ class RhinoVolMeshObject(RhinoObject, VolMeshObject):
         self._guid_cell = {}
 
     def draw(self):
-        """Draw the volmesh using the visualisation settings.
-        """
+        """Draw the volmesh using the visualisation settings."""
         self.clear()
         if not self.visible:
             return
         self.artist.vertex_xyz = self.vertex_xyz
 
-        if self.settings['show.vertices']:
+        if self.settings["show.vertices"]:
             vertices = list(self.volmesh.vertices())
-            guids = self.artist.draw_vertices(vertices=vertices, color=self.settings['color.vertices'])
+            guids = self.artist.draw_vertices(
+                vertices=vertices, color=self.settings["color.vertices"]
+            )
             self.guids += guids
             self.guid_vertex = zip(guids, vertices)
 
-            if self.settings['show.vertexlabels']:
+            if self.settings["show.vertexlabels"]:
                 text = {vertex: str(vertex) for vertex in vertices}
-                self.guids += self.artist.draw_vertexlabels(text=text, color=self.settings['color.vertices'])
+                self.guids += self.artist.draw_vertexlabels(
+                    text=text, color=self.settings["color.vertices"]
+                )
 
-        if self.settings['show.faces']:
+        if self.settings["show.faces"]:
             faces = list(self.volmesh.faces())
-            guids = self.artist.draw_faces(faces=faces, color=self.settings['color.faces'])
+            guids = self.artist.draw_faces(
+                faces=faces, color=self.settings["color.faces"]
+            )
             self.guids += guids
             self.guid_face = zip(guids, faces)
 
-            if self.settings['show.facelabels']:
+            if self.settings["show.facelabels"]:
                 text = {face: str(face) for face in faces}
-                self.guids += self.artist.draw_facelabels(text=text, color=self.settings['color.faces'])
- 
-        if self.settings['show.edges']:
+                self.guids += self.artist.draw_facelabels(
+                    text=text, color=self.settings["color.faces"]
+                )
+
+        if self.settings["show.edges"]:
             edges = list(self.volmesh.edges())
-            guids = self.artist.draw_edges(edges=edges, color=self.settings['color.edges'])
+            guids = self.artist.draw_edges(
+                edges=edges, color=self.settings["color.edges"]
+            )
             self.guids += guids
             self.guid_edge = zip(guids, edges)
 
-            if self.settings['show.edgelabels']:
+            if self.settings["show.edgelabels"]:
                 text = {edge: "{}-{}".format(*edge) for edge in edges}
-                self.guids += self.artist.draw_edgelabels(text=text, color=self.settings['color.edges'])
+                self.guids += self.artist.draw_edgelabels(
+                    text=text, color=self.settings["color.edges"]
+                )
 
-        if self.settings['show.cells']:
+        if self.settings["show.cells"]:
             cells = list(self.volmesh.cells())
-            guids = self.artist.draw_cells(cells=cells, color=self.settings['color.cells'])
+            guids = self.artist.draw_cells(
+                cells=cells, color=self.settings["color.cells"]
+            )
             self.guids += guids
             self.guid_cell = zip(guids, cells)
 
-            if self.settings['show.celllabels']:
+            if self.settings["show.celllabels"]:
                 text = {cell: str(cell) for cell in cells}
-                self.guids += self.artist.draw_celllabels(text=text, color=self.settings['color.cells'])
+                self.guids += self.artist.draw_celllabels(
+                    text=text, color=self.settings["color.cells"]
+                )
 
     def select_vertex(self, message="Select one vertex."):
         """Select one vertex of the mesh.
@@ -163,7 +177,9 @@ class RhinoVolMeshObject(RhinoObject, VolMeshObject):
             A list of vertex identifiers.
         """
         guids = compas_rhino.select_points(message=message)
-        vertices = [self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex]
+        vertices = [
+            self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex
+        ]
         return vertices
 
     def select_faces(self, message="Select faces."):

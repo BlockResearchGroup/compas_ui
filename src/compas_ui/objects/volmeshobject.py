@@ -36,18 +36,18 @@ class VolMeshObject(Object):
     """
 
     SETTINGS = {
-        'color.vertices': (255, 255, 255),
-        'color.edges': (0, 0, 0),
-        'color.faces': (210, 210, 210),
-        'color.cells': (255, 0, 0),
-        'show.vertices': True,
-        'show.edges': True,
-        'show.faces': True,
-        'show.cells': False,
-        'show.vertexlabels': False,
-        'show.facelabels': False,
-        'show.edgelabels': False,
-        'show.celllabels': False,
+        "color.vertices": (255, 255, 255),
+        "color.edges": (0, 0, 0),
+        "color.faces": (210, 210, 210),
+        "color.cells": (255, 0, 0),
+        "show.vertices": True,
+        "show.edges": True,
+        "show.faces": True,
+        "show.cells": False,
+        "show.vertexlabels": False,
+        "show.facelabels": False,
+        "show.edgelabels": False,
+        "show.celllabels": False,
     }
 
     def __init__(self, *args, **kwargs):
@@ -108,7 +108,7 @@ class VolMeshObject(Object):
     def vertex_xyz(self):
         origin = Point(0, 0, 0)
         vertices = list(self.volmesh.vertices())
-        xyz = self.volmesh.vertices_attributes(['x', 'y', 'z'], keys=vertices)
+        xyz = self.volmesh.vertices_attributes(["x", "y", "z"], keys=vertices)
 
         stack = []
         if self.scale != 1:
@@ -119,8 +119,8 @@ class VolMeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.volmesh.vertex_attributes(self.anchor, 'xyz')
-                point = Point(* xyz)
+                xyz = self.volmesh.vertex_attributes(self.anchor, "xyz")
+                point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
             T2 = Translation.from_vector(self.location)

@@ -17,7 +17,7 @@ from .object import Object
 
 class MeshObject(Object):
     """Base class for all scene objects representing meshes.
-    
+
     Attributes
     ----------
     anchor : int
@@ -38,18 +38,18 @@ class MeshObject(Object):
 
     # the color settings duplicate the colors settings of the artist
     SETTINGS = {
-        'color.vertices': Color.from_hex('#0092d2'),
-        'color.edges': Color.from_hex('#0092d2'),
-        'color.faces': Color.from_hex('#0092d2').lightened(50),
-        'show.mesh': True,
-        'show.vertices': True,
-        'show.edges': False,
-        'show.faces': False,
-        'show.vertexlabels': False,
-        'show.facelabels': False,
-        'show.edgelabels': False,
-        'show.vertexnormals': False,
-        'show.facenormals': False,
+        "color.vertices": Color.from_hex("#0092d2"),
+        "color.edges": Color.from_hex("#0092d2"),
+        "color.faces": Color.from_hex("#0092d2").lightened(50),
+        "show.mesh": True,
+        "show.vertices": True,
+        "show.edges": False,
+        "show.faces": False,
+        "show.vertexlabels": False,
+        "show.facelabels": False,
+        "show.edgelabels": False,
+        "show.vertexnormals": False,
+        "show.facenormals": False,
     }
 
     def __init__(self, *args, **kwargs):
@@ -111,7 +111,7 @@ class MeshObject(Object):
     def vertex_xyz(self):
         origin = Point(0, 0, 0)
         vertices = list(self.mesh.vertices())
-        xyz = self.mesh.vertices_attributes(['x', 'y', 'z'], keys=vertices)
+        xyz = self.mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
 
         stack = []
         if self.scale != 1:
@@ -122,8 +122,8 @@ class MeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.mesh.vertex_attributes(self.anchor, 'xyz')
-                point = Point(* xyz)
+                xyz = self.mesh.vertex_attributes(self.anchor, "xyz")
+                point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
             T2 = Translation.from_vector(self.location)
