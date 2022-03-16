@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import shelve
+import pickle
 
 from .singleton import Singleton
 from .session import Session
@@ -44,6 +44,20 @@ class App(Singleton):
         self.scene = Scene(settings=self.settings.get('scene'))
         self.proxy = None
         self.start_cloud()
+
+    @property
+    def state(self):
+        state = {}
+        state['session'] = self.session.data
+        state['scene'] = self.scene.state
+        state['settings'] = self.settings
+        return state
+
+    @state.setter
+    def state(self, state):
+        self.session.data = state['session']
+        self.scene.state = state['scene']
+        self.settings = state['settings']
 
     def start_cloud(self):
         """Start the command server.
@@ -107,15 +121,8 @@ class App(Singleton):
         None
 
         """
-        db = shelve.open(self.name)
-        try:
-            db['session'] = self.session.data
-            db['scene'] = self.scene.state
-            db['settings'] = self.settings
-        except Exception:
-            raise
-        finally:
-            db.close()
+        with open("{}.app".format(self.name), 'wb+') as f:
+            pickle.dump(self.state, f)
 
     def saveas(self, name):
         """Save the current state of the app to a shelve with a specific name.
@@ -130,15 +137,9 @@ class App(Singleton):
         None
 
         """
-        db = shelve.open(name)
-        try:
-            db['session'] = self.session.data
-            db['scene'] = self.scene.state
-            db['settings'] = self.settings
-        except Exception:
-            pass
-        finally:
-            db.close()
+        name = name.split('.')[0]
+        with open("{}.app".format(name), 'wb+') as f:
+            pickle.dump(self.state, f)
 
     def load(self, name):
         """Restore a saved state of the app from a shelve with a specific name.
@@ -154,12 +155,11 @@ class App(Singleton):
 
         """
         self.scene.clear()
-        db = shelve.open(name)
-        try:
-            self.session.data = db['session']
-            self.scene.state = db['scene']
-            self.settings = db['settings']
-        except Exception:
-            pass
-        finally:
-            db.close()
+        with open(name, 'wb+') as f:
+            self.state = pickle.load(f)
+
+    def update_settings(self):
+        # this is a quick temp test solution
+        from compas_ui.rhino.forms.settings import SettingsForm
+        form = SettingsForm(self.settings)
+        form.show()
