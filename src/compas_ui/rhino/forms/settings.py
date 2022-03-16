@@ -16,18 +16,21 @@ import Eto.Forms  # noqa : E402
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
 
-    def __init__(self, settings, title='Settings'):
-        # super(SettingsForm, self).__init__(*args, **kwargs)
-
+    def __init__(self, settings, title='Settings', width=500, height=800):
         self._settings = None
         self._names = None
         self._values = None
         self.settings = settings
 
+        self.Title = title
+        self.Padding = Eto.Drawing.Padding(0)
+        self.Resizable = True
+        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height) 
+        self.ClientSize = Eto.Drawing.Size(width, height)
+
         self.table = table = Eto.Forms.GridView()
         table.ShowHeader = True
         table.DataStore = [[name, value] for name, value in zip(self.names, self.values)]
-        table.Height = 300
 
         c1 = Eto.Forms.GridColumn()
         c1.HeaderText = 'Name'
@@ -42,19 +45,14 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         table.Columns.Add(c2)
 
         layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
         layout.AddRow(table)
-        layout.Add(None)
-        layout.BeginVertical()
-        layout.BeginHorizontal()
+        layout.EndVertical()
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
-        layout.EndHorizontal()
         layout.EndVertical()
 
-        self.Title = title
-        self.Padding = Eto.Drawing.Padding(12)
-        self.Resizable = False
         self.Content = layout
-        self.ClientSize = Eto.Drawing.Size(400, 600)
 
     @property
     def ok(self):
