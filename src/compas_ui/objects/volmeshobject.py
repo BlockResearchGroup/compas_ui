@@ -10,13 +10,12 @@ from compas.geometry import Scale
 from compas.geometry import Translation
 from compas.geometry import Rotation
 from compas.geometry import transform_points
-from compas.colors import Color
 
 from .object import Object
 
 
-class MeshObject(Object):
-    """Base class for all scene objects representing meshes.
+class VolMeshObject(Object):
+    """Class for representing COMPAS volmeshes in Rhino.
 
     Attributes
     ----------
@@ -36,37 +35,35 @@ class MeshObject(Object):
 
     """
 
-    # the color settings duplicate the colors settings of the artist
     SETTINGS = {
-        "color.vertices": Color.from_hex("#0092d2"),
-        "color.edges": Color.from_hex("#0092d2"),
-        "color.faces": Color.from_hex("#0092d2").lightened(50),
-        "show.mesh": True,
+        "color.vertices": (255, 255, 255),
+        "color.edges": (0, 0, 0),
+        "color.faces": (210, 210, 210),
+        "color.cells": (255, 0, 0),
         "show.vertices": True,
-        "show.edges": False,
-        "show.faces": False,
+        "show.edges": True,
+        "show.faces": True,
+        "show.cells": False,
         "show.vertexlabels": False,
         "show.facelabels": False,
         "show.edgelabels": False,
-        "show.vertexnormals": False,
-        "show.facenormals": False,
+        "show.celllabels": False,
     }
 
     def __init__(self, *args, **kwargs):
-        super(MeshObject, self).__init__(*args, **kwargs)
+        super(VolMeshObject, self).__init__(*args, **kwargs)
         self._anchor = None
         self._location = None
         self._scale = None
         self._rotation = None
 
     @property
-    def mesh(self):
+    def volmesh(self):
         return self.item
 
-    # this probably should reset the anchor, location, scale, and rotation
-    @mesh.setter
-    def mesh(self, mesh):
-        self.item = mesh
+    @volmesh.setter
+    def volmesh(self, volmesh):
+        self.item = volmesh
 
     @property
     def anchor(self):
@@ -74,7 +71,7 @@ class MeshObject(Object):
 
     @anchor.setter
     def anchor(self, vertex):
-        if self.mesh.has_vertex(vertex):
+        if self.volmesh.has_vertex(vertex):
             self._anchor = vertex
 
     @property
@@ -90,7 +87,7 @@ class MeshObject(Object):
     @property
     def scale(self):
         if not self._scale:
-            self._scale = 1
+            self._scale = 1.0
         return self._scale
 
     @scale.setter
@@ -110,8 +107,8 @@ class MeshObject(Object):
     @property
     def vertex_xyz(self):
         origin = Point(0, 0, 0)
-        vertices = list(self.mesh.vertices())
-        xyz = self.mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        vertices = list(self.volmesh.vertices())
+        xyz = self.volmesh.vertices_attributes(["x", "y", "z"], keys=vertices)
 
         stack = []
         if self.scale != 1:
@@ -122,7 +119,7 @@ class MeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.mesh.vertex_attributes(self.anchor, "xyz")
+                xyz = self.volmesh.vertex_attributes(self.anchor, "xyz")
                 point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
@@ -140,16 +137,10 @@ class MeshObject(Object):
     def select_vertices(self):
         raise NotImplementedError
 
-    def select_edge(self):
+    def select_faces(self):
         raise NotImplementedError
 
     def select_edges(self):
-        raise NotImplementedError
-
-    def select_face(self):
-        raise NotImplementedError
-
-    def select_faces(self):
         raise NotImplementedError
 
     def modify_vertices(self, vertices, names=None):
@@ -165,9 +156,6 @@ class MeshObject(Object):
         raise NotImplementedError
 
     def move_vertices(self, vertices):
-        raise NotImplementedError
-
-    def move_edge(self, edge):
         raise NotImplementedError
 
     def move_face(self, face):

@@ -1,3 +1,21 @@
+"""
+********************************************************************************
+session
+********************************************************************************
+
+.. currentmodule:: compas_ui.session
+
+
+Classes
+=======
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    Session
+
+"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -6,13 +24,12 @@ import sys
 import os
 import atexit
 
-from collections import deque
-
 from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
 from compas.data import json_dumps
-from .singleton import Singleton
+
+from compas_ui.singleton import Singleton
 
 
 def autosave():
@@ -26,7 +43,7 @@ atexit.register(autosave)
 
 
 class Session(Singleton):
-    """The Session singleton that tracks states of an app.
+    """The session singleton tracks data stored in an app.
 
     Parameters
     ----------
@@ -53,10 +70,6 @@ class Session(Singleton):
         The extension used for saving the session to disk.
     autosave : bool
         If True, automatically save the session to file at interpreter shutdown.
-    dataschema : schema.Schema
-        The schema of the session data.
-    historyschema : schema.Schema
-        The schema of the session data history.
     filename : str
         Name of the session file used for persistent storage.
     filepath : str
@@ -65,13 +78,14 @@ class Session(Singleton):
     """
 
     def __init__(self, name=None, directory=None, extension='json', autosave=False):
-        self._history = deque()
-        self._current = 0
+        self._history = []
+        self._current = -1
         self.data = {}
         self.directory = directory or os.path.realpath(sys.path[0])
         self.name = name or self.__class__.__name__
         self.extension = extension
         self.autosave = autosave
+        self.record()
 
     def __str__(self):
         return json_dumps(self.data, pretty=True)
@@ -89,15 +103,6 @@ class Session(Singleton):
 
     def __setitem__(self, key, value):
         self.data[key] = value
-
-    @property
-    def dataschema(self):
-        from schema import Schema
-        return Schema(dict)
-
-    @property
-    def historyschema(self):
-        raise NotImplementedError
 
     @property
     def filename(self):
@@ -120,6 +125,19 @@ class Session(Singleton):
     def history(self):
         return self._history
 
+    def reset(self):
+        """Reset the session to a blank state.
+
+        Returns
+        -------
+        None
+
+        """
+        self._history = []
+        self._current = -1
+        self.data = {}
+        self.record()
+
     def record(self):
         """Add the current data to recorded history making it available for undo/redo.
 
@@ -128,9 +146,14 @@ class Session(Singleton):
         None
 
         """
-        if self._current != 0:
-            self._history = deque(list(self._history)[self._current + 1:])
-        self._history.appendleft(json_dumps(self.data))
+        if self._current > -1:
+            if self._current < len(self._history) - 1:
+                # remove everything that comes after current
+                # but keep current
+                self._history[:] = self._history[:self._current + 1]
+
+        self._history.append(json_dumps(self.data))
+        self._current = len(self._history) - 1
 
     def undo(self):
         """Undo recent changes by reverting the data to the version recorded before the current one.
@@ -140,10 +163,15 @@ class Session(Singleton):
         None
 
         """
-        if self._current == len(self._history) - 1:
+        if self._current < 0:
+            print("Nothing to undo!")
+            return
+
+        if self._current == 0:
             print("Nothing more to undo!")
             return
-        self._current += 1
+
+        self._current -= 1
         self.data = json_loads(self._history[self._current])
 
     def redo(self):
@@ -154,9 +182,15 @@ class Session(Singleton):
         None
 
         """
-        if self._current == 0:
+        if self._current < 0:
+            print("Nothing to redo!")
             return
-        self._current -= 1
+
+        if self._current == len(self._history) - 1:
+            print("Nothing more to redo!")
+            return
+
+        self._current += 1
         self.data = json_loads(self._history[self._current])
 
     def save(self):
@@ -167,8 +201,7 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'history': list(self._history)}
-        json_dump(session, self.filepath)
+        json_dump(self.data, self.filepath)
 
     def saveas(self, filepath):
         """Save the session to a new file.
@@ -183,8 +216,7 @@ class Session(Singleton):
         None
 
         """
-        session = {'data': self.data, 'history': list(self._history)}
-        json_dump(session, filepath)
+        json_dump(self.data, filepath)
 
     def load(self, filepath=None):
         """Load session data from a session file.
@@ -199,27 +231,25 @@ class Session(Singleton):
         None
 
         """
-        session = json_load(filepath or self.filepath)
-        self.data = session['data']
-        self._history = deque(session['history'])
+        self.data = json_load(filepath or self.filepath)
 
-    def validate_data(self):
-        """Validate the data against the data schema.
+    # def validate_data(self):
+    #     """Validate the data against the data schema.
 
-        Returns
-        -------
-        None
+    #     Returns
+    #     -------
+    #     None
 
-        """
-        data = self.schema.validate(self.data)
-        return data
+    #     """
+    #     data = self.schema.validate(self.data)
+    #     return data
 
-    def validate_history(self):
-        """Validate the data history against the data history  schema.
+    # def validate_history(self):
+    #     """Validate the data history against the data history  schema.
 
-        Returns
-        -------
-        None
+    #     Returns
+    #     -------
+    #     None
 
-        """
-        pass
+    #     """
+    #     pass

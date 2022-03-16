@@ -9,6 +9,13 @@ compas_ui
 .. toctree::
     :maxdepth: 1
 
+    compas_ui.app
+    compas_ui.objects
+    compas_ui.rhino
+    compas_ui.scene
+    compas_ui.session
+    compas_ui.singleton
+
 
 """
 
@@ -36,5 +43,5 @@ __all__ = ["HOME", "DATA", "DOCS", "TEMP"]
 __all_plugins__ = [
     'compas_ui.rhino.install',
     'compas_ui.rhino.scene',
-    'compas_ui.rhino.prompt'
+    'compas_ui.rhino.objects'
 ]

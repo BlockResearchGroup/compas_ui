@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* `SingletonMetaClass` for Python 3+.
+* `SingletonMetaClass` for IronPython 2.7.
+* `App` singleton as main entry point.
+* `Scene` singleton for managing UI objects.
+* `Session` singleton for managing additional session data.
+* `Scene.record`, `Scene.undo`, `Scene.redo` based on copy/deepcopy.
+* `Scene.save`, `Scene.saveas`, `Scene.load` based on pickle.
+* `Session.record`, `Session.undo`, `Session.redo` based on JSON dumps/loads.
+* `Session.save`, `Session.saveas`, `Session.load` based on JSON dump/load.
+* `App.record`, `App.undo`, `App.redo` combining scene and session.
+* `App.save`, `App.saveas`, `App.load` combining scene and session.
+* `Object` pluggable as context-aware UI wrapper for data and artist, with support for copy/deepcopy and pickle dump/load.
+* `MeshObject` as base for context-aware UI wrapper for mesh data and artist.
+* `NetworkObject` as base for context-aware UI wrapper for network data and artist.
+* `VolMeshObject` as base for context-aware UI wrapper for volmesh data and artist.
+* `RhinoObject` as plugin for `Object` in the Rhino context.
+* `RhinoMeshObject` as plugin for `MeshObject` in the Rhino context.
+* `RhinoNetworkObject` as plugin for `NetworkObject` in the Rhino context.
+* `RhinoVolMeshObject` as plugin for `VolMeshObject` in the Rhino context.
+
 ### Changed
 
 ### Removed
