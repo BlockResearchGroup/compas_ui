@@ -122,3 +122,5 @@ conda.recipe/
 *.bak
 *.dat
 *.dir
+
+*.app
