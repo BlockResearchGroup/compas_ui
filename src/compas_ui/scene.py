@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 from copy import deepcopy
-from collections import deque
 
 from compas.plugins import pluggable
 
@@ -42,10 +41,11 @@ class Scene(Singleton):
 
     def __init__(self, settings=None):
         super(Scene, self).__init__()
-        self._history = deque()
-        self._current = 0
+        self._history = []
+        self._current = -1
         self.objects = []
         self.settings = settings or {}
+        self.record()
 
     @property
     def state(self):
@@ -64,11 +64,14 @@ class Scene(Singleton):
         None
 
         """
-        if self._current != 0:
-            self._history = deque(list(self._history)[self._current + 1:])
-            self._current = 0
-        self._history.appendleft(deepcopy(self.state))
-        print(self._current, len(self._history))
+        if self._current > -1:
+            if self._current < len(self._history) - 1:
+                # remove everything that comes after current
+                # but keep current
+                self._history[:] = self._history[:self._current + 1]
+
+        self._history.append(deepcopy(self.state))
+        self._current = len(self._history) - 1
 
     def undo(self):
         """Undo changes to the scene by rewinding to a recorded state.
@@ -79,11 +82,16 @@ class Scene(Singleton):
 
         """
         self.clear()
-        if self._current == len(self._history) - 1:
+
+        if self._current < 0:
+            print("Nothing to undo!")
+            return
+
+        if self._current == 0:
             print("Nothing more to undo!")
             return
-        self._current += 1
-        print(self._current, len(self._history))
+
+        self._current -= 1
         self.state = self._history[self._current]
         self.update()
 
@@ -96,10 +104,16 @@ class Scene(Singleton):
 
         """
         self.clear()
-        if self._current == 0:
+
+        if self._current < 0:
+            print("Nothing to redo!")
+            return
+
+        if self._current == len(self._history) - 1:
             print("Nothing more to redo!")
             return
-        self._current -= 1
+
+        self._current += 1
         self.state = self._history[self._current]
         self.update()
 

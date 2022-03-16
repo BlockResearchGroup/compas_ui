@@ -6,8 +6,6 @@ import sys
 import os
 import atexit
 
-from collections import deque
-
 from compas.data import json_load
 from compas.data import json_loads
 from compas.data import json_dump
@@ -62,16 +60,17 @@ class Session(Singleton):
     """
 
     def __init__(self, name=None, directory=None, extension='json', autosave=False):
-        self._history = deque()
-        self._current = 0
+        self._history = []
+        self._current = -1
         self.data = {}
         self.directory = directory or os.path.realpath(sys.path[0])
         self.name = name or self.__class__.__name__
         self.extension = extension
         self.autosave = autosave
+        self.record()
 
     def __str__(self):
-        return json_dumps(self.snapshot, pretty=True)
+        return json_dumps(self.data, pretty=True)
 
     def __del__(self):
         # automatically save the session to file
@@ -116,9 +115,10 @@ class Session(Singleton):
         None
 
         """
+        self._history = []
+        self._current = -1
         self.data = {}
-        self._current = 0
-        self._history = deque()
+        self.record()
 
     def record(self):
         """Add the current data to recorded history making it available for undo/redo.
@@ -128,10 +128,14 @@ class Session(Singleton):
         None
 
         """
-        if self._current != 0:
-            self._history = deque(list(self._history)[self._current + 1:])
-            self._current = 0
-        self._history.appendleft(json_dumps(self.data))
+        if self._current > -1:
+            if self._current < len(self._history) - 1:
+                # remove everything that comes after current
+                # but keep current
+                self._history[:] = self._history[:self._current + 1]
+
+        self._history.append(json_dumps(self.data))
+        self._current = len(self._history) - 1
 
     def undo(self):
         """Undo recent changes by reverting the data to the version recorded before the current one.
@@ -141,10 +145,15 @@ class Session(Singleton):
         None
 
         """
-        if self._current == len(self._history) - 1:
+        if self._current < 0:
+            print("Nothing to undo!")
+            return
+
+        if self._current == 0:
             print("Nothing more to undo!")
             return
-        self._current += 1
+
+        self._current -= 1
         self.data = json_loads(self._history[self._current])
 
     def redo(self):
@@ -155,10 +164,15 @@ class Session(Singleton):
         None
 
         """
-        if self._current == 0:
+        if self._current < 0:
+            print("Nothing to redo!")
+            return
+
+        if self._current == len(self._history) - 1:
             print("Nothing more to redo!")
             return
-        self._current -= 1
+
+        self._current += 1
         self.data = json_loads(self._history[self._current])
 
     def save(self):
