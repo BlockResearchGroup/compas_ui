@@ -1,3 +1,22 @@
+"""
+********************************************************************************
+singleton
+********************************************************************************
+
+.. currentmodule:: compas_ui.singleton
+
+
+Classes
+=======
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    Singleton
+
+"""
+
 import compas
 
 if compas.IPY:

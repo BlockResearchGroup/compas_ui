@@ -1,4 +1,4 @@
 
 
-class DataObjectNotRegistered(Exception):
+class ObjectNotRegistered(Exception):
     pass

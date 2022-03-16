@@ -10,18 +10,17 @@ from compas.geometry import Scale
 from compas.geometry import Translation
 from compas.geometry import Rotation
 from compas.geometry import transform_points
-from compas.colors import Color
 
 from .object import Object
 
 
-class MeshObject(Object):
-    """Base class for all scene objects representing meshes.
+class NetworkObject(Object):
+    """Class for representing COMPAS networkes in Rhino.
 
     Attributes
     ----------
     anchor : int
-        The vertex of the mesh that is anchored to the location of the object.
+        The node of the network that is anchored to the location of the object.
     location : :class:`compas.geometry.Point`
         The location of the object.
         Default is the origin of the world coordinate system.
@@ -31,51 +30,43 @@ class MeshObject(Object):
     rotation : list[float]
         The rotation angles around the 3 axis of the coordinate system
         with the origin placed at the location of the object in the scene.
-    vertex_xyz : dict[int, list[float]]
-        The view coordinates of the mesh object.
+    node_xyz : dict[int, list[float]]
+        The view coordinates of the network object.
 
     """
 
-    # the color settings duplicate the colors settings of the artist
     SETTINGS = {
-        "color.vertices": Color.from_hex("#0092d2"),
-        "color.edges": Color.from_hex("#0092d2"),
-        "color.faces": Color.from_hex("#0092d2").lightened(50),
-        "show.mesh": True,
-        "show.vertices": True,
-        "show.edges": False,
-        "show.faces": False,
-        "show.vertexlabels": False,
-        "show.facelabels": False,
-        "show.edgelabels": False,
-        "show.vertexnormals": False,
-        "show.facenormals": False,
+        'color.nodes': (255, 255, 255),
+        'color.edges': (0, 0, 0),
+        'show.nodes': True,
+        'show.edges': True,
+        'show.nodelabels': False,
+        'show.edgelabels': False,
     }
 
     def __init__(self, *args, **kwargs):
-        super(MeshObject, self).__init__(*args, **kwargs)
+        super(NetworkObject, self).__init__(*args, **kwargs)
         self._anchor = None
         self._location = None
         self._scale = None
         self._rotation = None
 
     @property
-    def mesh(self):
+    def network(self):
         return self.item
 
-    # this probably should reset the anchor, location, scale, and rotation
-    @mesh.setter
-    def mesh(self, mesh):
-        self.item = mesh
+    @network.setter
+    def network(self, network):
+        self.item = network
 
     @property
     def anchor(self):
         return self._anchor
 
     @anchor.setter
-    def anchor(self, vertex):
-        if self.mesh.has_vertex(vertex):
-            self._anchor = vertex
+    def anchor(self, node):
+        if self.network.has_node(node):
+            self._anchor = node
 
     @property
     def location(self):
@@ -90,7 +81,7 @@ class MeshObject(Object):
     @property
     def scale(self):
         if not self._scale:
-            self._scale = 1
+            self._scale = 1.0
         return self._scale
 
     @scale.setter
@@ -108,13 +99,13 @@ class MeshObject(Object):
         self._rotation = rotation
 
     @property
-    def vertex_xyz(self):
+    def node_xyz(self):
         origin = Point(0, 0, 0)
-        vertices = list(self.mesh.vertices())
-        xyz = self.mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        nodes = list(self.network.nodes())
+        xyz = self.network.nodes_attributes(['x', 'y', 'z'], keys=nodes)
 
         stack = []
-        if self.scale != 1:
+        if self.scale != 1.0:
             S = Scale.from_factors([self.scale] * 3)
             stack.append(S)
         if self.rotation != [0, 0, 0]:
@@ -122,53 +113,31 @@ class MeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.mesh.vertex_attributes(self.anchor, "xyz")
-                point = Point(*xyz)
+                xyz = self.network.node_attributes(self.anchor, 'xyz')
+                point = Point(* xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
             T2 = Translation.from_vector(self.location)
             stack.append(T2)
-
         if stack:
             X = reduce(mul, stack[::-1])
             xyz = transform_points(xyz, X)
-        return dict(zip(vertices, xyz))
+        return dict(zip(nodes, xyz))
 
-    def select_vertex(self):
-        raise NotImplementedError
-
-    def select_vertices(self):
-        raise NotImplementedError
-
-    def select_edge(self):
+    def select_nodes(self):
         raise NotImplementedError
 
     def select_edges(self):
         raise NotImplementedError
 
-    def select_face(self):
-        raise NotImplementedError
-
-    def select_faces(self):
-        raise NotImplementedError
-
-    def modify_vertices(self, vertices, names=None):
+    def modify_nodes(self, nodes, names=None):
         raise NotImplementedError
 
     def modify_edges(self, edges, names=None):
         raise NotImplementedError
 
-    def modify_faces(self, faces, names=None):
-        raise NotImplementedError
-
-    def move_vertex(self, vertex):
-        raise NotImplementedError
-
-    def move_vertices(self, vertices):
+    def move_node(self, node):
         raise NotImplementedError
 
     def move_edge(self, edge):
-        raise NotImplementedError
-
-    def move_face(self, face):
         raise NotImplementedError

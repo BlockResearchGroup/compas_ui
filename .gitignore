@@ -118,3 +118,9 @@ temp/**
 docs/api/generated/
 
 conda.recipe/
+
+*.bak
+*.dat
+*.dir
+
+*.app
