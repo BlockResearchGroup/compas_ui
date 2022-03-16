@@ -20,6 +20,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
 import pickle
 
 from .singleton import Singleton
@@ -57,6 +58,8 @@ class App(Singleton):
             raise RuntimeError('Initialized the app with a name first, for example: app = App(name="my_app")')
 
         self.name = name
+        self.dirname = None
+        self.basename = '{}.app'.format(self.name)
         self.session = Session(name=self.name)
         self.settings = settings or {}
         self.scene = Scene(settings=self.settings.get('scene'))
@@ -139,10 +142,29 @@ class App(Singleton):
         None
 
         """
-        with open("{}.app".format(self.name), 'wb+') as f:
+        if not self.dirname or not self.basename:
+            import Eto.Forms
+            import Rhino.UI
+            import System
+
+            dialog = Eto.Forms.SaveFileDialog()
+            dialog.Directory = System.Uri(os.path.expanduser('~'))
+            dialog.FileName = '{}.app'.format(self.name)
+
+            if dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow) != Eto.Forms.DialogResult.Ok:
+                return
+
+            path = dialog.FileName
+            self.dirname = os.path.dirname(path)
+            self.basename = os.path.basename(path)
+
+        else:
+            path = os.path.join(self.dirname, self.basename)
+
+        with open(path, 'wb+') as f:
             pickle.dump(self.state, f)
 
-    def saveas(self, name):
+    def saveas(self):
         """Save the current state of the app to a shelve with a specific name.
 
         Parameters
@@ -155,11 +177,25 @@ class App(Singleton):
         None
 
         """
-        name = name.split('.')[0]
-        with open("{}.app".format(name), 'wb+') as f:
+        import Eto.Forms
+        import Rhino.UI
+        import System
+
+        dialog = Eto.Forms.SaveFileDialog()
+        dialog.Directory = System.Uri(os.path.expanduser('~'))
+        dialog.FileName = '{}.app'.format(self.name)
+
+        if dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow) != Eto.Forms.DialogResult.Ok:
+            return
+ 
+        path = dialog.FileName
+        self.dirname = os.path.dirname(path)
+        self.basename = os.path.basename(path)
+ 
+        with open(path, 'wb+') as f:
             pickle.dump(self.state, f)
 
-    def load(self, name):
+    def load(self):
         """Restore a saved state of the app from a shelve with a specific name.
 
         Parameters
@@ -172,12 +208,39 @@ class App(Singleton):
         None
 
         """
+        import Eto.Forms
+        import Rhino.UI
+        import System
+
+        dirname = self.dirname or os.path.expanduser('~')
+
+        dialog = Eto.Forms.OpenFileDialog()
+        dialog.Directory = System.Uri(dirname)
+        dialog.MultiSelect = False
+
+        if dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow) != Eto.Forms.DialogResult.Ok:
+            return
+ 
         self.scene.clear()
-        with open(name, 'wb+') as f:
+
+        path = dialog.FileName
+        self.dirname = os.path.dirname(path)
+        self.basename = os.path.basename(path)
+
+        with open(path, 'rb') as f:
             self.state = pickle.load(f)
 
+        self.scene.update()
+
     def update_settings(self):
-        # this is a quick temp test solution
+        """Update the settings of the app.
+
+        Returns
+        -------
+        None
+
+        """
         from compas_ui.rhino.forms.settings import SettingsForm
+
         form = SettingsForm(self.settings)
         form.show()
