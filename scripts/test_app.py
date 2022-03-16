@@ -8,7 +8,7 @@ from compas_ui.app import App
 
 compas_rhino.clear()
 
-app = App(name='COMPAS')
+app = App(name='UITest')
 app.scene.clear()
 
 mesh = Mesh.from_obj(compas.get('tubemesh.obj'))
@@ -18,15 +18,14 @@ obj = app.scene.add(mesh)
 app.scene.update()
 app.record()
 
-x, y, z = mesh.centroid()
-obj.location = Point(-x, -y, 0)
 time.sleep(1)
 
-time.sleep(1)
+x, y, z = mesh.centroid()
+obj.location = Point(-x, -y, 0)
 app.scene.update()
 app.record()
 
 time.sleep(1)
-app.undo()
 
+app.undo()
 app.save()
