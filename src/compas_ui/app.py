@@ -1,3 +1,21 @@
+"""
+********************************************************************************
+app
+********************************************************************************
+
+.. currentmodule:: compas_ui.app
+
+
+Classes
+=======
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    App
+
+"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

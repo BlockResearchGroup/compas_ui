@@ -1,3 +1,35 @@
+"""
+********************************************************************************
+objects
+********************************************************************************
+
+.. currentmodule:: compas_ui.objects
+
+
+Classes
+=======
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    Object
+    MeshObject
+    NetworkObject
+    VolMeshObject
+
+
+Exceptions
+==========
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    ObjectNotRegistered
+
+"""
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
