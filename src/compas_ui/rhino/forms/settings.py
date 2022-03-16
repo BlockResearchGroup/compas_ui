@@ -5,6 +5,7 @@ from __future__ import division
 from ast import literal_eval
 
 import clr
+
 clr.AddReference("Eto")
 clr.AddReference("Rhino.UI")
 
@@ -15,8 +16,7 @@ import Eto.Forms  # noqa : E402
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-
-    def __init__(self, settings, title='Settings', width=500, height=800):
+    def __init__(self, settings, title="Settings", width=500, height=800):
         self._settings = None
         self._names = None
         self._values = None
@@ -25,30 +25,36 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
-        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height) 
+        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
 
         self.table = table = Eto.Forms.GridView()
         table.ShowHeader = True
-        table.DataStore = [[name, value] for name, value in zip(self.names, self.values)]
+        table.DataStore = [
+            [name, value] for name, value in zip(self.names, self.values)
+        ]
 
         c1 = Eto.Forms.GridColumn()
-        c1.HeaderText = 'Name'
+        c1.HeaderText = "Name"
         c1.Editable = False
         c1.DataCell = Eto.Forms.TextBoxCell(0)
         table.Columns.Add(c1)
 
         c2 = Eto.Forms.GridColumn()
-        c2.HeaderText = 'Value'
+        c2.HeaderText = "Value"
         c2.Editable = True
         c2.DataCell = Eto.Forms.TextBoxCell(1)
         table.Columns.Add(c2)
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
+        layout.BeginVertical(
+            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
+        )
         layout.AddRow(table)
         layout.EndVertical()
-        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
+        layout.BeginVertical(
+            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
+        )
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
 
@@ -56,13 +62,13 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     @property
     def ok(self):
-        self.DefaultButton = Eto.Forms.Button(Text='OK')
+        self.DefaultButton = Eto.Forms.Button(Text="OK")
         self.DefaultButton.Click += self.on_ok
         return self.DefaultButton
 
     @property
     def cancel(self):
-        self.AbortButton = Eto.Forms.Button(Text='Cancel')
+        self.AbortButton = Eto.Forms.Button(Text="Cancel")
         self.AbortButton.Click += self.on_cancel
         return self.AbortButton
 

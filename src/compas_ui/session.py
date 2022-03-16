@@ -32,14 +32,14 @@ from compas.data import json_dumps
 from compas_ui.singleton import Singleton
 
 
-# def autosave():
-#     """Automatically save the session to a file by registering this function with `atexit`."""
-#     session = Session()
-#     if session.autosave:
-#         session.save()
+def autosave():
+    """Automatically save the session to a file by registering this function with `atexit`."""
+    session = Session()
+    if session.autosave:
+        session.save()
 
 
-# atexit.register(autosave)
+atexit.register(autosave)
 
 
 class Session(Singleton):

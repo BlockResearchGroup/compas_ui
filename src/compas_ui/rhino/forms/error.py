@@ -26,7 +26,9 @@ def error(title="Error", showLocalTraceback=True):
                 else:
                     text = str(error)
                 ErrorForm(text, title=title)
+
         return wrapper
+
     return outer
 
 
@@ -68,12 +70,11 @@ Add any other context about the problem here.
 
 
 class ErrorForm(Eto.Forms.Dialog[bool]):
-
     def __init__(self, error="Unknown", title="Error", width=800, height=500):
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
-        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height) 
+        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
 
         textarea = Eto.Forms.TextArea()
@@ -81,10 +82,14 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
         textarea.ReadOnly = True
 
         dynamic = Eto.Forms.DynamicLayout()
-        dynamic.BeginVertical(Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True)
+        dynamic.BeginVertical(
+            Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True
+        )
         dynamic.AddRow(textarea)
         dynamic.EndVertical()
-        dynamic.BeginVertical(Eto.Drawing.Padding(12, 12, 12, 18), Eto.Drawing.Size(6, 0), False, False)
+        dynamic.BeginVertical(
+            Eto.Drawing.Padding(12, 12, 12, 18), Eto.Drawing.Size(6, 0), False, False
+        )
         dynamic.AddRow(None, self.cancel)
         dynamic.EndVertical()
 
@@ -94,7 +99,7 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
 
     @property
     def cancel(self):
-        self.AbortButton = Eto.Forms.Button(Text='Close')
+        self.AbortButton = Eto.Forms.Button(Text="Close")
         self.AbortButton.Click += self.on_cancel
         return self.AbortButton
 
