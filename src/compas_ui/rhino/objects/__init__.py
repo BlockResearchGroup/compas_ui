@@ -3,7 +3,7 @@
 objects
 ********************************************************************************
 
-.. currentmodule:: compas_rhino.objects
+.. currentmodule:: compas_ui.rhino.objects
 
 Classes
 =======
@@ -12,9 +12,9 @@ Classes
     :toctree: generated/
     :nosignatures:
 
-    MeshObject
-    NetworkObject
-    VolMeshObject
+    RhinoMeshObject
+    RhinoNetworkObject
+    RhinoVolMeshObject
 
 """
 from __future__ import absolute_import
@@ -37,25 +37,25 @@ from ._modify import (  # noqa : F401 F403
 
 from ._object import RhinoObject
 from .meshobject import RhinoMeshObject
-# from .networkobject import NetworkObject
-# from .volmeshobject import VolMeshObject
+from .networkobject import RhinoNetworkObject
+from .volmeshobject import RhinoVolMeshObject
 
 from compas.datastructures import Mesh
-# from compas.datastructures import Network
-# from compas.datastructures import VolMesh
+from compas.datastructures import Network
+from compas.datastructures import VolMesh
 
 
 @plugin(category='ui', requires=['Rhino'])
 def register_objects():
     RhinoObject.register(Mesh, RhinoMeshObject, context='Rhino')
-    # RhinoObject.register(Network, NetworkObject, context='Rhino')
-    # RhinoObject.register(VolMesh, VolMeshObject, context='Rhino')
+    RhinoObject.register(Network, RhinoNetworkObject, context='Rhino')
+    RhinoObject.register(VolMesh, RhinoVolMeshObject, context='Rhino')
     print('Rhino Objects registered.')
 
 
 __all__ = [
     'RhinoObject',
-    'MeshObject',
-    # 'NetworkObject',
-    # 'VolMeshObject'
+    'RhinoMeshObject',
+    'RhinoNetworkObject',
+    'RhinoVolMeshObject'
 ]
