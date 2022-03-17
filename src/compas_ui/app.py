@@ -53,6 +53,10 @@ class App(Singleton):
 
     """
 
+    @staticmethod
+    def reset():
+        App._instances = {}
+
     def __init__(self, name=None, settings=None):
         if name is None:
             raise RuntimeError(
