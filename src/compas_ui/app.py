@@ -23,6 +23,8 @@ from __future__ import print_function
 import os
 import pickle
 
+import compas_rhino
+
 from .singleton import Singleton
 from .session import Session
 from .scene import Scene
@@ -149,6 +151,8 @@ class App(Singleton):
         None
 
         """
+        # TODO: move this to a pluggable/plugin
+
         if not self.dirname or not self.basename:
             import Eto.Forms
             import Rhino.UI
@@ -187,6 +191,8 @@ class App(Singleton):
         None
 
         """
+        # TODO: move this to a pluggable/plugin
+
         import Eto.Forms
         import Rhino.UI
         import System
@@ -221,6 +227,8 @@ class App(Singleton):
         None
 
         """
+        # TODO: move this to a pluggable/plugin
+
         import Eto.Forms
         import Rhino.UI
         import System
@@ -256,7 +264,86 @@ class App(Singleton):
         None
 
         """
+        # TODO: move this to a pluggable/plugin
+
         from compas_ui.rhino.forms.settings import SettingsForm
 
         form = SettingsForm(self.settings)
         form.show()
+
+    # ========================================================================
+    # User data
+    # ========================================================================
+
+    def get_real(self, message, minval=None, maxval=None, default=None):
+        """Get a real number from the user.
+
+        Parameters
+        ----------
+        message : str
+            Tell the user what the number is for.
+        minval : float, optional
+            The minimum value.
+        maxval : float, optional
+            The maximum value.
+        default : float, optional
+            The default value.
+
+        Returns
+        -------
+        float | None
+
+        """
+        # TODO: move this to a pluggable/plugin
+
+        value = compas_rhino.rs.GetReal(message=message, number=default, minimum=minval, maximum=maxval)
+        if value:
+            return float(value)
+
+    def get_integer(self, message, minval=None, maxval=None, default=None):
+        """Get an integer number from the user.
+
+        Parameters
+        ----------
+        message : str
+            Tell the user what the number is for.
+        minval : int, optional
+            The minimum value.
+        maxval : int, optional
+            The maximum value.
+        default : int, optional
+            The default value.
+
+        Returns
+        -------
+        int | None
+
+        """
+        # TODO: move this to a pluggable/plugin
+
+        value = compas_rhino.rs.GetInteger(message=message, number=default, minimum=minval, maximum=maxval)
+        if value:
+            return int(value)
+
+    def get_string(self, message, options=None, default=None):
+        """Get a string from the user.
+
+        Parameters
+        ----------
+        message : str
+            Tell the user what the string is for.
+        options : list[str], optional
+            A list of options.
+        default : str, optional
+            The default value.
+
+        Returns
+        -------
+        str | None
+
+        """
+        # TODO: move this to a pluggable/plugin
+
+        value = compas_rhino.rs.GetString(message, defaultString=default, strings=options)
+        if value:
+            return str(value)
