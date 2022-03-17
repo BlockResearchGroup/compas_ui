@@ -8,34 +8,13 @@ import compas_rhino
 from compas.geometry import add_vectors
 
 import Rhino
-import clr
-
-clr.AddReference('Rhino.UI')
-import Rhino.UI  # noqa: E402
-from Rhino.Geometry import Point3d  # noqa: E402
+import Rhino.UI
+from Rhino.Geometry import Point3d
 
 try:
     from compas_rhino.forms import PropertyListForm
 except ImportError:
     from Rhino.UI.Dialogs import ShowPropertyListBox
-
-
-__all__ = [
-    'network_update_attributes',
-    'network_update_node_attributes',
-    'network_update_edge_attributes',
-
-    'network_move_node',
-
-    'mesh_update_attributes',
-    'mesh_update_vertex_attributes',
-    'mesh_update_face_attributes',
-    'mesh_update_edge_attributes',
-
-    'mesh_move_vertex',
-    'mesh_move_vertices',
-    'mesh_move_face',
-]
 
 
 def _update_named_values(names, values, message='', title='Update named values'):

@@ -4,15 +4,10 @@ from __future__ import division
 
 from ast import literal_eval
 
-import clr
-
-clr.AddReference("Eto")
-clr.AddReference("Rhino.UI")
-
-import Rhino  # noqa : E402
-import Rhino.UI  # noqa : E402
-import Eto.Drawing  # noqa : E402
-import Eto.Forms  # noqa : E402
+import Rhino
+import Rhino.UI
+import Eto.Drawing
+import Eto.Forms
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
