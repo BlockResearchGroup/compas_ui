@@ -4,16 +4,18 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.app import App
+from compas_ui.rhino import error
 
 
 __commandname__ = 'COMPAS_clear'
 
 
+@error()
 def RunCommand(is_interactive):
 
     compas_rhino.clear()
 
-    app = App(name='COMPAS')
+    app = App()
     app.session.reset()
     app.scene.clear()
     app.record()

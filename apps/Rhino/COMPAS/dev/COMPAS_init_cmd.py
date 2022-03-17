@@ -2,11 +2,12 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from __plugin__ import settings
+import __plugin__ as PLUGIN
 
 import os
 from compas_ui.app import App
-from compas_ui.rhino.forms.browser import BrowserForm
+from compas_ui.rhino import BrowserForm
+from compas_ui.rhino import error
 
 SPLASH = os.path.join(os.path.dirname(__file__), 'splash', 'index.html')
 
@@ -14,14 +15,17 @@ SPLASH = os.path.join(os.path.dirname(__file__), 'splash', 'index.html')
 __commandname__ = 'COMPAS_init'
 
 
+@error()
 def RunCommand(is_interactive):
 
-    App._instances = {}
+    App.reset()
 
-    browser = BrowserForm(title='COMPAS', url=SPLASH)
+    # this should become part of the App
+    # e.g. App.splash()
+    browser = BrowserForm(title=PLUGIN.title, url=SPLASH)
     browser.show()
 
-    app = App(name='COMPAS', settings=settings)
+    app = App(name=PLUGIN.title, settings=PLUGIN.settings)
     app.scene.clear()
 
 
