@@ -5,7 +5,7 @@ from __future__ import division
 import compas
 from compas.datastructures import Mesh
 from compas_ui.app import App
-from compas_ui.rhino import error
+from compas_ui.rhino.forms import error
 
 
 __commandname__ = 'COMPAS_test_mesh'

@@ -6,8 +6,8 @@ import __plugin__ as PLUGIN
 
 import os
 from compas_ui.app import App
-from compas_ui.rhino import BrowserForm
-from compas_ui.rhino import error
+from compas_ui.rhino.forms import BrowserForm
+from compas_ui.rhino.forms import error
 
 SPLASH = os.path.join(os.path.dirname(__file__), 'splash', 'index.html')
 
