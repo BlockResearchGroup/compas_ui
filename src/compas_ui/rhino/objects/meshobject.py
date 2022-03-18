@@ -2,7 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import Rhino
+import Rhino.Geometry
+
 import compas_rhino
+from compas.geometry import add_vectors
 
 from compas_ui.objects import MeshObject
 
@@ -318,3 +322,80 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         """
         return mesh_move_face(self.mesh, face)
+
+    def move_vertices_direction(self, vertices, direction=None):
+        """Move selected vertices along specified direction.
+
+        Parameters
+        ----------
+        keys : list
+            The identifiers of the vertices.
+        direction: string, optional
+            The name of axis or plane to move on. Defaut is the 'z'-axis.
+
+        """
+        def OnDynamicDraw(sender, e):
+            draw = e.Display.DrawDottedLine
+            end = e.CurrentPoint
+            vector = end - start
+            for a, b in lines:
+                a = a + vector
+                b = b + vector
+                draw(a, b, color)
+            for a, b in connectors:
+                a = a + vector
+                draw(a, b, color)
+
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+        lines = []
+        connectors = []
+
+        for vertex in vertices:
+            a = Rhino.Geometry.Point3d(* self.mesh.vertex_coordinates(vertex))
+            nbrs = self.mesh.vertex_neighbors(vertex)
+            for nbr in nbrs:
+                b = Rhino.Geometry.Point3d(* self.mesh.vertex_coordinates(nbr))
+                if nbr in vertices:
+                    lines.append((a, b))
+                else:
+                    connectors.append((a, b))
+
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt('Point to move from?')
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        start = gp.Point()
+
+        if direction in ('X', 'x'):
+            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(1, 0, 0))
+        elif direction in ('Y', 'y'):
+            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 1, 0))
+        elif direction in ('Z', 'z'):
+            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 0, 1))
+        elif direction in ('XY', 'xy'):
+            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 0, 1))
+        elif direction in ('YZ', 'yz'):
+            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(1, 0, 0))
+        elif direction in ('ZX', 'zx'):
+            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 1, 0))
+
+        gp.SetCommandPrompt('Point to move to?')
+        gp.SetBasePoint(start, False)
+        gp.DrawLineFromPoint(start, True)
+        gp.DynamicDraw += OnDynamicDraw
+        gp.Constrain(geometry)
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        end = gp.Point()
+        vector = list(end - start)
+        for vertex in vertices:
+            xyz = self.mesh.vertex_attributes(vertex, 'xyz')
+            self.mesh.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+
+        return True

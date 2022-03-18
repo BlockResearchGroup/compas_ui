@@ -237,6 +237,14 @@ class Object(object):
             setattr(result, k, deepcopy(v, memo))
         return result
 
+    def __getstate__(self):
+        """Return a serializable state of the object."""
+        pass
+
+    def __setstate__(self, state):
+        """Assign a deserialized state to the object and recreate the descriptors."""
+        pass
+
     # @property
     # def guids(self):
     #     return self._guids
