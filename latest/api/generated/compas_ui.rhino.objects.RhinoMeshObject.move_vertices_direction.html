@@ -3,7 +3,7 @@
 
 <head>
   
-  <title>compas_ui - MeshObject.draw</title>
+  <title>compas_ui - RhinoMeshObject.move_vertices_direction</title>
   
 
   <meta charset="utf-8" />
@@ -20,11 +20,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="MeshObject.modify" href="compas_ui.objects.MeshObject.modify.html" />
+  <link rel="next" title="RhinoMeshObject.select_edges" href="compas_ui.rhino.objects.RhinoMeshObject.select_edges.html" />
   
 
   
-  <link rel="prev" title="MeshObject.clear" href="compas_ui.objects.MeshObject.clear.html" />
+  <link rel="prev" title="RhinoMeshObject.move_vertices" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -86,23 +86,34 @@
             
             <li class="breadcrumb-item"><a href="../compas_ui.html">compas_ui</a></li>
             
-            <li class="breadcrumb-item"><a href="../compas_ui.objects.html">objects</a></li>
+            <li class="breadcrumb-item"><a href="../compas_ui.rhino.html">rhino</a></li>
             
-            <li class="breadcrumb-item"><a href="compas_ui.objects.MeshObject.html">MeshObject</a></li>
+            <li class="breadcrumb-item"><a href="../compas_ui.rhino.objects.html">rhino.objects</a></li>
             
-            <!-- <li class="breadcrumb-item active" aria-current="page">MeshObject.draw</li> -->
+            <li class="breadcrumb-item"><a href="compas_ui.rhino.objects.RhinoMeshObject.html">RhinoMeshObject</a></li>
+            
+            <!-- <li class="breadcrumb-item active" aria-current="page">RhinoMeshObject.move_vertices_direction</li> -->
           </ol>
         </nav>
         
 
         
         
-        <section class="detail" id="meshobject-draw">
-<h1>MeshObject.draw</h1>
+        <section class="detail" id="rhinomeshobject-move-vertices-direction">
+<h1>RhinoMeshObject.move_vertices_direction</h1>
 <dl class="py method">
-<dt class="sig sig-object py" id="compas_ui.objects.MeshObject.draw">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshObject.</span></span><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/objects/meshobject.py#L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction">
+<span class="sig-prename descclassname"><span class="pre">RhinoMeshObject.</span></span><span class="sig-name descname"><span class="pre">move_vertices_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/rhino/objects/meshobject.py#L326"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Move selected vertices along specified direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>list</em>) – The identifiers of the vertices.</p></li>
+<li><p><strong>direction</strong> (<em>string, optional</em>) – The name of axis or plane to move on. Defaut is the ‘z’-axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -132,8 +143,8 @@
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_ui.html">compas_ui</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.app.html">app</a></li>
-<li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.objects.html">objects</a></li>
-<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
+<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.objects.html">objects</a></li>
+<li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.scene.html">scene</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.session.html">session</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.singleton.html">singleton</a></li>
@@ -152,7 +163,7 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">MeshObject.draw</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">RhinoMeshObject.move_vertices_direction</a></li>
 </ul>
 
       </div>
@@ -164,20 +175,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="compas_ui.objects.MeshObject.clear.html" title="MeshObject.clear" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices.html" title="RhinoMeshObject.move_vertices" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          MeshObject.clear
+          RhinoMeshObject.move_vertices
         </div>
       </a>
       
 
       
-      <a href="compas_ui.objects.MeshObject.modify.html" title="MeshObject.modify" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_ui.rhino.objects.RhinoMeshObject.select_edges.html" title="RhinoMeshObject.select_edges" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          MeshObject.modify
+          RhinoMeshObject.select_edges
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>
