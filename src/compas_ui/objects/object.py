@@ -3,9 +3,9 @@ from __future__ import division
 from __future__ import print_function
 
 import inspect
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
+from abc import abstractproperty
 from collections import defaultdict
-from copy import deepcopy
 
 import compas
 from compas.artists import Artist
@@ -15,100 +15,59 @@ from compas.plugins import PluginValidator
 from compas_ui.objects import ObjectNotRegistered
 
 
-def __copy__(self):
-    """Make a shallow copy of the object."""
-    item = None
-    if hasattr(self, "mesh"):
-        item = self.mesh
-    elif hasattr(self, "network"):
-        item = self.network
-    elif hasattr(self, "volmesh"):
-        item = self.volmesh
-    elif hasattr(self, "shape"):
-        item = self.shape
-    elif hasattr(self, "primitive"):
-        item = self.primitive
-    cls = self.__class__
-    result = cls.__new__(cls, item)
-    result.__dict__.update(self.__dict__)
-    return result
-
-
-def __deepcopy__(self, memo):
-    """Make a deep copy of the object."""
-    item = None
-    if hasattr(self, "mesh"):
-        item = self.mesh
-    elif hasattr(self, "network"):
-        item = self.network
-    elif hasattr(self, "volmesh"):
-        item = self.volmesh
-    elif hasattr(self, "shape"):
-        item = self.shape
-    elif hasattr(self, "primitive"):
-        item = self.primitive
-    cls = self.__class__
-    result = cls.__new__(cls, item)
-    memo[id(self)] = result
-    for k, v in self.__dict__.items():
-        setattr(result, k, deepcopy(v, memo))
-    return result
-
-
 def __getstate__(self):
     """Return a serializable state of the artist."""
-    dictcopy = self.__dict__.copy()
+    state = self.__dict__.copy()
 
     if "_vertex_color" in self.__dict__:
         if self.__dict__["_vertex_color"] is not None:
-            dictcopy["_vertex_color"] = dict(self.__dict__["_vertex_color"])
+            state["_vertex_color"] = dict(self.__dict__["_vertex_color"])
     if "_node_color" in self.__dict__:
         if self.__dict__["_node_color"] is not None:
-            dictcopy["_node_color"] = dict(self.__dict__["_node_color"])
+            state["_node_color"] = dict(self.__dict__["_node_color"])
     if "_edge_color" in self.__dict__:
         if self.__dict__["_edge_color"] is not None:
-            dictcopy["_edge_color"] = dict(self.__dict__["_edge_color"])
+            state["_edge_color"] = dict(self.__dict__["_edge_color"])
     if "_face_color" in self.__dict__:
         if self.__dict__["_face_color"] is not None:
-            dictcopy["_face_color"] = dict(self.__dict__["_face_color"])
+            state["_face_color"] = dict(self.__dict__["_face_color"])
     if "_cell_color" in self.__dict__:
         if self.__dict__["_cell_color"] is not None:
-            dictcopy["_cell_color"] = dict(self.__dict__["_cell_color"])
+            state["_cell_color"] = dict(self.__dict__["_cell_color"])
 
-    return {"__dict__": dictcopy}
+    return state
 
 
 def __setstate__(self, state):
     """Assign a deserialized state to the artist and recreate the descriptors."""
-    dictcopy = state["__dict__"].copy()
 
-    if "_vertex_color" in state["__dict__"]:
-        dictcopy["_vertex_color"] = None
-    if "_node_color" in state["__dict__"]:
-        dictcopy["_node_color"] = None
-    if "_edge_color" in state["__dict__"]:
-        dictcopy["_edge_color"] = None
-    if "_face_color" in state["__dict__"]:
-        dictcopy["_face_color"] = None
-    if "_cell_color" in state["__dict__"]:
-        dictcopy["_cell_color"] = None
+    original = state.copy()
 
-    self.__dict__.update(dictcopy)
+    if "_vertex_color" in state:
+        state["_vertex_color"] = None
+    if "_node_color" in state:
+        state["_node_color"] = None
+    if "_edge_color" in state:
+        state["_edge_color"] = None
+    if "_face_color" in state:
+        state["_face_color"] = None
+    if "_cell_color" in state:
+        state["_cell_color"] = None
 
-    if "_vertex_color" in state["__dict__"]:
-        self.vertex_color = state["__dict__"]["_vertex_color"]
-    if "_node_color" in state["__dict__"]:
-        self.node_color = state["__dict__"]["_node_color"]
-    if "_edge_color" in state["__dict__"]:
-        self.edge_color = state["__dict__"]["_edge_color"]
-    if "_face_color" in state["__dict__"]:
-        self.face_color = state["__dict__"]["_face_color"]
-    if "_cell_color" in state["__dict__"]:
-        self.cell_color = state["__dict__"]["_cell_color"]
+    self.__dict__.update(state)
+
+    if "_vertex_color" in original:
+        self.vertex_color = original["_vertex_color"]
+    if "_node_color" in state:
+        self.node_color = original["_node_color"]
+    if "_edge_color" in state:
+        self.edge_color = original["_edge_color"]
+    if "_face_color" in state:
+        self.face_color = original["_face_color"]
+    if "_cell_color" in state:
+        self.cell_color = original["_cell_color"]
 
 
-Artist.__copy__ = __copy__
-Artist.__deepcopy__ = __deepcopy__
 Artist.__getstate__ = __getstate__
 Artist.__setstate__ = __setstate__
 
@@ -208,50 +167,44 @@ class Object(object):
         PluginValidator.ensure_implementations(cls)
         return super(Object, cls).__new__(cls)
 
-    def __init__(self, item, scene=None, name=None, visible=True, settings=None):
+    def __init__(self, item, name=None, visible=True, settings=None):
         super(Object, self).__init__()
-        # self._guids = []
         self._item = None
-        self._scene = None
         self._artist = None
         self.item = item
-        self.scene = scene
         self.name = name
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
 
-    def __copy__(self):
-        """Make a shallow copy of the object."""
-        cls = self.__class__
-        result = cls.__new__(cls, self.item)
-        result.__dict__.update(self.__dict__)
-        return result
-
-    def __deepcopy__(self, memo):
-        """Make a deep copy of the object."""
-        cls = self.__class__
-        result = cls.__new__(cls, self.item)
-        memo[id(self)] = result
-        for k, v in self.__dict__.items():
-            setattr(result, k, deepcopy(v, memo))
-        return result
-
     def __getstate__(self):
-        """Return a serializable state of the object."""
-        pass
+        return self.state
 
     def __setstate__(self, state):
-        """Assign a deserialized state to the object and recreate the descriptors."""
-        pass
+        self.state = state
 
-    # @property
-    # def guids(self):
-    #     return self._guids
+    @property
+    def state(self):
+        state = self.__dict__.copy()
+        for name in state:
+            if name.startswith('_conduit'):
+                state[name] = None
+            elif name == '_artist':
+                state[name] = None
+            elif name == '_scene':
+                state[name] = None
+        return state
 
-    # @guids.setter
-    # def guids(self, guids):
-    #     self._guids = guids
+    @state.setter
+    def state(self, state):
+        for name in state:
+            if name.startswith('_conduit'):
+                state[name] = None
+            elif name == '_artist':
+                state[name] = None
+            elif name == '_scene':
+                state[name] = None
+        self.__dict__.update(state)
 
     @abstractproperty
     def data(self):
@@ -266,14 +219,6 @@ class Object(object):
         self._item = item
         self._guids = []
         self._artist = None
-
-    @property
-    def scene(self):
-        return self._scene
-
-    @scene.setter
-    def scene(self, scene):
-        self._scene = scene
 
     @property
     def artist(self):

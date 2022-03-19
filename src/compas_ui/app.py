@@ -22,6 +22,7 @@ from __future__ import print_function
 
 import os
 import pickle
+import tempfile
 
 import compas_rhino
 
@@ -65,14 +66,25 @@ class App(Singleton):
                 'Initialized the app with a name first, for example: app = App(name="my_app")'
             )
 
+        self._current = -1
+        self._depth = 20
         self.name = name
         self.dirname = None
-        self.basename = "{}.app".format(self.name)
+        self.basename = "{}.cui".format(self.name)
         self.session = Session(name=self.name)
         self.settings = settings or {}
         self.scene = Scene(settings=self.settings.get("scene"))
         self.proxy = None
         self.start_cloud()
+
+        with open(self.dbname, 'wb') as f:
+            pickle.dump([], f)
+
+        self.record()
+
+    @property
+    def dbname(self):
+        return os.path.join(tempfile.gettempdir(), "{}.history".format(self.basename))
 
     @property
     def state(self):
@@ -110,6 +122,12 @@ class App(Singleton):
             except ImportError:
                 raise ImportError("The compas_cloud package is not installed.")
 
+    def clear(self):
+        with open(self.dbname, 'wb') as f:
+            pickle.dump([], f)
+        self.session.reset()
+        self.scene.clear()
+
     def record(self):
         """Record the current state of the app.
 
@@ -118,8 +136,21 @@ class App(Singleton):
         None
 
         """
-        self.session.record()
-        self.scene.record()
+        with open(self.dbname, 'rb') as f:
+            history = pickle.load(f)
+
+            if self._current > -1:
+                if self._current < len(history) - 1:
+                    history = history[:self._current + 1]
+
+            history.append(self.state)
+            h = len(history)
+            if h > self._depth:
+                history = history[h - self._depth:]
+            self._current = len(history) - 1
+
+        with open(self.dbname, 'wb') as f:
+            pickle.dump(history, f)
 
     def undo(self):
         """Undo changes in the app by rewinding to a recorded state.
@@ -129,8 +160,23 @@ class App(Singleton):
         None
 
         """
-        self.session.undo()
-        self.scene.undo()
+        self.scene.clear()
+
+        if self._current < 0:
+            print("Nothing to undo!")
+            return
+
+        if self._current == 0:
+            print("Nothing more to undo!")
+            return
+
+        with open(self.dbname, 'rb') as f:
+            history = pickle.load(f)
+
+        self._current -= 1
+        self.state = history[self._current]
+
+        self.scene.update()
 
     def redo(self):
         """Redo changes in the app by forwarding to a recorded state.
@@ -140,8 +186,23 @@ class App(Singleton):
         None
 
         """
-        self.session.redo()
-        self.scene.redo()
+        self.scene.clear()
+
+        if self._current < 0:
+            print("Nothing to redo!")
+            return
+
+        with open(self.dbname, 'rb') as f:
+            history = pickle.load(f)
+
+        if self._current == len(history) - 1:
+            print("Nothing more to redo!")
+            return
+
+        self._current += 1
+        self.state = history[self._current]
+
+        self.scene.update()
 
     def save(self):
         """Save the current state of the app to a shelve.

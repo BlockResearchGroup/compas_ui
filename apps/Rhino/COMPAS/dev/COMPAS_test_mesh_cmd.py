@@ -14,7 +14,7 @@ __commandname__ = 'COMPAS_test_mesh'
 @error()
 def RunCommand(is_interactive):
 
-    app = App(name='COMPAS')
+    app = App()
 
     mesh = Mesh.from_obj(compas.get('tubemesh.obj'))
     mesh.name = 'TubeMesh'

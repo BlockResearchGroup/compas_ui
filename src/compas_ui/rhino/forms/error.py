@@ -70,6 +70,7 @@ Add any other context about the problem here.
 
 
 class ErrorForm(Eto.Forms.Dialog[bool]):
+
     def __init__(self, error="Unknown", title="Error", width=800, height=500):
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)

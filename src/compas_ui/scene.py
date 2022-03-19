@@ -20,8 +20,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from copy import deepcopy
-
 from compas.plugins import pluggable
 
 from compas_ui.objects import Object
@@ -57,83 +55,38 @@ class Scene(Singleton):
 
     """
 
+    SETTINGS = {}
+
     def __init__(self, settings=None):
         super(Scene, self).__init__()
-        self._history = []
-        self._current = -1
         self.objects = []
-        self.settings = settings or {}
-        self.record()
+        self.settings = Scene.SETTINGS.copy()
+        self.settings.update(settings or {})
 
     @property
     def state(self):
-        return {'objects': self.objects, 'settings': self.settings}
+        data = {}
+        objects = []
+        for obj in self.objects:
+            guid = str(obj.item.guid)
+            if guid not in data:
+                data[guid] = obj.item
+            objects.append({
+                'item': guid,
+                'name': obj.name,
+                'visible': obj.visible,
+                'settings': obj.settings,
+            })
+        return {'data': data, 'objects': objects, 'settings': self.settings}
 
     @state.setter
     def state(self, state):
-        self.objects = state['objects']
-        self.settings = state['settings']
-
-    def record(self):
-        """Record the current state of the scene.
-
-        Returns
-        -------
-        None
-
-        """
-        if self._current > -1:
-            if self._current < len(self._history) - 1:
-                # remove everything that comes after current
-                # but keep current
-                self._history[:] = self._history[:self._current + 1]
-
-        self._history.append(deepcopy(self.state))
-        self._current = len(self._history) - 1
-
-    def undo(self):
-        """Undo changes to the scene by rewinding to a recorded state.
-
-        Returns
-        -------
-        None
-
-        """
-        self.clear()
-
-        if self._current < 0:
-            print("Nothing to undo!")
-            return
-
-        if self._current == 0:
-            print("Nothing more to undo!")
-            return
-
-        self._current -= 1
-        self.state = self._history[self._current]
-        self.update()
-
-    def redo(self):
-        """Redo changes to the scene by forwarding to a recorded state.
-
-        Returns
-        -------
-        None
-
-        """
-        self.clear()
-
-        if self._current < 0:
-            print("Nothing to redo!")
-            return
-
-        if self._current == len(self._history) - 1:
-            print("Nothing more to redo!")
-            return
-
-        self._current += 1
-        self.state = self._history[self._current]
-        self.update()
+        self.objects = []
+        for obj in state['objects']:
+            item = state['data'][obj['item']]
+            self.add(item, name=obj['name'], visible=obj['visible'], settings=obj['settings'])
+        self.settings = Scene.SETTINGS.copy()
+        self.settings.update(state['settings'])
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.
@@ -150,7 +103,7 @@ class Scene(Singleton):
         :class:`compas_ui.objects.Object`
 
         """
-        obj = Object(item, scene=self, **kwargs)
+        obj = Object(item, **kwargs)
         # implement __hash__ on Data
         # to allow for
         # self.objects[item] = obj

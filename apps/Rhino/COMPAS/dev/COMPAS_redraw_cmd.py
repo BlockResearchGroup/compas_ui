@@ -12,7 +12,7 @@ __commandname__ = 'COMPAS_clear'
 @error()
 def RunCommand(is_interactive):
 
-    app = App(name='COMPAS')
+    app = App()
     app.scene.update()
 
 
