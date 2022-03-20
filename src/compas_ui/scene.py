@@ -36,6 +36,11 @@ def clear_scene(self):
     raise NotImplementedError
 
 
+@pluggable(category='ui')
+def highlight_objects(self):
+    raise NotImplementedError
+
+
 class Scene(Singleton):
     """The scene singleton keeps track of the view objects of an app.
 
@@ -148,3 +153,13 @@ class Scene(Singleton):
 
         """
         clear_scene(self)
+
+    def highlight_objects(self, guids):
+        """Highlight objects in the scene.
+
+        Returns
+        -------
+        None
+
+        """
+        highlight_objects(guids)
