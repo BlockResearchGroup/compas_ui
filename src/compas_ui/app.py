@@ -214,14 +214,14 @@ class App(Singleton):
         """
         # TODO: move this to a pluggable/plugin
 
-        if not self.dirname or not self.basename:
+        if not self.dirname:
             import Eto.Forms
             import Rhino.UI
             import System
 
             dialog = Eto.Forms.SaveFileDialog()
             dialog.Directory = System.Uri(os.path.expanduser("~"))
-            dialog.FileName = "{}.app".format(self.name)
+            dialog.FileName = self.basename
 
             if (
                 dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
@@ -260,7 +260,7 @@ class App(Singleton):
 
         dialog = Eto.Forms.SaveFileDialog()
         dialog.Directory = System.Uri(os.path.expanduser("~"))
-        dialog.FileName = "{}.app".format(self.name)
+        dialog.FileName = self.basename
 
         if (
             dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
