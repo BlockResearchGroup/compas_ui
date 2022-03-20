@@ -3,7 +3,7 @@
 
 <head>
   
-  <title>compas_ui - Scene.update</title>
+  <title>compas_ui - MeshForm</title>
   
 
   <meta charset="utf-8" />
@@ -20,11 +20,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="session" href="../compas_ui.session.html" />
+  <link rel="next" title="MeshForm.make_table" href="compas_ui.rhino.forms.MeshForm.make_table.html" />
   
 
   
-  <link rel="prev" title="Scene.highlight_objects" href="compas_ui.scene.Scene.highlight_objects.html" />
+  <link rel="prev" title="SettingsForm.show" href="compas_ui.rhino.forms.SettingsForm.show.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -86,28 +86,44 @@
             
             <li class="breadcrumb-item"><a href="../compas_ui.html">compas_ui</a></li>
             
-            <li class="breadcrumb-item"><a href="../compas_ui.scene.html">scene</a></li>
+            <li class="breadcrumb-item"><a href="../compas_ui.rhino.html">rhino</a></li>
             
-            <li class="breadcrumb-item"><a href="compas_ui.scene.Scene.html">Scene</a></li>
+            <li class="breadcrumb-item"><a href="../compas_ui.rhino.forms.html">rhino.forms</a></li>
             
-            <!-- <li class="breadcrumb-item active" aria-current="page">Scene.update</li> -->
+            <!-- <li class="breadcrumb-item active" aria-current="page">MeshForm</li> -->
           </ol>
         </nav>
         
 
         
         
-        <section class="detail" id="scene-update">
-<h1>Scene.update</h1>
-<dl class="py method">
-<dt class="sig sig-object py" id="compas_ui.scene.Scene.update">
-<span class="sig-prename descclassname"><span class="pre">Scene.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/scene.py#L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Update the scene.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><em>None</em></p>
-</dd>
-</dl>
+        <section class="detail" id="meshform">
+<h1>MeshForm</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compas_ui.rhino.forms.MeshForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.rhino.forms.</span></span><span class="sig-name descname"><span class="pre">MeshForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/rhino/forms/mesh.py#L13"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">~Eto.Forms.Dialog.</span></code></p>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.forms.MeshForm.make_table.html#compas_ui.rhino.forms.MeshForm.make_table" title="compas_ui.rhino.forms.MeshForm.make_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_table</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.forms.MeshForm.on_cancel.html#compas_ui.rhino.forms.MeshForm.on_cancel" title="compas_ui.rhino.forms.MeshForm.on_cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_cancel</span></code></a></p></td>
+<td><p>Callback for the CANCEL event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.forms.MeshForm.on_ok.html#compas_ui.rhino.forms.MeshForm.on_ok" title="compas_ui.rhino.forms.MeshForm.on_ok"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_ok</span></code></a></p></td>
+<td><p>Callback for the OK event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.forms.MeshForm.show.html#compas_ui.rhino.forms.MeshForm.show" title="compas_ui.rhino.forms.MeshForm.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a></p></td>
+<td><p>Show the form dialog.</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </section>
@@ -139,8 +155,8 @@
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_ui.html">compas_ui</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.app.html">app</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.objects.html">objects</a></li>
-<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
-<li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.scene.html">scene</a></li>
+<li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
+<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.scene.html">scene</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.session.html">session</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.singleton.html">singleton</a></li>
 </ul>
@@ -158,7 +174,7 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Scene.update</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">MeshForm</a></li>
 </ul>
 
       </div>
@@ -170,20 +186,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="compas_ui.scene.Scene.highlight_objects.html" title="Scene.highlight_objects" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ui.rhino.forms.SettingsForm.show.html" title="SettingsForm.show" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          Scene.highlight_objects
+          SettingsForm.show
         </div>
       </a>
       
 
       
-      <a href="../compas_ui.session.html" title="session" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_ui.rhino.forms.MeshForm.make_table.html" title="MeshForm.make_table" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          session
+          MeshForm.make_table
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>
