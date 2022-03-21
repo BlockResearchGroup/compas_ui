@@ -15,7 +15,7 @@ Classes
     BrowserForm
     ErrorForm
     SettingsForm
-    MeshForm
+    MeshDataForm
 
 Decorators
 ==========
@@ -35,13 +35,13 @@ from .browser import BrowserForm
 from .error import ErrorForm
 from .settings import SettingsForm
 from .error import error
-from .mesh import MeshForm
+from .meshdata import MeshDataForm
 
 
 __all__ = [
     "BrowserForm",
     "ErrorForm",
     "SettingsForm",
-    "MeshForm",
+    "MeshDataForm",
     "error",
 ]
