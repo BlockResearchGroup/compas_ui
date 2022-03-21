@@ -323,7 +323,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
         """
         return mesh_move_face(self.mesh, face)
 
-    def move_vertices_direction(self, vertices, direction=None):
+    def move_vertices_direction(self, vertices, direction):
         """Move selected vertices along specified direction.
 
         Parameters
@@ -345,6 +345,8 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             for a, b in connectors:
                 a = a + vector
                 draw(a, b, color)
+
+        direction = direction.lower()
 
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
@@ -369,24 +371,29 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         start = gp.Point()
 
-        if direction in ('X', 'x'):
+        if direction == 'x':
             geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(1, 0, 0))
-        elif direction in ('Y', 'y'):
+        elif direction == 'y':
             geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 1, 0))
-        elif direction in ('Z', 'z'):
+        elif direction == 'z':
             geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 0, 1))
-        elif direction in ('XY', 'xy'):
+        elif direction == 'xy':
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 0, 1))
-        elif direction in ('YZ', 'yz'):
+        elif direction == 'yz':
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(1, 0, 0))
-        elif direction in ('ZX', 'zx'):
+        elif direction == 'zx':
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 1, 0))
 
         gp.SetCommandPrompt('Point to move to?')
         gp.SetBasePoint(start, False)
         gp.DrawLineFromPoint(start, True)
         gp.DynamicDraw += OnDynamicDraw
-        gp.Constrain(geometry)
+
+        if direction in ('x', 'y', 'z'):
+            gp.Constrain(geometry)
+        else:
+            gp.Constrain(geometry, False)
+
         gp.Get()
 
         if gp.CommandResult() != Rhino.Commands.Result.Success:
