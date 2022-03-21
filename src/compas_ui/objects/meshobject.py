@@ -63,7 +63,6 @@ class MeshObject(Object):
     def mesh(self):
         return self.item
 
-    # this probably should reset the anchor, location, scale, and rotation
     @mesh.setter
     def mesh(self, mesh):
         self.item = mesh

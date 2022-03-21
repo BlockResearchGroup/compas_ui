@@ -162,4 +162,4 @@ class Scene(Singleton):
         None
 
         """
-        highlight_objects(guids)
+        highlight_objects(self, guids)
