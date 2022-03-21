@@ -24,11 +24,16 @@ import os
 import pickle
 import tempfile
 
+from compas.utilities import flatten
+
 import compas_rhino
 
 from .singleton import Singleton
 from .session import Session
 from .scene import Scene
+
+from .rhino.forms import BrowserForm
+from .rhino.forms import error
 
 
 class App(Singleton):
@@ -59,6 +64,10 @@ class App(Singleton):
     @staticmethod
     def reset():
         App._instances = {}
+
+    @staticmethod
+    def error(*args, **kwargs):
+        return error(*args, **kwargs)
 
     def __init__(self, name=None, settings=None):
         if name is None:
@@ -100,6 +109,10 @@ class App(Singleton):
         self.scene.state = state["scene"]
         self.settings = state["settings"]
 
+    # ========================================================================
+    # Init
+    # ========================================================================
+
     def start_cloud(self):
         """Start the command server.
 
@@ -117,7 +130,6 @@ class App(Singleton):
         if cloud_settings is not None:
             try:
                 from compas_cloud import Proxy
-
                 self.proxy = Proxy(**cloud_settings)
             except ImportError:
                 raise ImportError("The compas_cloud package is not installed.")
@@ -127,6 +139,14 @@ class App(Singleton):
             pickle.dump([], f)
         self.session.reset()
         self.scene.clear()
+
+    def splash(self, url):
+        browser = BrowserForm(title=self.name, url=url)
+        browser.show()
+
+    # ========================================================================
+    # State
+    # ========================================================================
 
     def record(self):
         """Record the current state of the app.
@@ -317,6 +337,10 @@ class App(Singleton):
 
         self.scene.update()
 
+    # ========================================================================
+    # User data
+    # ========================================================================
+
     def update_settings(self):
         """Update the settings of the app.
 
@@ -326,15 +350,12 @@ class App(Singleton):
 
         """
         # TODO: move this to a pluggable/plugin
-
         from compas_ui.rhino.forms.settings import SettingsForm
 
         form = SettingsForm(self.settings)
-        form.show()
-
-    # ========================================================================
-    # User data
-    # ========================================================================
+        if form.show():
+            self.settings.update(form.settings)
+            self.scene.update()
 
     def get_real(self, message, minval=None, maxval=None, default=None):
         """Get a real number from the user.
@@ -408,3 +429,99 @@ class App(Singleton):
         value = compas_rhino.rs.GetString(message, defaultString=default, strings=options)
         if value:
             return str(value)
+
+    # ========================================================================
+    # Selections
+    # ========================================================================
+
+    def select_mesh_vertices(self, meshobj):
+        """Select vertices of a mesh object through the UI.
+
+        Parameters
+        ----------
+        meshobj : :class:`compas_ui.objects.MeshObject`
+
+        Returns
+        -------
+        list[int]
+
+        """
+        mesh = meshobj.mesh
+
+        options = ["All", "Boundary", "Corners", "ByContinuousEdges", "Manual"]
+        mode = self.get_string(message="Selection mode.", options=options)
+        if not mode:
+            return
+
+        vertex_guid = {vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())}
+
+        if mode == 'All':
+            vertices = list(mesh.vertices())
+
+        elif mode == 'Boundary':
+            vertices = list(set(flatten(mesh.vertices_on_boundaries())))
+            guids = [vertex_guid[vertex] for vertex in vertices]
+            self.scene.highlight_objects(guids)
+
+        elif mode == "Corners":
+            vertices = mesh.corner_vertices()
+            guids = [vertex_guid[vertex] for vertex in vertices]
+            self.scene.highlight_objects(guids)
+
+        elif mode == "ByContinuousEdges":
+            temp = meshobj.select_edges()
+            vertices = list(set(flatten([mesh.vertices_on_edge_loop(key) for key in temp])))
+            guids = [vertex_guid[vertex] for vertex in vertices]
+            self.scene.highlight_objects(guids)
+
+        elif mode == 'Manual':
+            vertices = meshobj.select_vertices()
+
+        return vertices
+
+    def select_mesh_edges(self, meshobj):
+        """Select edges of a mesh object through the UI.
+
+        Parameters
+        ----------
+        meshobj : :class:`compas_ui.objects.MeshObject`
+
+        Returns
+        -------
+        list[tuple[int, int]]
+
+        """
+        mesh = meshobj.mesh
+
+        options = ["All", "AllBoundaryEdges", "Continuous", "Parallel", "Manual"]
+        mode = self.get_string(message="Selection mode.", options=options)
+        if not mode:
+            return
+
+        edge_guid = {edge: guid for guid, edge in iter(meshobj.guid_edge.items())}
+        edge_guid.update({(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())})
+
+        if mode == 'All':
+            edges = list(mesh.edges())
+
+        elif mode == 'AllBoundaryEdges':
+            edges = list(set(flatten(mesh.edges_on_boundaries())))
+            guids = [edge_guid[edge] for edge in edges]
+            self.scene.highlight_objects(guids)
+
+        elif mode == 'Continuous':
+            temp = meshobj.select_edges()
+            edges = list(set(flatten([mesh.edge_loop(edge) for edge in temp])))
+            guids = [edge_guid[edge] for edge in edges]
+            self.scene.highlight_objects(guids)
+
+        elif mode == 'Parallel':
+            temp = meshobj.select_edges()
+            edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
+            guids = [edge_guid[edge] for edge in edges]
+            self.scene.highlight_objects(guids)
+
+        elif mode == 'Manual':
+            edges = meshobj.select_edges()
+
+        return edges
