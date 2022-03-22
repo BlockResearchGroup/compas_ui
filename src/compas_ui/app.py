@@ -32,9 +32,6 @@ from .singleton import Singleton
 from .session import Session
 from .scene import Scene
 
-from .rhino.forms import BrowserForm
-from .rhino.forms import error
-
 
 class App(Singleton):
     """App singleton.
@@ -67,6 +64,7 @@ class App(Singleton):
 
     @staticmethod
     def error(*args, **kwargs):
+        from .rhino.forms import error
         return error(*args, **kwargs)
 
     def __init__(self, name=None, settings=None):
@@ -141,6 +139,7 @@ class App(Singleton):
         self.scene.clear()
 
     def splash(self, url):
+        from .rhino.forms import BrowserForm
         browser = BrowserForm(title=self.name, url=url)
         browser.show()
 
