@@ -79,7 +79,7 @@ class App(Singleton):
         self._depth = 20
         self.name = name
         self.dirname = None
-        self.basename = "{}.cui".format(self.name)
+        self.basename = "{}.ui".format(self.name)
         self.session = Session(name=self.name)
         self.settings = settings or {}
         self.scene = Scene(settings=self.settings.get("scene"))
@@ -340,6 +340,35 @@ class App(Singleton):
     # ========================================================================
     # User data
     # ========================================================================
+
+    def pick_file(self, basename):
+        """Pick a file on the file system.
+
+        Parameters
+        ----------
+        basename : str
+            The basename of the file.
+
+        Returns
+        -------
+        path
+
+        """
+        import Eto.Forms
+        import Rhino.UI
+        import System
+
+        dialog = Eto.Forms.SaveFileDialog()
+        dialog.Directory = System.Uri(os.path.expanduser("~"))
+        dialog.FileName = basename
+
+        if (
+            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
+            != Eto.Forms.DialogResult.Ok
+        ):
+            return
+
+        return dialog.FileName
 
     def update_settings(self):
         """Update the settings of the app.
