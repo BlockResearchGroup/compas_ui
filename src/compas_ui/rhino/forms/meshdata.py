@@ -2,7 +2,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-# from ast import literal_eval
+from ast import literal_eval
 
 import Rhino
 import Rhino.UI
@@ -11,9 +11,29 @@ import Eto.Forms
 
 
 class MeshDataForm(Eto.Forms.Dialog[bool]):
+    """Form for working with mesh data.
 
-    def __init__(self, mesh, title="Mesh Attributes", width=800, height=800):
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+
+    """
+
+    def __init__(self,
+                 mesh,
+                 title="Mesh Data",
+                 width=800,
+                 height=800,
+                 excluded_vertex_attr=None,
+                 excluded_edge_attr=None,
+                 excluded_face_attr=None):
+
         self.mesh = mesh
+        self.excluded_vertex_attr = excluded_vertex_attr
+        self.excluded_edge_attr = excluded_edge_attr
+        self.excluded_face_attr = excluded_face_attr
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
@@ -21,27 +41,44 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
         self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
 
-        layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 12, 0, 12), Eto.Drawing.Size(0, 0), True, True
+        # Tabs
+        # ------------------
+        self.vertexpage = Page(
+            title='Vertices',
+            defaults=self.mesh.default_vertex_attributes,
+            keys=list(self.mesh.vertices()),
+            valuefunc=self.mesh.vertex_attribute,
+            excluded=self.excluded_vertex_attr
         )
-
+        self.edgepage = Page(
+            title='Edges',
+            defaults=self.mesh.default_edge_attributes,
+            keys=list(self.mesh.edges()),
+            valuefunc=self.mesh.edge_attribute,
+            excluded=self.excluded_edge_attr
+        )
+        self.facepage = Page(
+            title='Faces',
+            defaults=self.mesh.default_face_attributes,
+            keys=list(self.mesh.faces()),
+            valuefunc=self.mesh.face_attribute,
+            excluded=self.excluded_face_attr
+        )
         control = Eto.Forms.TabControl()
         control.TabPosition = Eto.Forms.DockPosition.Top
-        control.Pages.Add(self.make_tab('Vertices', self.mesh.default_vertex_attributes, self.mesh.vertex_attribute, list(self.mesh.vertices())))
-        control.Pages.Add(self.make_tab('Edges', self.mesh.default_edge_attributes, self.mesh.edge_attribute, list(self.mesh.edges())))
-        control.Pages.Add(self.make_tab('Faces', self.mesh.default_face_attributes, self.mesh.face_attribute, list(self.mesh.faces())))
+        control.Pages.Add(self.vertexpage.widget)
+        control.Pages.Add(self.edgepage.widget)
+        control.Pages.Add(self.facepage.widget)
+        # ------------------
+        # Tabs
 
-        self.TabControl = control
-
-        layout.AddRow(self.TabControl)
+        layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(Eto.Drawing.Padding(0, 12, 0, 12), Eto.Drawing.Size(0, 0), True, True)
+        layout.AddRow(control)
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
-
         self.Content = layout
 
     @property
@@ -57,96 +94,157 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     def on_ok(self, sender, event):
-        """Callback for the OK event."""
+        """Callback for the OK event.
+        """
         try:
-            pass
+            self.vertexpage.process()
+            self.edgepage.process()
+            self.facepage.process()
         except Exception as e:
             print(e)
             self.Close(False)
         self.Close(True)
 
     def on_cancel(self, sender, event):
-        """Callback for the CANCEL event."""
+        """Callback for the CANCEL event.
+        """
         self.Close(False)
 
     def show(self):
-        """Show the form dialog."""
+        """Show the form dialog.
+        """
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
 
-    def make_tab(self, title, defaults, attrfunc, keys):
-        """Make a tab page for the tab control.
 
-        Parameters
-        ----------
-        title : str
-            The text in the tab control.
-        defaults : dict[str, Any]
-            The dict with default attribute values.
-        attrfunc : callable
-            The function for retrieving individual attribute values.
-        keys : list[int, tuple[int, int]]
-            The identifiers of the objects in the table.
+class Page(object):
+    """Wrapper for Eto tab pages.
 
-        Returns
-        -------
-        Eto.Forms.TabPage
+    Parameters
+    ----------
+    title : str
+        The title of the tab page.
+    defaults : dict[str, Any]
+        Default values of the data attributes.
+    keys : list[int | tuple[int, int]]
+        The identifiers of the mesh components.
+    valuefunc : callable
+        Function for retrieving the value of a named data attribute of a specific component.
 
-        """
-        public = sorted([name for name in defaults.keys() if not name.startswith('_')])
-        private = sorted([name for name in defaults.keys() if name.startswith('_')])
+    Attributes
+    ----------
+    names : list[str]
+        The names of the attributes, in alphabetical order.
+    public : list[str]
+        The names of the editable attributes.
+    private : list[str]
+        The names of the read-only attributes.
+    cols : list[dict]
+        A list of dicts with each dict representing the properties of a data column.
+    rows : list[list[str]]
+        The data per mesh components corresponding to the columns.
 
-        cols = [('ID', False, False, None)]
+    """
 
-        for name in public:
-            default = defaults[name]
+    def __init__(self, title, defaults, keys, valuefunc, excluded=None):
+        self.defaults = defaults
+        self.keys = keys
+        self.valuefunc = valuefunc
+        self.excluded = excluded or []
+        self.table = Table(self.cols, self.rows)
+        self.widget = Eto.Forms.TabPage()
+        self.widget.Text = title
+        if self.names:
+            # replace this by a dynamic layout
+            # with the first row an overview of the default attribute values
+            # and second row the data table
+            self.widget.Content = self.table.widget
+
+    @property
+    def names(self):
+        return sorted([name for name in self.defaults.keys() if name not in self.excluded])
+
+    @property
+    def public(self):
+        return sorted([name for name in self.names if not name.startswith('_')])
+
+    @property
+    def private(self):
+        return sorted([name for name in self.names if name.startswith('_')])
+
+    @property
+    def cols(self):
+        cols = [{'name': 'ID', 'is_editable': False, 'is_checkbox': False, 'precision': None}]
+
+        for name in self.public:
+            default = self.defaults[name]
+            col = {'name': name, 'is_editable': True, 'is_checkbox': False, 'precision': None}
             if isinstance(default, bool):
-                cols.append((name, True, True, None))
+                col['is_checkbox'] = True
             elif isinstance(default, float):
-                cols.append((name, True, False, '3f'))
-            else:
-                cols.append((name, True, False, None))
+                col['precision'] = '3f'
+            cols.append(col)
 
-        for name in private:
-            default = defaults[name]
+        for name in self.private:
+            default = self.defaults[name]
+            col = {'name': name, 'is_editable': False, 'is_checkbox': False, 'precision': None}
             if isinstance(default, bool):
-                cols.append((name, False, True, None))
+                col['is_checkbox'] = True
             elif isinstance(default, float):
-                cols.append((name, False, False, '3f'))
-            else:
-                cols.append((name, False, False, None))
+                col['precision'] = '3f'
+            cols.append(col)
 
+        return cols
+
+    @property
+    def rows(self):
         rows = []
-        for key in keys:
+        for key in self.keys:
             row = [str(key)]
-            for col in cols[1:]:
-                name = col[0]
-                precision = col[-1]
-                value = attrfunc(key, name)
+            for col in self.cols[1:]:
+                name = col['name']
+                checkbox = col['is_checkbox']
+                precision = col['precision']
+                value = self.valuefunc(key, name)
                 if precision:
                     value = '{0:.{1}}'.format(value, precision)
-                row.append(value)
+                elif not checkbox:
+                    value = str(value)
+                row.append(str(value))
             rows.append(row)
+        return rows
 
-        tab = Eto.Forms.TabPage()
-        tab.Text = title
-        tab.Content = self.make_table(cols, rows)
-        return tab
+    def process(self):
+        """Process the data of the page."""
+        for row in self.table.data:
+            key = literal_eval(row[0])
+            for index, col in enumerate(self.table.cols):
+                name = col['name']
+                editable = col['is_editable']
+                if not editable:
+                    continue
+                value = row[index]
+                if isinstance(value, str):
+                    try:
+                        value = literal_eval(value)
+                    except Exception as e:
+                        print(key, name, value, e)
+                    else:
+                        self.valuefunc(key, name, value)
+                else:
+                    self.valuefunc(key, name, value)
 
-    def make_table(self, cols, rows):
-        """Make a grid view of the data in the tab.
 
-        Parameters
-        ----------
-        cols : list[tuple[str, bool, bool, str | None]]
-            Information about the table columns.
-        rows : list
-            The data contained in the rows.
+class Table(object):
+    """Wrapper for Eto grid view.
 
-        Returns
-        -------
-        Eto.Forms.GridView
+    Parameters
+    ----------
+    cols
+    rows
 
-        """
+    """
+
+    def __init__(self, cols, rows):
         def on_cell_formatting(sender, e):
             try:
                 if not e.Column.Editable:
@@ -154,21 +252,28 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
             except Exception as e:
                 print(e)
 
-        table = Eto.Forms.GridView()
-        table.ShowHeader = True
-        table.DataStore = rows
+        self.widget = Eto.Forms.GridView()
+        self.widget.ShowHeader = True
+        self.widget.DataStore = rows
 
-        for i, (name, editable, checkbox, _) in enumerate(cols):
-            col = Eto.Forms.GridColumn()
-            col.HeaderText = name
-            col.Editable = editable
-            if checkbox:
-                col.DataCell = Eto.Forms.CheckBoxCell(i)
+        for i, col in enumerate(cols):
+            column = Eto.Forms.GridColumn()
+            column.HeaderText = col['name']
+            column.Editable = col['is_editable']
+            if col['is_checkbox']:
+                cell = Eto.Forms.CheckBoxCell(i)
+                column.DataCell = cell
             else:
-                col.DataCell = Eto.Forms.TextBoxCell(i)
-                col.DataCell.VerticalAlignment = Eto.Forms.VerticalAlignment.Center
-            table.Columns.Add(col)
+                cell = Eto.Forms.TextBoxCell(i)
+                cell.AutoSelectMode = Eto.Forms.AutoSelectMode.OnFocus
+                cell.VerticalAlignment = Eto.Forms.VerticalAlignment.Center
+                cell.TextAlignment = Eto.Forms.TextAlignment.Right
+                column.DataCell = cell
 
-        table.CellFormatting += on_cell_formatting
+            self.widget.Columns.Add(column)
 
-        return table
+        self.widget.CellFormatting += on_cell_formatting
+
+        self.cols = cols
+        self.rows = rows
+        self.data = self.widget.DataStore
