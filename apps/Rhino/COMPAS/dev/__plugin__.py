@@ -11,6 +11,21 @@ env = "compas-dev"
 packages = []
 
 # default plugin settings
-settings = {'a': 1, 'b': 2}
+settings = {
+    "text": "text",
+    "int": 1,
+    "float": 1.0,
+    "bool": True,
+    "color": (1.0, 0, 0),
+    "dict": {
+            "subtext": "text",
+            "subint": 1,
+            "subfloat": 1.0,
+            "subbool": True,
+            "subdict": {
+                "subsubtext": "text",
+            }
+    }
+}
 
 # proxy info
