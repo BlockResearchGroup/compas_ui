@@ -3,7 +3,7 @@
 
 <head>
   
-  <title>compas_ui - App</title>
+  <title>compas_ui - App.pick_file_open</title>
   
 
   <meta charset="utf-8" />
@@ -20,11 +20,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="App.clear" href="compas_ui.app.App.clear.html" />
+  <link rel="next" title="App.pick_file_save" href="compas_ui.app.App.pick_file_save.html" />
   
 
   
-  <link rel="prev" title="app" href="../compas_ui.app.html" />
+  <link rel="prev" title="App.load" href="compas_ui.app.App.load.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -88,103 +88,26 @@
             
             <li class="breadcrumb-item"><a href="../compas_ui.app.html">app</a></li>
             
-            <!-- <li class="breadcrumb-item active" aria-current="page">App</li> -->
+            <li class="breadcrumb-item"><a href="compas_ui.app.App.html">App</a></li>
+            
+            <!-- <li class="breadcrumb-item active" aria-current="page">App.pick_file_open</li> -->
           </ol>
         </nav>
         
 
         
         
-        <section class="detail" id="app">
-<h1>App</h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="compas_ui.app.App">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.app.</span></span><span class="sig-name descname"><span class="pre">App</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/app.py#L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="compas_ui.singleton.Singleton.html#compas_ui.singleton.Singleton" title="compas_ui.singleton.singleton_py3.Singleton"><code class="xref py py-class docutils literal notranslate"><span class="pre">Singleton</span></code></a></p>
-<p>App singleton.</p>
+        <section class="detail" id="app-pick-file-open">
+<h1>App.pick_file_open</h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ui.app.App.pick_file_open">
+<span class="sig-prename descclassname"><span class="pre">App.</span></span><span class="sig-name descname"><span class="pre">pick_file_open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/app.py#L374"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Pick a file on the file system.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the app.</p></li>
-<li><p><strong>settings</strong> (<em>settings for scene and proxy object, optional</em>) – The compas rpc or compas_cloud Proxy object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the app.</p></li>
-<li><p><strong>scene</strong> (<a class="reference internal" href="compas_ui.scene.Scene.html#compas_ui.scene.Scene" title="compas_ui.scene.Scene"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ui.scene.Scene</span></code></a>) – The compas_ui scene object.</p></li>
-<li><p><strong>proxy</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas_cloud.Proxy</span></code>) – The compas_cloud Proxy object to communicate with a compas_cloud server.</p></li>
-<li><p><strong>session</strong> (<a class="reference internal" href="compas_ui.session.Session.html#compas_ui.session.Session" title="compas_ui.session.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ui.session.Session</span></code></a>) – The compas_ui session object.</p></li>
-<li><p><strong>settings</strong> (<em>dict[str, Any]</em>) – A configuration dict for the app.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>path</em></p>
 </dd>
 </dl>
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.clear.html#compas_ui.app.App.clear" title="compas_ui.app.App.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.error.html#compas_ui.app.App.error" title="compas_ui.app.App.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.get_integer.html#compas_ui.app.App.get_integer" title="compas_ui.app.App.get_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_integer</span></code></a></p></td>
-<td><p>Get an integer number from the user.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.get_real.html#compas_ui.app.App.get_real" title="compas_ui.app.App.get_real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_real</span></code></a></p></td>
-<td><p>Get a real number from the user.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.get_string.html#compas_ui.app.App.get_string" title="compas_ui.app.App.get_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_string</span></code></a></p></td>
-<td><p>Get a string from the user.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.load.html#compas_ui.app.App.load" title="compas_ui.app.App.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a></p></td>
-<td><p>Restore a saved state of the app from a shelve with a specific name.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.pick_file_open.html#compas_ui.app.App.pick_file_open" title="compas_ui.app.App.pick_file_open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_file_open</span></code></a></p></td>
-<td><p>Pick a file on the file system.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.pick_file_save.html#compas_ui.app.App.pick_file_save" title="compas_ui.app.App.pick_file_save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_file_save</span></code></a></p></td>
-<td><p>Pick a file on the file system.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.record.html#compas_ui.app.App.record" title="compas_ui.app.App.record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">record</span></code></a></p></td>
-<td><p>Record the current state of the app.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.redo.html#compas_ui.app.App.redo" title="compas_ui.app.App.redo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redo</span></code></a></p></td>
-<td><p>Redo changes in the app by forwarding to a recorded state.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.reset.html#compas_ui.app.App.reset" title="compas_ui.app.App.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.save.html#compas_ui.app.App.save" title="compas_ui.app.App.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a></p></td>
-<td><p>Save the current state of the app to a shelve.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.saveas.html#compas_ui.app.App.saveas" title="compas_ui.app.App.saveas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saveas</span></code></a></p></td>
-<td><p>Save the current state of the app to a shelve with a specific name.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.select_mesh_edges.html#compas_ui.app.App.select_mesh_edges" title="compas_ui.app.App.select_mesh_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_mesh_edges</span></code></a></p></td>
-<td><p>Select edges of a mesh object through the UI.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.select_mesh_vertices.html#compas_ui.app.App.select_mesh_vertices" title="compas_ui.app.App.select_mesh_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_mesh_vertices</span></code></a></p></td>
-<td><p>Select vertices of a mesh object through the UI.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.splash.html#compas_ui.app.App.splash" title="compas_ui.app.App.splash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splash</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.start_cloud.html#compas_ui.app.App.start_cloud" title="compas_ui.app.App.start_cloud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_cloud</span></code></a></p></td>
-<td><p>Start the command server.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.app.App.undo.html#compas_ui.app.App.undo" title="compas_ui.app.App.undo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">undo</span></code></a></p></td>
-<td><p>Undo changes in the app by rewinding to a recorded state.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.app.App.update_settings.html#compas_ui.app.App.update_settings" title="compas_ui.app.App.update_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_settings</span></code></a></p></td>
-<td><p>Update the settings of the app.</p></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </section>
@@ -235,7 +158,7 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">App</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">App.pick_file_open</a></li>
 </ul>
 
       </div>
@@ -247,20 +170,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="../compas_ui.app.html" title="app" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ui.app.App.load.html" title="App.load" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          app
+          App.load
         </div>
       </a>
       
 
       
-      <a href="compas_ui.app.App.clear.html" title="App.clear" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_ui.app.App.pick_file_save.html" title="App.pick_file_save" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          App.clear
+          App.pick_file_save
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>
