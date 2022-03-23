@@ -340,7 +340,7 @@ class App(Singleton):
     # User data
     # ========================================================================
 
-    def pick_file(self, basename):
+    def pick_file_save(self, basename):
         """Pick a file on the file system.
 
         Parameters
@@ -357,9 +357,37 @@ class App(Singleton):
         import Rhino.UI
         import System
 
+        dirname = self.dirname or os.path.expanduser("~")
+
         dialog = Eto.Forms.SaveFileDialog()
-        dialog.Directory = System.Uri(os.path.expanduser("~"))
+        dialog.Directory = System.Uri(dirname)
         dialog.FileName = basename
+
+        if (
+            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
+            != Eto.Forms.DialogResult.Ok
+        ):
+            return
+
+        return dialog.FileName
+
+    def pick_file_open(self):
+        """Pick a file on the file system.
+
+        Returns
+        -------
+        path
+
+        """
+        import Eto.Forms
+        import Rhino.UI
+        import System
+
+        dirname = self.dirname or os.path.expanduser("~")
+
+        dialog = Eto.Forms.OpenFileDialog()
+        dialog.Directory = System.Uri(dirname)
+        dialog.MultiSelect = False
 
         if (
             dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
@@ -378,6 +406,7 @@ class App(Singleton):
 
         """
         # TODO: move this to a pluggable/plugin
+
         from compas_ui.rhino.forms.settings import SettingsForm
 
         form = SettingsForm(self.settings)

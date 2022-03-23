@@ -16,6 +16,7 @@ class BrowserForm(Eto.Forms.Dialog[bool]):
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = False
+        self.ClientSize = Eto.Drawing.Size(width, height)
 
         webview = Eto.Forms.WebView()
         webview.Size = Eto.Drawing.Size(width, height)

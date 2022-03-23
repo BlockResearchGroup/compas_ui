@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added `App.pick_file_save` and `App.pick_file_open`.
+
 ### Changed
 
 * Use `TreeView` and `CustomCell` for `SettingsForm`.
+* Changed clien size of browser form.
 
 ### Removed
 
