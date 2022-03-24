@@ -1,0 +1,48 @@
+{
+    "ui": {
+        "commands": [
+            {
+                "name": "COMPAS_init",
+                "menu_text": "Init",
+                "tooltip": "Initialise COMPAS UI"
+            },
+            {
+                "name": "COMPAS_save",
+                "menu_text": "save",
+                "tooltip": ""
+            },
+            {
+                "name": "COMPAS_load",
+                "menu_text": "load",
+                "tooltip": ""
+            },
+            {
+                "name": "COMPAS_settings",
+                "menu_text": "settings",
+                "tooltip": "COMPAS UI settings"
+            }
+        ],
+        "menus": [
+            {
+                "name": "COMPAS_UI",
+                "items": [
+                    {
+                        "command": "COMPAS_init"
+                    },
+                    {
+                        "name": "File",
+                        "items":
+                        [
+                            {"command": "COMPAS_save"},
+                            {"command": "COMPAS_load"}
+                        ]
+                    },
+                    {"type": "separator"},
+                    {
+                        "command": "COMPAS_settings"
+                    }
+                ]
+            }
+        ]
+    }
+}

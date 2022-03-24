@@ -36,6 +36,7 @@ from .error import ErrorForm
 from .settings import SettingsForm
 from .error import error
 from .meshdata import MeshDataForm
+from .menu import MenuForm
 
 
 __all__ = [
@@ -43,5 +44,6 @@ __all__ = [
     "ErrorForm",
     "SettingsForm",
     "MeshDataForm",
+    "MenuForm"
     "error",
 ]
