@@ -189,4 +189,4 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     def show(self):
         """Show the form dialog."""
-        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+        return self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)

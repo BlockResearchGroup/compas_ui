@@ -23,7 +23,7 @@ def _update_named_values(names, values, message='', title='Update named values')
     except Exception:
         values = ShowPropertyListBox(message, title, names, values)
     else:
-        if dialog.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow):
+        if dialog.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow):
             values = dialog.values
         else:
             values = None
@@ -168,7 +168,7 @@ def network_move_node(network, node, constraint=None, allow_off=False):
             sp = e.CurrentPoint
             e.Display.DrawDottedLine(sp, ep, color)
 
-    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+    color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
     nbrs = [network.node_coordinates(nbr) for nbr in network.node_neighbors(node)]
     nbrs = [Point3d(*xyz) for xyz in nbrs]
 
@@ -350,7 +350,7 @@ def mesh_update_edge_attributes(mesh, edges, names=None):
 
 # def mesh_move(mesh):
 #     """"""
-#     color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+#     color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
 
 #     vertex_xyz0 = {key: mesh.vertex_coordinates(key) for key in mesh.mesh.vertices()}
 #     vertex_xyz = {key: mesh.vertex_coordinates(key) for key in mesh.mesh.vertices()}
@@ -403,7 +403,7 @@ def mesh_move_vertex(mesh, vertex, constraint=None, allow_off=True):
         Allow the vertex to move off the constraint.
 
     """
-    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+    color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
     nbrs = [mesh.vertex_coordinates(nbr) for nbr in mesh.vertex_neighbors(vertex)]
     nbrs = [Point3d(*xyz) for xyz in nbrs]
 
@@ -443,7 +443,7 @@ def mesh_move_vertices(mesh, vertices):
         Allow the vertex to move off the constraint.
 
     """
-    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+    color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
     lines = []
     connectors = []
 
@@ -515,7 +515,7 @@ def mesh_move_face(mesh, face, constraint=None, allow_off=True):
             sp = e.CurrentPoint
             e.Display.DrawDottedLine(sp, ep, color)
 
-    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+    color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
     nbrs = [mesh.face_coordinates(nbr) for nbr in mesh.face_neighbors(face)]
     nbrs = [Point3d(*xyz) for xyz in nbrs]
 

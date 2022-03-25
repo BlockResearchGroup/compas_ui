@@ -42,7 +42,7 @@ class MeshObject(Object):
         "color.edges": Color.from_hex("#0092d2"),
         "color.faces": Color.from_hex("#0092d2").lightened(50),
         "show.mesh": True,
-        "show.vertices": True,
+        "show.vertices": False,
         "show.edges": False,
         "show.faces": False,
         "show.vertexlabels": False,

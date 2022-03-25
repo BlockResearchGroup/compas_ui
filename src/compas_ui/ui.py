@@ -1,9 +1,9 @@
 """
 ********************************************************************************
-app
+ui
 ********************************************************************************
 
-.. currentmodule:: compas_ui.app
+.. currentmodule:: compas_ui.ui
 
 
 Classes
@@ -13,7 +13,7 @@ Classes
     :toctree: generated/
     :nosignatures:
 
-    App
+    UI
 
 """
 from __future__ import absolute_import
@@ -24,17 +24,18 @@ import os
 import pickle
 import tempfile
 
-from compas.utilities import flatten
-
 import compas_rhino
+
+from compas_cloud import Proxy
 
 from .singleton import Singleton
 from .session import Session
 from .scene import Scene
+from .controller import Controller
 
 
-class App(Singleton):
-    """App singleton.
+class UI(Singleton):
+    """UI singleton.
 
     Parameters
     ----------
@@ -60,18 +61,20 @@ class App(Singleton):
 
     @staticmethod
     def reset():
-        App._instances = {}
+        UI._instances = {}
 
     @staticmethod
     def error(*args, **kwargs):
         from .rhino.forms import error
         return error(*args, **kwargs)
 
-    def __init__(self, name=None, settings=None):
+    def __init__(self, name=None, settings=None, controller_class=None):
         if name is None:
             raise RuntimeError(
-                'Initialized the app with a name first, for example: app = App(name="my_app")'
+                'Initialized the UI with a name first, for example: ui = UI(name="MyUI")'
             )
+
+        controller_class = controller_class or Controller
 
         self._current = -1
         self._depth = 20
@@ -81,12 +84,10 @@ class App(Singleton):
         self.session = Session(name=self.name)
         self.settings = settings or {}
         self.scene = Scene(settings=self.settings.get("scene"))
+        self.controller = controller_class(self)
         self.proxy = None
-        self.start_cloud()
-
         with open(self.dbname, 'wb') as f:
             pickle.dump([], f)
-
         self.record()
 
     @property
@@ -111,7 +112,35 @@ class App(Singleton):
     # Init
     # ========================================================================
 
-    def start_cloud(self):
+    def restart(self):
+        with open(self.dbname, 'wb') as f:
+            pickle.dump([], f)
+        self.session.reset()
+        self.scene.clear()
+
+    # ========================================================================
+    # Info
+    # ========================================================================
+
+    def splash(self, url):
+        from .rhino.forms import BrowserForm
+        browser = BrowserForm(title=self.name, url=url)
+        browser.show()
+
+    def github(self):
+        print("Go to github.")
+
+    def docs(self):
+        print("Go to the docs.")
+
+    def examples(self):
+        print("Go to the examples.")
+
+    # ========================================================================
+    # Cloud
+    # ========================================================================
+
+    def cloud_start(self):
         """Start the command server.
 
         Returns
@@ -124,31 +153,47 @@ class App(Singleton):
             If `compas_cloud` is not installed.
 
         """
-        cloud_settings = self.settings.get("cloud")
-        if cloud_settings is not None:
-            try:
-                from compas_cloud import Proxy
-                self.proxy = Proxy(**cloud_settings)
-            except ImportError:
-                raise ImportError("The compas_cloud package is not installed.")
+        settings = self.settings.get("cloud") or {}
+        self.proxy = Proxy(**settings)
 
-    def clear(self):
-        with open(self.dbname, 'wb') as f:
-            pickle.dump([], f)
-        self.session.reset()
+    def cloud_restart(self):
+        self.proxy.restart()
+
+    def cloud_shutdown(self):
+        self.proxy.shutdown()
+
+    def speckle_sync(self):
+        pass
+
+    # ========================================================================
+    # Scene
+    # ========================================================================
+
+    def scene_clear(self):
         self.scene.clear()
 
-    def splash(self, url):
-        from .rhino.forms import BrowserForm
-        browser = BrowserForm(title=self.name, url=url)
-        browser.show()
+    def scene_update(self):
+        self.scene.update()
+
+    def scene_objects(self):
+        print("Show all objects in the scene.")
+
+    # ========================================================================
+    # Conda
+    # ========================================================================
+
+    def conda_envs(self):
+        pass
+
+    def conda_activate(self):
+        pass
 
     # ========================================================================
     # State
     # ========================================================================
 
     def record(self):
-        """Record the current state of the app.
+        """Record the current state of the UI.
 
         Returns
         -------
@@ -172,7 +217,7 @@ class App(Singleton):
             pickle.dump(history, f)
 
     def undo(self):
-        """Undo changes in the app by rewinding to a recorded state.
+        """Undo changes in the UI by rewinding to a recorded state.
 
         Returns
         -------
@@ -337,6 +382,27 @@ class App(Singleton):
         self.scene.update()
 
     # ========================================================================
+    # Settings
+    # ========================================================================
+
+    def update_settings(self):
+        """Update the settings of the app.
+
+        Returns
+        -------
+        None
+
+        """
+        # TODO: move this to a pluggable/plugin
+
+        from compas_ui.rhino.forms.settings import SettingsForm
+
+        form = SettingsForm(self.settings)
+        if form.show():
+            self.settings.update(form.settings)
+            self.scene.update()
+
+    # ========================================================================
     # User data
     # ========================================================================
 
@@ -396,23 +462,6 @@ class App(Singleton):
             return
 
         return dialog.FileName
-
-    def update_settings(self):
-        """Update the settings of the app.
-
-        Returns
-        -------
-        None
-
-        """
-        # TODO: move this to a pluggable/plugin
-
-        from compas_ui.rhino.forms.settings import SettingsForm
-
-        form = SettingsForm(self.settings)
-        if form.show():
-            self.settings.update(form.settings)
-            self.scene.update()
 
     def get_real(self, message, minval=None, maxval=None, default=None):
         """Get a real number from the user.
@@ -486,99 +535,3 @@ class App(Singleton):
         value = compas_rhino.rs.GetString(message, defaultString=default, strings=options)
         if value:
             return str(value)
-
-    # ========================================================================
-    # Selections
-    # ========================================================================
-
-    def select_mesh_vertices(self, meshobj):
-        """Select vertices of a mesh object through the UI.
-
-        Parameters
-        ----------
-        meshobj : :class:`compas_ui.objects.MeshObject`
-
-        Returns
-        -------
-        list[int]
-
-        """
-        mesh = meshobj.mesh
-
-        options = ["All", "Boundary", "Corners", "ByContinuousEdges", "Manual"]
-        mode = self.get_string(message="Selection mode.", options=options)
-        if not mode:
-            return
-
-        vertex_guid = {vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())}
-
-        if mode == 'All':
-            vertices = list(mesh.vertices())
-
-        elif mode == 'Boundary':
-            vertices = list(set(flatten(mesh.vertices_on_boundaries())))
-            guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
-
-        elif mode == "Corners":
-            vertices = mesh.corner_vertices()
-            guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
-
-        elif mode == "ByContinuousEdges":
-            temp = meshobj.select_edges()
-            vertices = list(set(flatten([mesh.vertices_on_edge_loop(key) for key in temp])))
-            guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
-
-        elif mode == 'Manual':
-            vertices = meshobj.select_vertices()
-
-        return vertices
-
-    def select_mesh_edges(self, meshobj):
-        """Select edges of a mesh object through the UI.
-
-        Parameters
-        ----------
-        meshobj : :class:`compas_ui.objects.MeshObject`
-
-        Returns
-        -------
-        list[tuple[int, int]]
-
-        """
-        mesh = meshobj.mesh
-
-        options = ["All", "AllBoundaryEdges", "Continuous", "Parallel", "Manual"]
-        mode = self.get_string(message="Selection mode.", options=options)
-        if not mode:
-            return
-
-        edge_guid = {edge: guid for guid, edge in iter(meshobj.guid_edge.items())}
-        edge_guid.update({(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())})
-
-        if mode == 'All':
-            edges = list(mesh.edges())
-
-        elif mode == 'AllBoundaryEdges':
-            edges = list(set(flatten(mesh.edges_on_boundaries())))
-            guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
-
-        elif mode == 'Continuous':
-            temp = meshobj.select_edges()
-            edges = list(set(flatten([mesh.edge_loop(edge) for edge in temp])))
-            guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
-
-        elif mode == 'Parallel':
-            temp = meshobj.select_edges()
-            edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
-            guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
-
-        elif mode == 'Manual':
-            edges = meshobj.select_edges()
-
-        return edges

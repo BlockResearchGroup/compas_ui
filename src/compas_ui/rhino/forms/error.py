@@ -96,7 +96,7 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
 
         self.Content = dynamic
 
-        self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+        self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)
 
     @property
     def cancel(self):

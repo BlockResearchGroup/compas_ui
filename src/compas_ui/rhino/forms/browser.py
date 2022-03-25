@@ -36,4 +36,4 @@ class BrowserForm(Eto.Forms.Dialog[bool]):
             self.Close()
 
     def show(self):
-        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+        return self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)

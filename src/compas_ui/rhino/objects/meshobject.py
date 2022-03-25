@@ -348,7 +348,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         direction = direction.lower()
 
-        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+        color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
         lines = []
         connectors = []
 

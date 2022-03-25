@@ -115,6 +115,11 @@ class Scene(Singleton):
         self.objects.append(obj)
         return obj
 
+    def remove(self, obj):
+        obj.clear()
+        while obj in self.objects:
+            self.objects.remove(obj)
+
     def get(self, name):
         """Get all scene objects with a given name.
 
