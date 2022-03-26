@@ -23,6 +23,8 @@ from __future__ import print_function
 import os
 import pickle
 import tempfile
+from subprocess import Popen
+from subprocess import PIPE
 
 import compas_rhino
 
@@ -59,15 +61,6 @@ class UI(Singleton):
 
     """
 
-    @staticmethod
-    def reset():
-        UI._instances = {}
-
-    @staticmethod
-    def error(*args, **kwargs):
-        from .rhino.forms import error
-        return error(*args, **kwargs)
-
     def __init__(self, name=None, settings=None, controller_class=None):
         if name is None:
             raise RuntimeError(
@@ -86,7 +79,8 @@ class UI(Singleton):
         self.scene = Scene(settings=self.settings.get("scene"))
         self.controller = controller_class(self)
         self.proxy = None
-        with open(self.dbname, 'wb') as f:
+        self.condadir = None
+        with open(self.dbname, "wb") as f:
             pickle.dump([], f)
         self.record()
 
@@ -112,8 +106,12 @@ class UI(Singleton):
     # Init
     # ========================================================================
 
+    @staticmethod
+    def reset():
+        UI._instances = {}
+
     def restart(self):
-        with open(self.dbname, 'wb') as f:
+        with open(self.dbname, "wb") as f:
             pickle.dump([], f)
         self.session.reset()
         self.scene.clear()
@@ -122,8 +120,15 @@ class UI(Singleton):
     # Info
     # ========================================================================
 
+    @staticmethod
+    def error(*args, **kwargs):
+        from .rhino.forms import error
+
+        return error(*args, **kwargs)
+
     def splash(self, url):
         from .rhino.forms import BrowserForm
+
         browser = BrowserForm(title=self.name, url=url)
         browser.show()
 
@@ -176,14 +181,33 @@ class UI(Singleton):
         self.scene.update()
 
     def scene_objects(self):
-        print("Show all objects in the scene.")
+        for obj in self.scene.objects:
+            print(obj.name, obj.item, obj.settings)
 
     # ========================================================================
     # Conda
     # ========================================================================
 
     def conda_envs(self):
-        pass
+        if not self.condadir:
+            user = os.path.expanduser("~")
+            condadir = self.pick_file_open(user)
+            if not condadir:
+                return
+            self.condadir = condadir
+
+        conda = os.path.join(self.condadir, "condabin", "conda")
+        process = Popen(["{} info --envs".format(conda)], stdout=PIPE, shell=True)
+        out = process.stdout.read().decode()
+        lines = out.split("\n")
+        envs = []
+        for line in lines:
+            if line.startswith("#"):
+                continue
+            parts = lines.split()
+            envs.append((parts[0], parts[-1]))
+        for name, path in sorted(envs, key=lambda env: env[0]):
+            print(name, path)
 
     def conda_activate(self):
         pass
@@ -200,20 +224,20 @@ class UI(Singleton):
         None
 
         """
-        with open(self.dbname, 'rb') as f:
+        with open(self.dbname, "rb") as f:
             history = pickle.load(f)
 
             if self._current > -1:
                 if self._current < len(history) - 1:
-                    history = history[:self._current + 1]
+                    history = history[: self._current + 1]
 
             history.append(self.state)
             h = len(history)
             if h > self._depth:
-                history = history[h - self._depth:]
+                history = history[h - self._depth :]  # noqa : E203
             self._current = len(history) - 1
 
-        with open(self.dbname, 'wb') as f:
+        with open(self.dbname, "wb") as f:
             pickle.dump(history, f)
 
     def undo(self):
@@ -234,7 +258,7 @@ class UI(Singleton):
             print("Nothing more to undo!")
             return
 
-        with open(self.dbname, 'rb') as f:
+        with open(self.dbname, "rb") as f:
             history = pickle.load(f)
 
         self._current -= 1
@@ -256,7 +280,7 @@ class UI(Singleton):
             print("Nothing to redo!")
             return
 
-        with open(self.dbname, 'rb') as f:
+        with open(self.dbname, "rb") as f:
             history = pickle.load(f)
 
         if self._current == len(history) - 1:
@@ -276,24 +300,11 @@ class UI(Singleton):
         None
 
         """
-        # TODO: move this to a pluggable/plugin
-
         if not self.dirname:
-            import Eto.Forms
-            import Rhino.UI
-            import System
-
-            dialog = Eto.Forms.SaveFileDialog()
-            dialog.Directory = System.Uri(os.path.expanduser("~"))
-            dialog.FileName = self.basename
-
-            if (
-                dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-                != Eto.Forms.DialogResult.Ok
-            ):
+            path = self.pick_file_save(self.basename)
+            if not path:
                 return
 
-            path = dialog.FileName
             self.dirname = os.path.dirname(path)
             self.basename = os.path.basename(path)
 
@@ -316,23 +327,10 @@ class UI(Singleton):
         None
 
         """
-        # TODO: move this to a pluggable/plugin
-
-        import Eto.Forms
-        import Rhino.UI
-        import System
-
-        dialog = Eto.Forms.SaveFileDialog()
-        dialog.Directory = System.Uri(os.path.expanduser("~"))
-        dialog.FileName = self.basename
-
-        if (
-            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-            != Eto.Forms.DialogResult.Ok
-        ):
+        path = self.pick_file_save(self.basename)
+        if not path:
             return
 
-        path = dialog.FileName
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
 
@@ -352,27 +350,12 @@ class UI(Singleton):
         None
 
         """
-        # TODO: move this to a pluggable/plugin
-
-        import Eto.Forms
-        import Rhino.UI
-        import System
-
-        dirname = self.dirname or os.path.expanduser("~")
-
-        dialog = Eto.Forms.OpenFileDialog()
-        dialog.Directory = System.Uri(dirname)
-        dialog.MultiSelect = False
-
-        if (
-            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-            != Eto.Forms.DialogResult.Ok
-        ):
+        path = self.pick_file_open(self.dirname)
+        if not path:
             return
 
         self.scene.clear()
 
-        path = dialog.FileName
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
 
@@ -437,7 +420,7 @@ class UI(Singleton):
 
         return dialog.FileName
 
-    def pick_file_open(self):
+    def pick_file_open(self, dirname):
         """Pick a file on the file system.
 
         Returns
@@ -484,7 +467,9 @@ class UI(Singleton):
         """
         # TODO: move this to a pluggable/plugin
 
-        value = compas_rhino.rs.GetReal(message=message, number=default, minimum=minval, maximum=maxval)
+        value = compas_rhino.rs.GetReal(
+            message=message, number=default, minimum=minval, maximum=maxval
+        )
         if value:
             return float(value)
 
@@ -509,7 +494,9 @@ class UI(Singleton):
         """
         # TODO: move this to a pluggable/plugin
 
-        value = compas_rhino.rs.GetInteger(message=message, number=default, minimum=minval, maximum=maxval)
+        value = compas_rhino.rs.GetInteger(
+            message=message, number=default, minimum=minval, maximum=maxval
+        )
         if value:
             return int(value)
 
@@ -532,6 +519,8 @@ class UI(Singleton):
         """
         # TODO: move this to a pluggable/plugin
 
-        value = compas_rhino.rs.GetString(message, defaultString=default, strings=options)
+        value = compas_rhino.rs.GetString(
+            message, defaultString=default, strings=options
+        )
         if value:
             return str(value)

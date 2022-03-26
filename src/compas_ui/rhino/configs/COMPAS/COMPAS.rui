@@ -1,0 +1,520 @@
+<?xml version="1.0" ?>
+<RhinoUI major_ver="2" minor_ver="0" guid="aa29cd48-b0c2-43df-b40c-5f93023ce452" localize="False" default_language_id="1033">
+  <extend_rhino_menus>
+    <menu guid="558f65fc-41b1-4763-9cb4-2c773add110e">
+      <text>
+        <locale_1033>Extend Rhino Menus</locale_1033>
+      </text>
+    </menu>
+  </extend_rhino_menus>
+  <menus>
+    <menu guid="404b7aaf-adf7-47ae-90b7-faf68d2db7b7">
+      <text>
+        <locale_1033>COMPAS</locale_1033>
+      </text>
+      <menu_item guid="e6880de1-8e99-42a1-abee-58ec50b697af" item_type="normal">
+        <macro_id>c36eb63c-242b-4e51-955b-eaa700f9437d</macro_id>
+      </menu_item>
+      <menu_item guid="6b1dd905-ea8b-4c72-8763-23a50bd62d5b" item_type="separator"/>
+      <menu_item guid="6154faa7-77b0-44d5-9eb5-5465ae007049" item_type="normal">
+        <macro_id>2565060b-0953-46eb-bb94-54626e6e962d</macro_id>
+      </menu_item>
+      <menu_item guid="ca849b32-1c2d-4751-9172-a02ac40e39f9" item_type="normal">
+        <macro_id>a9561823-bd66-4f90-bbbc-b2f13a873d59</macro_id>
+      </menu_item>
+      <menu_item guid="e10cd695-4921-489d-a13b-6d6f43190ee8" item_type="normal">
+        <macro_id>f5079c73-302e-4cc1-bce1-5e8eec4a7ddb</macro_id>
+      </menu_item>
+      <menu_item guid="2197ed96-4c09-419a-a007-a0abdcc487d6" item_type="separator"/>
+      <menu guid="0905abc4-73f0-404f-b1c7-0f0150432bc9">
+        <text>
+          <locale_1033>Scene</locale_1033>
+        </text>
+        <menu_item guid="1d34a170-2f7d-4469-b38d-9692e2e97ac2" item_type="normal">
+          <macro_id>ecc69a9f-f5b2-4ce2-b4fd-a59abd6be72c</macro_id>
+        </menu_item>
+        <menu_item guid="1dbac343-cc80-4955-89cd-7b94611c2043" item_type="normal">
+          <macro_id>793327c2-22e2-4c41-a854-a25bbe7d8509</macro_id>
+        </menu_item>
+        <menu_item guid="f1e84a77-cf17-4b1a-b6ce-170de342d3d8" item_type="normal">
+          <macro_id>3e622695-94bd-42ff-9dfe-c398f6375a2b</macro_id>
+        </menu_item>
+      </menu>
+      <menu guid="3b48cdab-8edd-432c-9144-9429e9fbfdc4">
+        <text>
+          <locale_1033>Cloud</locale_1033>
+        </text>
+        <menu_item guid="93ffc5e1-42a8-431f-927b-77f3ac3ba3ca" item_type="normal">
+          <macro_id>374e8df9-716e-4da0-b0d7-772e5dbf43f7</macro_id>
+        </menu_item>
+        <menu_item guid="be248abf-c8a4-4542-8edf-25958dce1c56" item_type="normal">
+          <macro_id>1b73ed25-625e-400a-a426-c96e71163975</macro_id>
+        </menu_item>
+        <menu_item guid="2d4d8370-bd47-4309-98d7-c6e3738044fd" item_type="normal">
+          <macro_id>4d67e405-b933-43dd-b5b7-8dd08281999a</macro_id>
+        </menu_item>
+        <menu_item guid="e60b5f9f-257e-4c85-98f4-e6842e5c193d" item_type="separator"/>
+        <menu_item guid="a28f364a-2722-442c-9901-13d0310add5d" item_type="normal">
+          <macro_id>d3bd2dc7-abe2-425a-a471-833ff5fea0ac</macro_id>
+        </menu_item>
+      </menu>
+      <menu guid="8b43598b-55bc-4108-8562-39e01ea0c6d2">
+        <text>
+          <locale_1033>Conda</locale_1033>
+        </text>
+        <menu_item guid="bd59c352-1c87-45b9-b1fc-aed8b25481a1" item_type="normal">
+          <macro_id>8407cfe6-bc78-4d06-af17-7df19d784267</macro_id>
+        </menu_item>
+        <menu_item guid="fa91ebb9-f160-4919-8710-32d0c4251e75" item_type="normal">
+          <macro_id>6ca91404-c2be-4b7b-9db4-cd4282e7f275</macro_id>
+        </menu_item>
+      </menu>
+      <menu_item guid="6e749ba2-1448-454a-8cf9-4e0297906ec2" item_type="separator"/>
+      <menu guid="e56d3eb2-704f-4c7c-8808-5066b90ceeb5">
+        <text>
+          <locale_1033>Geometry</locale_1033>
+        </text>
+      </menu>
+      <menu guid="ed0d30b7-0163-46a6-83c9-db6e75fb774a">
+        <text>
+          <locale_1033>DataStructures</locale_1033>
+        </text>
+        <menu guid="272f9b03-b035-46e2-84af-db8866781c9d">
+          <text>
+            <locale_1033>Networks</locale_1033>
+          </text>
+        </menu>
+        <menu guid="acb3ca0c-d60f-4aee-972e-28c0f0a66cea">
+          <text>
+            <locale_1033>Meshes</locale_1033>
+          </text>
+          <menu_item guid="9f9e6043-9145-41ed-b4f5-a1ee31a36408" item_type="normal">
+            <macro_id>72709abc-0814-4d04-b560-bff8e25b7eea</macro_id>
+          </menu_item>
+          <menu_item guid="ef27c3e2-a037-4834-945c-90c5745022d2" item_type="normal">
+            <macro_id>ed32ee1e-cbbf-4ff5-b35c-e3e7617b78f3</macro_id>
+          </menu_item>
+          <menu_item guid="cfe6d09b-e4b4-43aa-98ab-547d97109626" item_type="normal">
+            <macro_id>1d275ec7-561e-42f6-b586-783d51b24853</macro_id>
+          </menu_item>
+          <menu_item guid="98379316-29ce-4080-9d30-5d2d3fdf6cb9" item_type="normal">
+            <macro_id>84f65c44-6d42-4bbd-ac21-edcb4caf9685</macro_id>
+          </menu_item>
+        </menu>
+        <menu guid="887b590d-f04d-419d-a315-fde70352ad4f">
+          <text>
+            <locale_1033>Volumetric Meshes</locale_1033>
+          </text>
+        </menu>
+        <menu guid="ab7603ac-c17e-46f9-a25a-4bf8618a361a">
+          <text>
+            <locale_1033>Assemblies</locale_1033>
+          </text>
+        </menu>
+      </menu>
+      <menu guid="ead11ce0-0ad4-4672-8889-411363b8b81e">
+        <text>
+          <locale_1033>Robots</locale_1033>
+        </text>
+      </menu>
+      <menu_item guid="c551dae6-d1dc-45f5-b4c0-e1c0f3f61212" item_type="separator"/>
+      <menu_item guid="df317c32-b42c-4b91-8a58-6697a2268c7e" item_type="normal">
+        <macro_id>05faea96-670b-4dd3-80e5-e4652da27507</macro_id>
+      </menu_item>
+      <menu_item guid="5ff74026-2a02-4626-858a-6a5b2ae6e93f" item_type="normal">
+        <macro_id>64c6cd85-ada6-4cb2-827b-799192e0ca38</macro_id>
+      </menu_item>
+      <menu_item guid="7531f683-0784-4797-91a5-ac368cd2be7a" item_type="normal">
+        <macro_id>8e96dfe5-741a-4c6a-b4f7-eec19112371c</macro_id>
+      </menu_item>
+    </menu>
+  </menus>
+  <tool_bar_groups/>
+  <tool_bars/>
+  <macros>
+    <macro_item guid="c36eb63c-242b-4e51-955b-eaa700f9437d">
+      <text>
+        <locale_1033>COMPAS_init</locale_1033>
+      </text>
+      <script>-_RunPythonScript ResetEngine (import compas_ui; from compas_ui.ui import UI; ui = UI(name='COMPAS'))</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_init</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Init</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="05faea96-670b-4dd3-80e5-e4652da27507">
+      <text>
+        <locale_1033>COMPAS_github</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.github() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_github</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Github</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="64c6cd85-ada6-4cb2-827b-799192e0ca38">
+      <text>
+        <locale_1033>COMPAS_docs</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.docs() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_docs</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Docs</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="8e96dfe5-741a-4c6a-b4f7-eec19112371c">
+      <text>
+        <locale_1033>COMPAS_examples</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.examples() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_examples</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Examples</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="2565060b-0953-46eb-bb94-54626e6e962d">
+      <text>
+        <locale_1033>COMPAS_save</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.save() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_save</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Save</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="a9561823-bd66-4f90-bbbc-b2f13a873d59">
+      <text>
+        <locale_1033>COMPAS_saveas</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.saveas() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_saveas</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>SaveAs</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="f5079c73-302e-4cc1-bce1-5e8eec4a7ddb">
+      <text>
+        <locale_1033>COMPAS_load</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.load() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_load</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Load</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="ecc69a9f-f5b2-4ce2-b4fd-a59abd6be72c">
+      <text>
+        <locale_1033>COMPAS_scene_clear</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.scene_clear() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_scene_clear</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Scene Clear</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="793327c2-22e2-4c41-a854-a25bbe7d8509">
+      <text>
+        <locale_1033>COMPAS_scene_update</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.scene_update() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_scene_update</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Scene Update</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="3e622695-94bd-42ff-9dfe-c398f6375a2b">
+      <text>
+        <locale_1033>COMPAS_scene_objects</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.scene_objects() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_scene_objects</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Scene Objects</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="374e8df9-716e-4da0-b0d7-772e5dbf43f7">
+      <text>
+        <locale_1033>COMPAS_cloud_start</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.cloud_start() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_cloud_start</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Cloud Start</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="1b73ed25-625e-400a-a426-c96e71163975">
+      <text>
+        <locale_1033>COMPAS_cloud_restart</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.cloud_restart() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_cloud_restart</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Cloud Restart</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="4d67e405-b933-43dd-b5b7-8dd08281999a">
+      <text>
+        <locale_1033>COMPAS_cloud_shutdown</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.cloud_shutdown() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_cloud_shutdown</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Cloud Shutdown</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="d3bd2dc7-abe2-425a-a471-833ff5fea0ac">
+      <text>
+        <locale_1033>COMPAS_speckle_sync</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.speckle_sync() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_speckle_sync</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Speckle Sync</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="8407cfe6-bc78-4d06-af17-7df19d784267">
+      <text>
+        <locale_1033>COMPAS_conda_envs</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.conda_envs() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_conda_envs</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Conda Envs</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="6ca91404-c2be-4b7b-9db4-cd4282e7f275">
+      <text>
+        <locale_1033>COMPAS_conda_activate</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.conda_activate() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_conda_activate</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Conda Activate</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="72709abc-0814-4d04-b560-bff8e25b7eea">
+      <text>
+        <locale_1033>COMPAS_mesh_create</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.controller.mesh_create() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_mesh_create</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Mesh Create</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="ed32ee1e-cbbf-4ff5-b35c-e3e7617b78f3">
+      <text>
+        <locale_1033>COMPAS_mesh_modify</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.controller.mesh_modify() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_mesh_modify</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Mesh Modify</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="1d275ec7-561e-42f6-b586-783d51b24853">
+      <text>
+        <locale_1033>COMPAS_mesh_delete</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.controller.mesh_delete() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_mesh_delete</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Mesh Delete</locale_1033>
+      </menu_text>
+    </macro_item>
+    <macro_item guid="84f65c44-6d42-4bbd-ac21-edcb4caf9685">
+      <text>
+        <locale_1033>COMPAS_mesh_export</locale_1033>
+      </text>
+      <script>-_RunPythonScript ( ui.controller.mesh_export() )</script>
+      <tooltip>
+        <locale_1033/>
+      </tooltip>
+      <help_text>
+        <locale_1033/>
+      </help_text>
+      <button_text>
+        <locale_1033>COMPAS_mesh_export</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Mesh export</locale_1033>
+      </menu_text>
+    </macro_item>
+  </macros>
+  <bitmaps>
+    <small_bitmap item_width="16" item_height="16">
+      <bitmap>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
+AAAOvAAADrwBlbxySQAAABNJREFUOE9jGAWjYBSMAjBgYAAABBAAAadEfGMAAAAASUVORK5CYIIA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bitmap>
+    </small_bitmap>
+    <normal_bitmap item_width="24" item_height="24">
+      <bitmap>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
+AAAOvAAADrwBlbxySQAAABNJREFUOE9jGAWjYBSMAjBgYAAABBAAAadEfGMAAAAASUVORK5CYIIA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bitmap>
+    </normal_bitmap>
+    <large_bitmap item_width="32" item_height="32">
+      <bitmap>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
+AAAOvAAADrwBlbxySQAAABNJREFUOE9jGAWjYBSMAjBgYAAABBAAAadEfGMAAAAASUVORK5CYIIA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bitmap>
+    </large_bitmap>
+  </bitmaps>
+  <scripts/>
+</RhinoUI>

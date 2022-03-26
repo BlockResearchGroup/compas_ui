@@ -11,7 +11,6 @@ from compas.colors import Color
 
 
 class CustomCell(Eto.Forms.CustomCell):
-
     def OnCreateCell(self, args):
         item = args.Item
         value = item.GetValue(1)
@@ -22,6 +21,7 @@ class CustomCell(Eto.Forms.CustomCell):
 
             def on_checked(sender, e):
                 item.SetValue(1, control.Checked)
+
             control.CheckedChanged += on_checked
 
         elif isinstance(value, int):
@@ -30,6 +30,7 @@ class CustomCell(Eto.Forms.CustomCell):
 
             def on_value_changed(sender, e):
                 item.SetValue(1, int(control.Value))
+
             control.ValueChanged += on_value_changed
 
         elif isinstance(value, float):
@@ -38,10 +39,11 @@ class CustomCell(Eto.Forms.CustomCell):
             precision = str(value)
             d = decimal.Decimal(precision).as_tuple()
             control.DecimalPlaces = -d.exponent
-            control.Increment = 10 ** d.exponent
+            control.Increment = 10**d.exponent
 
             def on_value_changed(sender, e):
                 item.SetValue(1, float(control.Value))
+
             control.ValueChanged += on_value_changed
 
         elif isinstance(value, str):
@@ -50,6 +52,7 @@ class CustomCell(Eto.Forms.CustomCell):
 
             def on_text_changed(sender, e):
                 item.SetValue(1, str(control.Text))
+
             control.TextChanged += on_text_changed
 
         elif isinstance(value, (Color, tuple, list)):
@@ -61,10 +64,10 @@ class CustomCell(Eto.Forms.CustomCell):
             def on_value_changed(sender, e):
                 color = Eto.Drawing.Color(control.Value)
                 item.SetValue(1, Color(color.R, color.G, color.B))
+
             control.ValueChanged += on_value_changed
 
         else:
-
             control = Eto.Forms.Label()
 
         control.Size = Eto.Drawing.Size(100, 25)
@@ -73,7 +76,6 @@ class CustomCell(Eto.Forms.CustomCell):
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-
     def __init__(self, settings, title="Settings", width=500, height=800):
         self._settings = None
         self._names = None
@@ -167,6 +169,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
     def on_ok(self, sender, event):
         """Callback for the OK event."""
         try:
+
             def set_value(items, setting):
                 for item in items:
                     key = item.GetValue(0)

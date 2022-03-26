@@ -208,7 +208,7 @@ class Rui(object):
     @classmethod
     def from_json(cls, configpath, ruipath):
         """Construct a RUI object from a JSON config file.
-        
+
         Parameters
         ----------
         configpath : str
@@ -219,7 +219,7 @@ class Rui(object):
         :class:`Rui`
 
         """
-        here = os.path.dirname(configpath)
+        # here = os.path.dirname(configpath)
 
         with open(configpath, "r") as f:
             config = json.load(f)
@@ -271,14 +271,44 @@ class Rui(object):
             button_text = macro.get("button_text", name)
             menu_text = macro.get("menu_text", name.replace("_", " "))
             icon_index = macro.get("icon")
-            self.add_macro(name, guid, script, tooltip, help_text, button_text, menu_text, icon_index)
+            self.add_macro(
+                name,
+                guid,
+                script,
+                tooltip,
+                help_text,
+                button_text,
+                menu_text,
+                icon_index,
+            )
 
-    def add_macro(self, name, guid, script, tooltip, help_text, button_text, menu_text, icon_index=None):
+    def add_macro(
+        self,
+        name,
+        guid,
+        script,
+        tooltip,
+        help_text,
+        button_text,
+        menu_text,
+        icon_index=None,
+    ):
         if icon_index is not None:
             icon_guid = self.icons[icon_index]
-            s_macro = TPL_MACRO_ICON.format(guid, name, script, tooltip, help_text, button_text, menu_text, icon_guid)
+            s_macro = TPL_MACRO_ICON.format(
+                guid,
+                name,
+                script,
+                tooltip,
+                help_text,
+                button_text,
+                menu_text,
+                icon_guid,
+            )
         else:
-            s_macro = TPL_MACRO.format(guid, name, script, tooltip, help_text, button_text, menu_text)
+            s_macro = TPL_MACRO.format(
+                guid, name, script, tooltip, help_text, button_text, menu_text
+            )
         e_macro = ET.fromstring(s_macro)
         self.root_macros.append(e_macro)
         self.macros[name] = e_macro
@@ -330,9 +360,7 @@ class Rui(object):
             self.add_toolbar(toolbar)
 
     def add_toolbar(self, toolbar):
-        options = {
-            "item_display_style": "control"
-        }
+        options = {"item_display_style": "control"}
         guid = uuid.uuid4()
         s_tb = TPL_TOOLBAR.format(guid, toolbar["name"], options)
         e_tb = ET.fromstring(s_tb)
@@ -398,8 +426,8 @@ class Rui(object):
 if __name__ == "__main__":
 
     HERE = os.path.dirname(__file__)
-    FILE_I = os.path.join(HERE, "..\\..\\..\\apps\\Rhino\\COMPAS\\dev\\config.json")
-    FILE_O = os.path.join(HERE, "COMPAS.rui")
+    FILE_I = os.path.join(HERE, "configs", "COMPAS", "config.json")
+    FILE_O = os.path.join(HERE, "configs", "COMPAS", "COMPAS.rui")
 
     rui = Rui.from_json(FILE_I, FILE_O)
     rui.write()

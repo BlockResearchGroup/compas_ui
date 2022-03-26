@@ -1,0 +1,245 @@
+{
+    "plugin": {
+        "id": "{6c18fcab-3ae5-4b03-b515-d33d8078b977}",
+        "version": "0.0.1.0",
+        "title": "COMPAS"
+    },
+    "ui": {
+        "icons": {
+            "bitmap": "",
+            "images": []
+        },
+        "commands": [
+            {
+                "name": "COMPAS_init",
+                "menu_text": "Init",
+                "script": "-_RunPythonScript ResetEngine (import compas_ui; from compas_ui.ui import UI; ui = UI(name='COMPAS'))"
+            },
+            {
+                "name": "COMPAS_github",
+                "menu_text": "Github",
+                "script": "-_RunPythonScript ( ui.github() )"
+            },
+            {
+                "name": "COMPAS_docs",
+                "menu_text": "Docs",
+                "script": "-_RunPythonScript ( ui.docs() )"
+            },
+            {
+                "name": "COMPAS_examples",
+                "menu_text": "Examples",
+                "script": "-_RunPythonScript ( ui.examples() )"
+            },
+            {
+                "name": "COMPAS_save",
+                "menu_text": "Save",
+                "script": "-_RunPythonScript ( ui.save() )"
+            },
+            {
+                "name": "COMPAS_saveas",
+                "menu_text": "SaveAs",
+                "script": "-_RunPythonScript ( ui.saveas() )"
+            },
+            {
+                "name": "COMPAS_load",
+                "menu_text": "Load",
+                "script": "-_RunPythonScript ( ui.load() )"
+            },
+            {
+                "name": "COMPAS_scene_clear",
+                "menu_text": "Scene Clear",
+                "script": "-_RunPythonScript ( ui.scene_clear() )"
+            },
+            {
+                "name": "COMPAS_scene_update",
+                "menu_text": "Scene Update",
+                "script": "-_RunPythonScript ( ui.scene_update() )"
+            },
+            {
+                "name": "COMPAS_scene_objects",
+                "menu_text": "Scene Objects",
+                "script": "-_RunPythonScript ( ui.scene_objects() )"
+            },
+            {
+                "name": "COMPAS_cloud_start",
+                "menu_text": "Cloud Start",
+                "script": "-_RunPythonScript ( ui.cloud_start() )"
+            },
+            {
+                "name": "COMPAS_cloud_restart",
+                "menu_text": "Cloud Restart",
+                "script": "-_RunPythonScript ( ui.cloud_restart() )"
+            },
+            {
+                "name": "COMPAS_cloud_shutdown",
+                "menu_text": "Cloud Shutdown",
+                "script": "-_RunPythonScript ( ui.cloud_shutdown() )"
+            },
+            {
+                "name": "COMPAS_speckle_sync",
+                "menu_text": "Speckle Sync",
+                "script": "-_RunPythonScript ( ui.speckle_sync() )"
+            },
+            {
+                "name": "COMPAS_conda_envs",
+                "menu_text": "Conda Envs",
+                "script": "-_RunPythonScript ( ui.conda_envs() )"
+            },
+            {
+                "name": "COMPAS_conda_activate",
+                "menu_text": "Conda Activate",
+                "script": "-_RunPythonScript ( ui.conda_activate() )"
+            },
+            {
+                "name": "COMPAS_mesh_create",
+                "menu_text": "Mesh Create",
+                "script": "-_RunPythonScript ( ui.controller.mesh_create() )"
+            },
+            {
+                "name": "COMPAS_mesh_modify",
+                "menu_text": "Mesh Modify",
+                "script": "-_RunPythonScript ( ui.controller.mesh_modify() )"
+            },
+            {
+                "name": "COMPAS_mesh_delete",
+                "menu_text": "Mesh Delete",
+                "script": "-_RunPythonScript ( ui.controller.mesh_delete() )"
+            },
+            {
+                "name": "COMPAS_mesh_export",
+                "menu_text": "Mesh export",
+                "script": "-_RunPythonScript ( ui.controller.mesh_export() )"
+            }
+        ],
+        "menus": [
+            {
+                "name": "COMPAS",
+                "items": [
+                    {
+                        "command": "COMPAS_init"
+                    },
+                    {
+                        "type": "separator"
+                    },
+                    {
+                        "command": "COMPAS_save"
+                    },
+                    {
+                        "command": "COMPAS_saveas"
+                    },
+                    {
+                        "command": "COMPAS_load"
+                    },
+                    {
+                        "type": "separator"
+                    },
+                    {
+                        "name": "Scene",
+                        "items": [
+                            {
+                                "command": "COMPAS_scene_clear"
+                            },
+                            {
+                                "command": "COMPAS_scene_update"
+                            },
+                            {
+                                "command": "COMPAS_scene_objects"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Cloud",
+                        "items": [
+                            {
+                                "command": "COMPAS_cloud_start"
+                            },
+                            {
+                                "command": "COMPAS_cloud_restart"
+                            },
+                            {
+                                "command": "COMPAS_cloud_shutdown"
+                            },
+                            {
+                                "type": "separator"
+                            },
+                            {
+                                "command": "COMPAS_speckle_sync"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Conda",
+                        "items": [
+                            {
+                                "command": "COMPAS_conda_envs"
+                            },
+                            {
+                                "command": "COMPAS_conda_activate"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "separator"
+                    },
+                    {
+                        "name": "Geometry",
+                        "items": []
+                    },
+                    {
+                        "name": "DataStructures",
+                        "items": [
+                            {
+                                "name": "Networks",
+                                "items": []
+                            },
+                            {
+                                "name": "Meshes",
+                                "items": [
+                                    {
+                                        "command": "COMPAS_mesh_create"
+                                    },
+                                    {
+                                        "command": "COMPAS_mesh_modify"
+                                    },
+                                    {
+                                        "command": "COMPAS_mesh_delete"
+                                    },
+                                    {
+                                        "command": "COMPAS_mesh_export"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Volumetric Meshes",
+                                "items": []
+                            },
+                            {
+                                "name": "Assemblies",
+                                "items": []
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Robots",
+                        "items": []
+                    },
+                    {
+                        "type": "separator"
+                    },
+                    {
+                        "command": "COMPAS_github"
+                    },
+                    {
+                        "command": "COMPAS_docs"
+                    },
+                    {
+                        "command": "COMPAS_examples"
+                    }
+                ]
+            }
+        ],
+        "toolbars": [],
+        "toolbargroups": []
+    },
+    "settings": {}
+}

@@ -4,7 +4,6 @@ from compas.utilities import flatten
 
 
 class Controller(object):
-
     def __init__(self, ui):
         self.ui = ui
 
@@ -35,18 +34,18 @@ class Controller(object):
 
             _, ext = os.path.splitext(path)
 
-            if ext == '.obj':
+            if ext == ".obj":
                 mesh = Mesh.from_obj(path)
-                mesh.name = 'MeshFromOBJ'
-            elif ext == '.off':
+                mesh.name = "MeshFromOBJ"
+            elif ext == ".off":
                 mesh = Mesh.from_off(path)
-                mesh.name = 'MeshFromOFF'
-            elif ext == '.ply':
+                mesh.name = "MeshFromOFF"
+            elif ext == ".ply":
                 mesh = Mesh.from_ply(path)
-                mesh.name = 'MeshFromPLY'
-            elif ext == '.json':
+                mesh.name = "MeshFromPLY"
+            elif ext == ".json":
                 mesh = Mesh.from_json(path)
-                mesh.name = 'MeshFromJSON'
+                mesh.name = "MeshFromJSON"
             else:
                 raise NotImplementedError
 
@@ -55,44 +54,58 @@ class Controller(object):
             if not guid:
                 return
 
-            U = self.ui.get_integer("Number of faces in the U direction?", minval=1, maxval=1000, default=10)
+            U = self.ui.get_integer(
+                "Number of faces in the U direction?", minval=1, maxval=1000, default=10
+            )
             if not U:
                 return
 
-            V = self.ui.get_integer("Number of faces in the V direction?", minval=1, maxval=1000, default=U)
+            V = self.ui.get_integer(
+                "Number of faces in the V direction?", minval=1, maxval=1000, default=U
+            )
             if not V:
                 return
 
-            mesh = RhinoSurface.from_guid(guid).to_compas_quadmesh(nu=U, nv=V, weld=True)
-            mesh.name = 'MeshFromSurface'
+            mesh = RhinoSurface.from_guid(guid).to_compas_quadmesh(
+                nu=U, nv=V, weld=True
+            )
+            mesh.name = "MeshFromSurface"
 
         elif option == "FromMesh":
             guid = compas_rhino.select_mesh()
             if not guid:
                 return
-            
+
             mesh = RhinoMesh.from_guid(guid).to_compas()
-            mesh.name = 'MeshFromMesh'
+            mesh.name = "MeshFromMesh"
 
         elif option == "FromShape":
             raise NotImplementedError
 
         elif option == "FromMeshgrid":
-            dx = self.ui.get_real("Span in the X direction?", minval=1, maxval=100, default=10)
+            dx = self.ui.get_real(
+                "Span in the X direction?", minval=1, maxval=100, default=10
+            )
             if not dx:
                 return
-            nx = self.ui.get_integer("Number of faces in the X direction?", minval=1, maxval=1000, default=10)
+            nx = self.ui.get_integer(
+                "Number of faces in the X direction?", minval=1, maxval=1000, default=10
+            )
             if not nx:
                 return
-            dy = self.ui.get_real("Span in the Y direction?", minval=1, maxval=100, default=dx)
+            dy = self.ui.get_real(
+                "Span in the Y direction?", minval=1, maxval=100, default=dx
+            )
             if not dy:
                 return
-            ny = self.ui.get_integer("Number of faces in the Y direction?", minval=1, maxval=1000, default=nx)
+            ny = self.ui.get_integer(
+                "Number of faces in the Y direction?", minval=1, maxval=1000, default=nx
+            )
             if not ny:
                 return
 
             mesh = Mesh.from_meshgrid(dx=dx, nx=nx, dy=dy, ny=ny)
-            mesh.name = 'MeshFromMeshgrid'
+            mesh.name = "MeshFromMeshgrid"
 
         else:
             raise NotImplementedError
@@ -138,12 +151,14 @@ class Controller(object):
         if not mode:
             return
 
-        vertex_guid = {vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())}
+        vertex_guid = {
+            vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())
+        }
 
-        if mode == 'All':
+        if mode == "All":
             vertices = list(mesh.vertices())
 
-        elif mode == 'Boundary':
+        elif mode == "Boundary":
             vertices = list(set(flatten(mesh.vertices_on_boundaries())))
             guids = [vertex_guid[vertex] for vertex in vertices]
             self.scene.highlight_objects(guids)
@@ -155,11 +170,13 @@ class Controller(object):
 
         elif mode == "ByContinuousEdges":
             temp = meshobj.select_edges()
-            vertices = list(set(flatten([mesh.vertices_on_edge_loop(key) for key in temp])))
+            vertices = list(
+                set(flatten([mesh.vertices_on_edge_loop(key) for key in temp]))
+            )
             guids = [vertex_guid[vertex] for vertex in vertices]
             self.scene.highlight_objects(guids)
 
-        elif mode == 'Manual':
+        elif mode == "Manual":
             vertices = meshobj.select_vertices()
 
         return vertices
@@ -184,29 +201,31 @@ class Controller(object):
             return
 
         edge_guid = {edge: guid for guid, edge in iter(meshobj.guid_edge.items())}
-        edge_guid.update({(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())})
+        edge_guid.update(
+            {(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())}
+        )
 
-        if mode == 'All':
+        if mode == "All":
             edges = list(mesh.edges())
 
-        elif mode == 'AllBoundaryEdges':
+        elif mode == "AllBoundaryEdges":
             edges = list(set(flatten(mesh.edges_on_boundaries())))
             guids = [edge_guid[edge] for edge in edges]
             self.scene.highlight_objects(guids)
 
-        elif mode == 'Continuous':
+        elif mode == "Continuous":
             temp = meshobj.select_edges()
             edges = list(set(flatten([mesh.edge_loop(edge) for edge in temp])))
             guids = [edge_guid[edge] for edge in edges]
             self.scene.highlight_objects(guids)
 
-        elif mode == 'Parallel':
+        elif mode == "Parallel":
             temp = meshobj.select_edges()
             edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
             guids = [edge_guid[edge] for edge in edges]
             self.scene.highlight_objects(guids)
 
-        elif mode == 'Manual':
+        elif mode == "Manual":
             edges = meshobj.select_edges()
 
         return edges
