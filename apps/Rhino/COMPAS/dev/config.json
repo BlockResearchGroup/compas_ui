@@ -2,7 +2,22 @@
     "plugin": {
         "id": "{6c18fcab-3ae5-4b03-b515-d33d8078b977}",
         "version": "0.0.1.0",
-        "title": "COMPAS"
+        "title": "COMPAS",
+        "copyright": "ETH Zurich",
+        "designers": [
+            "Juney Lee"
+        ],
+        "developers": [
+            "Li Chen",
+            "Tom Van Mele"
+        ],
+        "documenters": [
+            "unknown"
+        ],
+        "license": "MIT License",
+        "logo": null,
+        "description": "COMPAS UI provides...",
+        "website": "https://compas.dev"
     },
     "ui": {
         "icons": {
@@ -241,5 +256,8 @@
         "toolbars": [],
         "toolbargroups": []
     },
-    "settings": {}
+    "settings": {
+        "a": 1,
+        "b": 2
+    }
 }
