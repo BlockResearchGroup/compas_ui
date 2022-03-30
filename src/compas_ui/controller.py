@@ -20,6 +20,7 @@ class Controller(object):
         from compas.datastructures import Mesh
         from compas_rhino.conversions import RhinoMesh
         from compas_rhino.conversions import RhinoSurface
+        from .rhino.forms import FileForm
 
         options = ["FromFile", "FromSurface", "FromMesh", "FromShape", "FromMeshgrid"]
         option = compas_rhino.rs.GetString("Create a COMPAS mesh:", strings=options)
@@ -28,26 +29,25 @@ class Controller(object):
             return
 
         if option == "FromFile":
-            path = self.ui.pick_file_open()
+            path = FileForm.open(self.ui.dirname or os.path.expanduser("~"))
             if not path:
                 return
 
+            basename = os.path.basename(path)
             _, ext = os.path.splitext(path)
 
             if ext == ".obj":
                 mesh = Mesh.from_obj(path)
-                mesh.name = "MeshFromOBJ"
             elif ext == ".off":
                 mesh = Mesh.from_off(path)
-                mesh.name = "MeshFromOFF"
             elif ext == ".ply":
                 mesh = Mesh.from_ply(path)
-                mesh.name = "MeshFromPLY"
             elif ext == ".json":
                 mesh = Mesh.from_json(path)
-                mesh.name = "MeshFromJSON"
             else:
                 raise NotImplementedError
+
+            mesh.name = basename
 
         elif option == "FromSurface":
             guid = compas_rhino.select_surface()
