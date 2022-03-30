@@ -61,32 +61,36 @@ class UI(Singleton):
 
     """
 
-    def __init__(self, name=None, settings=None, controller_class=None):
-        if name is None:
+    def __init__(self, config=None, controller_class=None):
+        if config is None:
             raise RuntimeError(
-                'Initialized the UI with a name first, for example: ui = UI(name="MyUI")'
+                "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
             )
 
         controller_class = controller_class or Controller
 
         self._current = -1
         self._depth = 20
-        self.name = name
+
+        self.config = config
+        self.name = self.config["plugin"]["title"]
+        self.condadir = None
         self.dirname = None
         self.basename = "{}.ui".format(self.name)
+        self.settings = self.config["settings"] or {}
+
         self.session = Session(name=self.name)
-        self.settings = settings or {}
         self.scene = Scene(settings=self.settings.get("scene"))
         self.controller = controller_class(self)
         self.proxy = None
-        self.condadir = None
+
         with open(self.dbname, "wb") as f:
             pickle.dump([], f)
         self.record()
 
     @property
     def dbname(self):
-        return os.path.join(tempfile.gettempdir(), "{}.history".format(self.basename))
+        return os.path.join(tempfile.gettempdir(), "{}.history".format(self.name))
 
     @property
     def state(self):
@@ -122,15 +126,74 @@ class UI(Singleton):
 
     @staticmethod
     def error(*args, **kwargs):
+        """Decorator for functions that require proper error handling.
+
+        Parameters
+        ----------
+        *args : list
+            ???
+        **kwargs : dict
+            ???
+
+        Returns
+        -------
+        callable
+
+        """
         from .rhino.forms import error
 
         return error(*args, **kwargs)
 
     def splash(self, url):
-        from .rhino.forms import BrowserForm
+        """Display a splash screen.
 
-        browser = BrowserForm(title=self.name, url=url)
+        Parameters
+        ----------
+        url : str
+            The url of the html file.
+
+        Returns
+        -------
+        None
+
+        """
+        from .rhino.forms import SplashForm
+
+        browser = SplashForm(title=self.name, url=url)
         browser.show()
+
+    def about(self):
+        """Display a standard dialog with information about the project.
+
+        Returns
+        -------
+        None
+
+        """
+        import System
+        import Eto.Forms
+        import Rhino.UI
+
+        dialog = Eto.Forms.AboutDialog()
+
+        dialog.Copyright = self.config["plugin"]["copyright"]
+        dialog.Designers = System.Array[System.String](
+            self.config["plugin"]["designers"]
+        )
+        dialog.Developers = System.Array[System.String](
+            self.config["plugin"]["developers"]
+        )
+        dialog.Documenters = System.Array[System.String](
+            self.config["plugin"]["documenters"]
+        )
+        dialog.License = self.config["plugin"]["license"]
+        dialog.ProgramDescription = self.config["plugin"]["description"]
+        dialog.ProgramName = self.config["plugin"]["title"]
+        dialog.Title = self.config["plugin"]["title"]
+        dialog.Version = self.config["plugin"]["version"]
+        dialog.Website = System.Uri(self.config["plugin"]["website"])
+
+        dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
 
     def github(self):
         print("Go to github.")
@@ -152,50 +215,64 @@ class UI(Singleton):
         -------
         None
 
-        Raises
-        ------
-        ImportError
-            If `compas_cloud` is not installed.
-
         """
         settings = self.settings.get("cloud") or {}
         self.proxy = Proxy(**settings)
 
     def cloud_restart(self):
-        self.proxy.restart()
+        """Restart the command server.
+
+        Returns
+        -------
+        None
+
+        """
+        if self.proxy:
+            self.proxy.restart()
+        else:
+            self.cloud_start()
 
     def cloud_shutdown(self):
-        self.proxy.shutdown()
+        """Shut down the command server.
 
-    def speckle_sync(self):
-        pass
+        Returns
+        -------
+        None
 
-    # ========================================================================
-    # Scene
-    # ========================================================================
-
-    def scene_clear(self):
-        self.scene.clear()
-
-    def scene_update(self):
-        self.scene.update()
-
-    def scene_objects(self):
-        for obj in self.scene.objects:
-            print(obj.name, obj.item, obj.settings)
+        """
+        if self.proxy:
+            self.proxy.shutdown()
 
     # ========================================================================
-    # Conda
+    # Environments
     # ========================================================================
 
     def conda_envs(self):
-        if not self.condadir:
-            user = os.path.expanduser("~")
-            condadir = self.pick_file_open(user)
-            if not condadir:
-                return
-            self.condadir = condadir
+        """Display a list of available conda environments.
 
+        Returns
+        -------
+        None
+
+        """
+        from .rhino.forms import CondaEnvsForm
+
+        if not self.condadir:
+            import Rhino.UI
+            import Eto.Forms
+
+            dialog = Eto.Forms.SelectFolderDialog()
+            dialog.Directory = os.path.expanduser("~")
+
+            result = dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
+            if result != Eto.Forms.DialogResult.Ok:
+                return
+            if not dialog.Directory:
+                return
+
+            self.condadir = dialog.Directory
+
+        # replace with conda object
         conda = os.path.join(self.condadir, "condabin", "conda")
         process = Popen(["{} info --envs".format(conda)], stdout=PIPE, shell=True)
         out = process.stdout.read().decode()
@@ -204,13 +281,90 @@ class UI(Singleton):
         for line in lines:
             if line.startswith("#"):
                 continue
-            parts = lines.split()
-            envs.append((parts[0], parts[-1]))
-        for name, path in sorted(envs, key=lambda env: env[0]):
-            print(name, path)
+            parts = line.strip().split()
+            if parts:
+                envs.append((parts[0], parts[-1]))
+
+        form = CondaEnvsForm(envs)
+        form.show()
 
     def conda_activate(self):
+        """Activate a conda environment by running a subprocess that does a compas_rhino install.
+
+        Returns
+        -------
+        None
+
+        """
         pass
+
+    def rhinopython_searchpaths(self):
+        """Modify the Rhino Python search paths.
+
+        Returns
+        -------
+        None
+
+        """
+        import System
+        import Rhino.UI
+
+        from .rhino.forms import SearchPathsForm
+
+        dialog = SearchPathsForm()
+
+        if not dialog.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow):
+            return
+
+        paths = []
+        for path in Rhino.Runtime.PythonScript.SearchPaths:
+            paths.append(path)
+        paths[:] = paths[:3]
+        for row in dialog.data:
+            path = row[0]
+            path = path.strip()
+            if path:
+                paths.append(path)
+
+        paths = System.Array[System.String](paths)
+        Rhino.Runtime.PythonScript.SearchPaths = paths
+
+    # ========================================================================
+    # Scene
+    # ========================================================================
+
+    def scene_clear(self):
+        """Clear all objects from the scene.
+
+        Returns
+        -------
+        None
+
+        """
+        self.scene.clear()
+
+    def scene_update(self):
+        """Update the scene.
+
+        Returns
+        -------
+        None
+
+        """
+        self.scene.update()
+
+    def scene_objects(self):
+        """Display a form with all objects in the scene.
+
+        Returns
+        -------
+        None
+
+        """
+        from .rhino.forms import SceneObjectsForm
+
+        form = SceneObjectsForm(self.scene)
+        form.show()
 
     # ========================================================================
     # State
@@ -293,7 +447,7 @@ class UI(Singleton):
         self.scene.update()
 
     def save(self):
-        """Save the current state of the app to a shelve.
+        """Save the current state of the app to a pickle file.
 
         Returns
         -------
@@ -301,33 +455,36 @@ class UI(Singleton):
 
         """
         if not self.dirname:
-            path = self.pick_file_save(self.basename)
+            from .rhino.forms import FileForm
+
+            path = FileForm.save(self.dirname, self.basename)
             if not path:
                 return
 
             self.dirname = os.path.dirname(path)
             self.basename = os.path.basename(path)
 
-        else:
-            path = os.path.join(self.dirname, self.basename)
+        path = os.path.join(self.dirname, self.basename)
 
         with open(path, "wb+") as f:
             pickle.dump(self.state, f)
 
     def saveas(self):
-        """Save the current state of the app to a shelve with a specific name.
+        """Save the current state of the app to a pickle file with a specific name.
 
         Parameters
         ----------
         name : str
-            The name of the shelve.
+            The name of the pickle.
 
         Returns
         -------
         None
 
         """
-        path = self.pick_file_save(self.basename)
+        from .rhino.forms import FileForm
+
+        path = FileForm.save(self.dirname, self.basename)
         if not path:
             return
 
@@ -338,7 +495,7 @@ class UI(Singleton):
             pickle.dump(self.state, f)
 
     def load(self):
-        """Restore a saved state of the app from a shelve with a specific name.
+        """Restore a saved state of the app from a selected pickle file.
 
         Parameters
         ----------
@@ -350,11 +507,11 @@ class UI(Singleton):
         None
 
         """
-        path = self.pick_file_open(self.dirname)
+        from .rhino.forms import FileForm
+
+        path = FileForm.open(self.dirname or os.path.expanduser("~"))
         if not path:
             return
-
-        self.scene.clear()
 
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
@@ -362,6 +519,7 @@ class UI(Singleton):
         with open(path, "rb") as f:
             self.state = pickle.load(f)
 
+        self.scene.clear()
         self.scene.update()
 
     # ========================================================================
@@ -376,8 +534,6 @@ class UI(Singleton):
         None
 
         """
-        # TODO: move this to a pluggable/plugin
-
         from compas_ui.rhino.forms.settings import SettingsForm
 
         form = SettingsForm(self.settings)
@@ -388,63 +544,6 @@ class UI(Singleton):
     # ========================================================================
     # User data
     # ========================================================================
-
-    def pick_file_save(self, basename):
-        """Pick a file on the file system.
-
-        Parameters
-        ----------
-        basename : str
-            The basename of the file.
-
-        Returns
-        -------
-        path
-
-        """
-        import Eto.Forms
-        import Rhino.UI
-        import System
-
-        dirname = self.dirname or os.path.expanduser("~")
-
-        dialog = Eto.Forms.SaveFileDialog()
-        dialog.Directory = System.Uri(dirname)
-        dialog.FileName = basename
-
-        if (
-            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-            != Eto.Forms.DialogResult.Ok
-        ):
-            return
-
-        return dialog.FileName
-
-    def pick_file_open(self, dirname):
-        """Pick a file on the file system.
-
-        Returns
-        -------
-        path
-
-        """
-        import Eto.Forms
-        import Rhino.UI
-        import System
-
-        dirname = self.dirname or os.path.expanduser("~")
-
-        dialog = Eto.Forms.OpenFileDialog()
-        dialog.Directory = System.Uri(dirname)
-        dialog.MultiSelect = False
-
-        if (
-            dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-            != Eto.Forms.DialogResult.Ok
-        ):
-            return
-
-        return dialog.FileName
 
     def get_real(self, message, minval=None, maxval=None, default=None):
         """Get a real number from the user.
@@ -465,8 +564,6 @@ class UI(Singleton):
         float | None
 
         """
-        # TODO: move this to a pluggable/plugin
-
         value = compas_rhino.rs.GetReal(
             message=message, number=default, minimum=minval, maximum=maxval
         )
@@ -492,8 +589,6 @@ class UI(Singleton):
         int | None
 
         """
-        # TODO: move this to a pluggable/plugin
-
         value = compas_rhino.rs.GetInteger(
             message=message, number=default, minimum=minval, maximum=maxval
         )
@@ -517,8 +612,6 @@ class UI(Singleton):
         str | None
 
         """
-        # TODO: move this to a pluggable/plugin
-
         value = compas_rhino.rs.GetString(
             message, defaultString=default, strings=options
         )
