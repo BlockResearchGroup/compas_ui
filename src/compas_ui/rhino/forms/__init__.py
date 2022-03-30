@@ -12,10 +12,14 @@ Classes
     :toctree: generated/
     :nosignatures:
 
-    BrowserForm
+    CondaEnvsForm
     ErrorForm
-    SettingsForm
+    FileForm
     MeshDataForm
+    SearchPathsForm
+    SettingsForm
+    SceneObjectsForm
+    SplashForm
 
 Decorators
 ==========
@@ -31,17 +35,24 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from .browser import BrowserForm
-from .error import ErrorForm
-from .settings import SettingsForm
-from .error import error
+from .conda import CondaEnvsForm
+from .error import ErrorForm, error
+from .files import FileForm
 from .meshdata import MeshDataForm
+from .searchpaths import SearchPathsForm
+from .settings import SettingsForm
+from .scene import SceneObjectsForm
+from .splash import SplashForm
 
 
 __all__ = [
-    "BrowserForm",
+    "CondaEnvsForm",
     "ErrorForm",
-    "SettingsForm",
-    "MeshDataForm",
     "error",
+    "FileForm",
+    "MeshDataForm",
+    "SearchPathsForm",
+    "SettingsForm",
+    "SceneObjectsForm",
+    "SplashForm",
 ]

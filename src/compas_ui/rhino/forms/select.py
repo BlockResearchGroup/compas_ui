@@ -10,22 +10,19 @@ import Eto.Drawing
 import Eto.Forms
 
 
-class ListSelectForm(Eto.Forms.Dialog[bool]):
-
+class MultiSelectForm(Eto.Forms.Dialog[bool]):
     def __init__(self, items, title="Options"):
         self.items = items
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = False
-        # self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
-        # self.ClientSize = Eto.Drawing.Size(width, height)
 
         layout = Eto.Forms.DynamicLayout()
         layout.BeginVertical(
             Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
         )
-        layout.AddRow(box)
+        layout.AddRow()
         layout.EndVertical()
         layout.BeginVertical(
             Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False

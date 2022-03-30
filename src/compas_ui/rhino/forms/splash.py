@@ -9,19 +9,19 @@ import Eto.Drawing
 import Eto.Forms
 
 
-class BrowserForm(Eto.Forms.Dialog[bool]):
-
+class SplashForm(Eto.Forms.Dialog[bool]):
     def __init__(self, title, url, width=800, height=400):
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = False
         self.ClientSize = Eto.Drawing.Size(width, height)
+        self.WindowStyle = Eto.Forms.WindowStyle.None  # noqa: E999
 
         webview = Eto.Forms.WebView()
         webview.Size = Eto.Drawing.Size(width, height)
         webview.Url = System.Uri(url)
-        webview.BrowserContextMenuEnabled = True
+        webview.BrowserContextMenuEnabled = False
         webview.DocumentLoading += self.action
 
         layout = Eto.Forms.DynamicLayout()
@@ -36,4 +36,4 @@ class BrowserForm(Eto.Forms.Dialog[bool]):
             self.Close()
 
     def show(self):
-        return self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)
+        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)

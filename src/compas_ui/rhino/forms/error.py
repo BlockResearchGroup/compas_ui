@@ -70,18 +70,15 @@ Add any other context about the problem here.
 
 
 class ErrorForm(Eto.Forms.Dialog[bool]):
-
     def __init__(self, error="Unknown", title="Error", width=800, height=500):
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
         self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
-
         textarea = Eto.Forms.TextArea()
         textarea.Text = error
         textarea.ReadOnly = True
-
         dynamic = Eto.Forms.DynamicLayout()
         dynamic.BeginVertical(
             Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True
@@ -93,10 +90,8 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
         )
         dynamic.AddRow(None, self.cancel)
         dynamic.EndVertical()
-
         self.Content = dynamic
-
-        self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)
+        self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
 
     @property
     def cancel(self):
