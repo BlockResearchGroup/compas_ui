@@ -12,7 +12,7 @@
             "Tom Van Mele"
         ],
         "documenters": [
-            "unknown"
+            "unknown :)"
         ],
         "license": "MIT License",
         "logo": null,
@@ -26,104 +26,72 @@
         },
         "commands": [
             {
-                "name": "COMPAS__init",
-                "menu_text": "Init",
-                "script": "-_RunPythonScript ResetEngine ( from compas_ui.ui import UI; ui = UI(name='COMPAS') )"
-            },
-            {
-                "name": "COMPAS__github",
-                "menu_text": "Github",
-                "script": "-_RunPythonScript ( ui.github() )"
-            },
-            {
-                "name": "COMPAS__docs",
-                "menu_text": "Docs",
-                "script": "-_RunPythonScript ( ui.docs() )"
-            },
-            {
-                "name": "COMPAS__examples",
-                "menu_text": "Examples",
-                "script": "-_RunPythonScript ( ui.examples() )"
-            },
-            {
-                "name": "COMPAS__save",
-                "menu_text": "Save",
-                "script": "-_RunPythonScript ( ui.save() )"
-            },
-            {
-                "name": "COMPAS__saveas",
-                "menu_text": "SaveAs",
-                "script": "-_RunPythonScript ( ui.saveas() )"
-            },
-            {
-                "name": "COMPAS__load",
-                "menu_text": "Load",
-                "script": "-_RunPythonScript ( ui.load() )"
-            },
-            {
-                "name": "COMPAS__scene_clear",
-                "menu_text": "Scene Clear",
-                "script": "-_RunPythonScript ( ui.scene_clear() )"
-            },
-            {
-                "name": "COMPAS__scene_update",
-                "menu_text": "Scene Update",
-                "script": "-_RunPythonScript ( ui.scene_update() )"
-            },
-            {
-                "name": "COMPAS__scene_objects",
-                "menu_text": "Scene Objects",
-                "script": "-_RunPythonScript ( ui.scene_objects() )"
-            },
-            {
-                "name": "COMPAS__cloud_start",
-                "menu_text": "Cloud Start",
-                "script": "-_RunPythonScript ( ui.cloud_start() )"
+                "name": "COMPAS__about",
+                "menu_text": "About"
             },
             {
                 "name": "COMPAS__cloud_restart",
-                "menu_text": "Cloud Restart",
-                "script": "-_RunPythonScript ( ui.cloud_restart() )"
+                "menu_text": "Cloud Restart"
             },
             {
                 "name": "COMPAS__cloud_shutdown",
-                "menu_text": "Cloud Shutdown",
-                "script": "-_RunPythonScript ( ui.cloud_shutdown() )"
+                "menu_text": "Cloud Shutdown"
             },
             {
-                "name": "COMPAS__speckle_sync",
-                "menu_text": "Speckle Sync",
-                "script": "-_RunPythonScript ( ui.speckle_sync() )"
+                "name": "COMPAS__cloud_start",
+                "menu_text": "cloud Start"
             },
             {
                 "name": "COMPAS__conda_envs",
-                "menu_text": "Conda Envs",
-                "script": "-_RunPythonScript ( ui.conda_envs() )"
+                "menu_text": "Conda Environments"
             },
             {
-                "name": "COMPAS__conda_activate",
-                "menu_text": "Conda Activate",
-                "script": "-_RunPythonScript ( ui.conda_activate() )"
+                "name": "COMPAS__init",
+                "menu_text": "Init"
+            },
+            {
+                "name": "COMPAS__load",
+                "menu_text": "Load"
+            },
+            {
+                "name": "COMPAS__redo",
+                "menu_text": "Redo"
+            },
+            {
+                "name": "COMPAS__save",
+                "menu_text": "Save"
+            },
+            {
+                "name": "COMPAS__saveas",
+                "menu_text": "SaveAs"
+            },
+            {
+                "name": "COMPAS__scene_clear",
+                "menu_text": "Scene Clear"
+            },
+            {
+                "name": "COMPAS__scene_objects",
+                "menu_text": "Scene Objects"
+            },
+            {
+                "name": "COMPAS__scene_update",
+                "menu_text": "Scene Update"
+            },
+            {
+                "name": "COMPAS__searchpaths",
+                "menu_text": "Rhino Search Paths"
+            },
+            {
+                "name": "COMPAS__settings",
+                "menu_text": "Settings"
+            },
+            {
+                "name": "COMPAS__undo",
+                "menu_text": "Undo"
             },
             {
                 "name": "COMPAS_mesh_create",
-                "menu_text": "Mesh Create",
-                "script": "-_RunPythonScript ( ui.controller.mesh_create() )"
-            },
-            {
-                "name": "COMPAS_mesh_modify",
-                "menu_text": "Mesh Modify",
-                "script": "-_RunPythonScript ( ui.controller.mesh_modify() )"
-            },
-            {
-                "name": "COMPAS_mesh_delete",
-                "menu_text": "Mesh Delete",
-                "script": "-_RunPythonScript ( ui.controller.mesh_delete() )"
-            },
-            {
-                "name": "COMPAS_mesh_export",
-                "menu_text": "Mesh export",
-                "script": "-_RunPythonScript ( ui.controller.mesh_export() )"
+                "menu_text": "Mesh Create"
             }
         ],
         "menus": [
@@ -135,6 +103,12 @@
                     },
                     {
                         "type": "separator"
+                    },
+                    {
+                        "command": "COMPAS__undo"
+                    },
+                    {
+                        "command": "COMPAS__redo"
                     },
                     {
                         "command": "COMPAS__save"
@@ -173,12 +147,6 @@
                             },
                             {
                                 "command": "COMPAS__cloud_shutdown"
-                            },
-                            {
-                                "type": "separator"
-                            },
-                            {
-                                "command": "COMPAS__speckle_sync"
                             }
                         ]
                     },
@@ -187,9 +155,6 @@
                         "items": [
                             {
                                 "command": "COMPAS__conda_envs"
-                            },
-                            {
-                                "command": "COMPAS__conda_activate"
                             }
                         ]
                     },
@@ -212,15 +177,6 @@
                                 "items": [
                                     {
                                         "command": "COMPAS_mesh_create"
-                                    },
-                                    {
-                                        "command": "COMPAS_mesh_modify"
-                                    },
-                                    {
-                                        "command": "COMPAS_mesh_delete"
-                                    },
-                                    {
-                                        "command": "COMPAS_mesh_export"
                                     }
                                 ]
                             },
@@ -242,13 +198,7 @@
                         "type": "separator"
                     },
                     {
-                        "command": "COMPAS__github"
-                    },
-                    {
-                        "command": "COMPAS__docs"
-                    },
-                    {
-                        "command": "COMPAS__examples"
+                        "command": "COMPAS__about"
                     }
                 ]
             }
