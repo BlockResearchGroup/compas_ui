@@ -232,13 +232,11 @@ class Object(object):
     def register(item_type, object_type, context=None):
         Object.ITEM_OBJECT[context][item_type] = object_type
 
-    @abstractmethod
     def clear(self):
-        raise NotImplementedError
+        pass
 
-    @abstractmethod
     def draw(self):
-        raise NotImplementedError
+        pass
 
     # not sure this should exist
     def redraw(self):

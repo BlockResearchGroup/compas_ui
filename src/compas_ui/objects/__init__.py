@@ -40,6 +40,18 @@ from .meshobject import MeshObject
 from .networkobject import NetworkObject
 from .volmeshobject import VolMeshObject
 
+from compas.datastructures import Mesh
+from compas.datastructures import Network
+from compas.datastructures import VolMesh
+
+from compas.plugins import plugin
+
+@plugin(category="ui")
+def register_objects():
+    Object.register(Mesh, MeshObject, context=None)
+    Object.register(Network, NetworkObject, context=None)
+    Object.register(VolMesh, VolMeshObject, context=None)
+
 
 __all__ = [
     'ObjectNotRegistered',
