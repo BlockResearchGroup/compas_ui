@@ -425,9 +425,17 @@ class Rui(object):
 
 if __name__ == "__main__":
 
-    HERE = os.path.dirname(__file__)
-    FILE_I = os.path.join(HERE, "configs", "COMPAS", "config.json")
-    FILE_O = os.path.join(HERE, "configs", "COMPAS", "COMPAS.rui")
+    import argparse
 
-    rui = Rui.from_json(FILE_I, FILE_O)
+    parser = argparse.ArgumentParser(description="COMPAS Rhino UI compiler.")
+
+    parser.add_argument("ipath", help="Path to the config file (input).")
+    parser.add_argument("opath", help="Path to the rui file (output).")
+
+    args = parser.parse_args()
+
+    ipath = os.path.abspath(args.ipath)
+    opath = os.path.abspath(args.opath)
+
+    rui = Rui.from_json(ipath, opath)
     rui.write()
