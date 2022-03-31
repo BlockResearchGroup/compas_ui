@@ -67,6 +67,7 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
+        self.speckle_id = None
 
     @property
     def state(self):
@@ -78,11 +79,12 @@ class Scene(Singleton):
                 data[guid] = obj.item
             objects.append({
                 'item': guid,
+                'speckle_id': obj.speckle_id,
                 'name': obj.name,
                 'visible': obj.visible,
                 'settings': obj.settings,
             })
-        return {'data': data, 'objects': objects, 'settings': self.settings}
+        return {'data': data, 'objects': objects, 'settings': self.settings, 'speckle_id': self.speckle_id}
 
     @state.setter
     def state(self, state):
@@ -168,3 +170,25 @@ class Scene(Singleton):
 
         """
         highlight_objects(self, guids)
+
+    def speckle_push(self):
+        from compas_ui.ui import UI
+
+        for obj in self.objects:
+            print("obj pushed:", obj.speckle_push())
+
+        state = self.state
+        del state['data']
+        self.speckle_id = UI().proxy.speckle_push(stream_id=self.state['speckle_id'], item=state)
+        return self.speckle_id
+
+    def speckle_pull(self):
+        from compas_ui.ui import UI
+        ui = UI()
+        state = ui.proxy.speckle_pull(stream_id=self.state['speckle_id'])
+        state['data'] = {}
+        for obj in state['objects']:
+            guid = obj['item']
+            object_state = ui.proxy.speckle_pull(stream_id=obj['speckle_id'])
+            state['data'][guid] = object_state['_item']
+        self.state = state
