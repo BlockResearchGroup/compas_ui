@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added `compas_ui.rhino.forms.AboutForm`.
+* Added `compas_ui.rhino.forms.CondaEnvsForm`.
+* Added `compas_ui.rhino.forms.FileForm`.
+* Added `compas_ui.rhino.forms.FolderForm`.
+* Added `compas_ui.rhino.forms.InfoForm`.
+* Added `compas_ui.rhino.forms.SceneObjectsForm`.
+* Added `compas_ui.rhino.forms.SearchPathsForm`.
+* Added default controller for all non-system commands.
+
 ### Changed
 
 ### Removed
