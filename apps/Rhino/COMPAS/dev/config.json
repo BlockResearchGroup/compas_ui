@@ -257,7 +257,8 @@
         "toolbargroups": []
     },
     "settings": {
-        "a": 1,
-        "b": 2
+        "cloud": {
+            "background": true
+        }
     }
 }
