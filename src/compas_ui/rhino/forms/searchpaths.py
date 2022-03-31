@@ -1,3 +1,4 @@
+import System
 import Rhino
 import Rhino.UI
 import Eto.Drawing
@@ -10,6 +11,11 @@ class SearchPathsForm(Eto.Forms.Dialog[bool]):
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = False
         self.ClientSize = Eto.Drawing.Size(800, 500)
+
+        paths = [[str(path)] for path in Rhino.Runtime.PythonScript.SearchPaths]
+        while len(paths) < 8:
+            paths.append([""])
+
         layout = Eto.Forms.DynamicLayout()
         layout.BeginVertical(
             Eto.Drawing.Padding(12, 12, 12, 0),
@@ -17,42 +23,60 @@ class SearchPathsForm(Eto.Forms.Dialog[bool]):
             True,
             True,
         )
-        paths = [[str(path)] for path in Rhino.Runtime.PythonScript.SearchPaths]
-        while len(paths) < 8:
-            paths.append([""])
-        gridview = Eto.Forms.GridView()
-        gridview.ShowHeader = True
-        gridview.GridLines = Eto.Forms.GridLines.Horizontal
-        self.data = gridview.DataStore = paths[3:]
+        self.table = Eto.Forms.GridView()
+        self.table.ShowHeader = False
+        self.table.GridLines = Eto.Forms.GridLines.Horizontal
+        self.table.DataStore = paths[3:]
+
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "Path"
         column.Editable = True
         column.Expand = True
         column.AutoSize = True
-        cell = Eto.Forms.TextBoxCell(0)
-        cell.AutoSelectMode = Eto.Forms.AutoSelectMode.OnFocus
-        cell.VerticalAlignment = Eto.Forms.VerticalAlignment.Center
-        cell.TextAlignment = Eto.Forms.TextAlignment.Left
-        column.DataCell = cell
-        gridview.Columns.Add(column)
-        layout.AddRow(gridview)
+        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
+        self.table.Columns.Add(column)
+
+        layout.AddRow(self.table)
         layout.EndVertical()
+
         layout.BeginVertical(
             Eto.Drawing.Padding(12, 12, 12, 18),
             Eto.Drawing.Size(6, 0),
             False,
             False,
         )
-        self.DefaultButton = Eto.Forms.Button(Text="OK")
-        self.DefaultButton.Click += self.ok
-        self.AbortButton = Eto.Forms.Button(Text="Cancel")
-        self.AbortButton.Click += self.cancel
-        layout.AddRow(None, self.DefaultButton, self.AbortButton)
+        layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
         self.Content = layout
 
-    def ok(self, sender, event):
+    @property
+    def ok(self):
+        self.DefaultButton = Eto.Forms.Button(Text="OK")
+        self.DefaultButton.Click += self.on_ok
+        return self.DefaultButton
+
+    @property
+    def cancel(self):
+        self.AbortButton = Eto.Forms.Button(Text="Cancel")
+        self.AbortButton.Click += self.on_cancel
+        return self.AbortButton
+
+    def on_ok(self, sender, event):
+        paths = []
+        for path in Rhino.Runtime.PythonScript.SearchPaths:
+            paths.append(path)
+        paths[:] = paths[:3]
+        for row in self.table.DataStore:
+            path = row[0]
+            path = path.strip()
+            if path:
+                paths.append(path)
+        paths = System.Array[System.String](paths)
+        Rhino.Runtime.PythonScript.SearchPaths = paths
+
         self.Close(True)
 
-    def cancel(self, sender, event):
+    def on_cancel(self, sender, event):
         self.Close(False)
+
+    def show(self):
+        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)

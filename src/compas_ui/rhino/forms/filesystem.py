@@ -8,6 +8,7 @@ import Eto.Forms
 class FileForm(Eto.Forms.Dialog[bool]):
     @staticmethod
     def open(dirname=None):
+        dirname = dirname or os.path.expanduser("~")
         dialog = Eto.Forms.OpenFileDialog()
         if dirname:
             dialog.Directory = System.Uri(dirname)
@@ -28,3 +29,15 @@ class FileForm(Eto.Forms.Dialog[bool]):
         if result != Eto.Forms.DialogResult.Ok:
             return
         return dialog.FileName
+
+
+class FolderForm(Eto.Forms.Dialog[bool]):
+    @staticmethod
+    def select(dirname=None):
+        dirname = dirname or os.path.expanduser("~")
+        dialog = Eto.Forms.SelectFolderDialog()
+        dialog.Directory = dirname
+        result = dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
+        if result != Eto.Forms.DialogResult.Ok:
+            return
+        return dialog.Directory

@@ -89,7 +89,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         self.ClientSize = Eto.Drawing.Size(width, height)
 
         self.table = Eto.Forms.TreeGridView()
-        # self.table.GridLines = Eto.Forms.GridLines.Horizontal
         layout = Eto.Forms.DynamicLayout()
         layout.BeginVertical(
             Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True

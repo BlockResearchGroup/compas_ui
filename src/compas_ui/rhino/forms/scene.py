@@ -2,30 +2,12 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import uuid
+
 import Rhino
 import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
-
-from compas.colors import Color
-
-
-class ColorCell(Eto.Forms.CustomCell):
-    def __init__(self, position):
-        self.position = position
-
-    def OnCreateCell(self, args):
-        def on_value_changed(sender, e):
-            color = Eto.Drawing.Color(control.Value)
-            item.SetValue(self.position, Color(color.R, color.G, color.B))
-
-        item = args.Item
-        value = item.GetValue(self.position)
-        control = Eto.Forms.ColorPicker()
-        control.AllowAlpha = False
-        control.Value = Eto.Drawing.Color.FromArgb(*value.rgb255)
-        control.ValueChanged += on_value_changed
-        return control
 
 
 class SceneObjectsForm(Eto.Forms.Dialog[bool]):
@@ -41,7 +23,14 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.ShowHeader = True
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "Scene Objects"
+        column.HeaderText = "GUID"
+        column.Editable = False
+        column.Visible = False
+        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
+        self.table.Columns.Add(column)
+
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = "Type"
         column.Editable = False
         column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
@@ -59,24 +48,6 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "VColor"
-        column.Editable = True
-        column.DataCell = ColorCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
-        column.HeaderText = "EColor"
-        column.Editable = True
-        column.DataCell = ColorCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
-        column.HeaderText = "FColor"
-        column.Editable = True
-        column.DataCell = ColorCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
         column.HeaderText = "Data"
         column.Editable = False
         column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
@@ -86,12 +57,10 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         for obj in self.scene.objects:
             item = Eto.Forms.TreeGridItem(
                 Values=(
+                    str(obj.guid),
                     obj.__class__.__name__,
                     obj.name,
                     obj.visible,
-                    obj.settings["color.vertices"],
-                    obj.settings["color.edges"],
-                    obj.settings["color.faces"],
                     str(obj.item),
                 )
             )
@@ -126,6 +95,13 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     def on_ok(self, sender, event):
+        for row in self.table.DataStore:
+            guid = uuid.UUID(row.GetValue(0))
+            for obj in self.scene.objects:
+                if obj.guid == guid:
+                    obj.name = row.GetValue(2)
+                    obj.visible = bool(row.GetValue(3))
+                    break
         self.Close(True)
 
     def on_cancel(self, sender, event):

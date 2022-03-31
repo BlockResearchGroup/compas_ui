@@ -76,28 +76,33 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
         self.Resizable = True
         self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
+
         textarea = Eto.Forms.TextArea()
         textarea.Text = error
         textarea.ReadOnly = True
-        dynamic = Eto.Forms.DynamicLayout()
-        dynamic.BeginVertical(
+
+        layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(
             Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True
         )
-        dynamic.AddRow(textarea)
-        dynamic.EndVertical()
-        dynamic.BeginVertical(
+        layout.AddRow(textarea)
+        layout.EndVertical()
+        layout.BeginVertical(
             Eto.Drawing.Padding(12, 12, 12, 18), Eto.Drawing.Size(6, 0), False, False
         )
-        dynamic.AddRow(None, self.cancel)
-        dynamic.EndVertical()
-        self.Content = dynamic
-        self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+        layout.AddRow(None, self.ok)
+        layout.EndVertical()
+        self.Content = layout
+        self.show()
 
     @property
-    def cancel(self):
-        self.AbortButton = Eto.Forms.Button(Text="Close")
-        self.AbortButton.Click += self.on_cancel
-        return self.AbortButton
+    def ok(self):
+        self.DefaultButton = Eto.Forms.Button(Text="OK")
+        self.DefaultButton.Click += self.on_ok
+        return self.DefaultButton
 
-    def on_cancel(self, sender, event):
-        self.Close()
+    def on_ok(self, sender, event):
+        self.Close(True)
+
+    def show(self):
+        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)

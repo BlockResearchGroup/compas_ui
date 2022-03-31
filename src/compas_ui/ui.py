@@ -35,6 +35,20 @@ from .session import Session
 from .scene import Scene
 from .controller import Controller
 
+from .rhino.forms import AboutForm
+from .rhino.forms import CondaEnvsForm
+
+# from .rhino.forms import ErrorForm
+from .rhino.forms import FileForm
+from .rhino.forms import FolderForm
+
+# from .rhino.forms import InfoForm
+# from .rhino.forms import MeshDataForm
+from .rhino.forms import SceneObjectsForm
+from .rhino.forms import SearchPathsForm
+from .rhino.forms import SettingsForm
+from .rhino.forms import SplashForm
+
 
 class UI(Singleton):
     """UI singleton.
@@ -157,8 +171,6 @@ class UI(Singleton):
         None
 
         """
-        from .rhino.forms import SplashForm
-
         browser = SplashForm(title=self.name, url=url)
         browser.show()
 
@@ -170,30 +182,8 @@ class UI(Singleton):
         None
 
         """
-        import System
-        import Eto.Forms
-        import Rhino.UI
-
-        dialog = Eto.Forms.AboutDialog()
-
-        dialog.Copyright = self.config["plugin"]["copyright"]
-        dialog.Designers = System.Array[System.String](
-            self.config["plugin"]["designers"]
-        )
-        dialog.Developers = System.Array[System.String](
-            self.config["plugin"]["developers"]
-        )
-        dialog.Documenters = System.Array[System.String](
-            self.config["plugin"]["documenters"]
-        )
-        dialog.License = self.config["plugin"]["license"]
-        dialog.ProgramDescription = self.config["plugin"]["description"]
-        dialog.ProgramName = self.config["plugin"]["title"]
-        dialog.Title = self.config["plugin"]["title"]
-        dialog.Version = self.config["plugin"]["version"]
-        dialog.Website = System.Uri(self.config["plugin"]["website"])
-
-        dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
+        form = AboutForm(self.config["plugin"])
+        form.show()
 
     def github(self):
         print("Go to github.")
@@ -255,48 +245,28 @@ class UI(Singleton):
         None
 
         """
-        from .rhino.forms import CondaEnvsForm
-
         if not self.condadir:
-            import Rhino.UI
-            import Eto.Forms
-
-            dialog = Eto.Forms.SelectFolderDialog()
-            dialog.Directory = os.path.expanduser("~")
-
-            result = dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)
-            if result != Eto.Forms.DialogResult.Ok:
+            folder = FolderForm.select()
+            if not folder:
                 return
-            if not dialog.Directory:
-                return
-
-            self.condadir = dialog.Directory
+            self.condadir = folder
 
         # replace with conda object
         conda = os.path.join(self.condadir, "condabin", "conda")
         process = Popen(["{} info --envs".format(conda)], stdout=PIPE, shell=True)
         out = process.stdout.read().decode()
         lines = out.split("\n")
+
         envs = []
         for line in lines:
             if line.startswith("#"):
                 continue
             parts = line.strip().split()
-            if parts:
+            if parts and len(parts) > 1:
                 envs.append((parts[0], parts[-1]))
 
         form = CondaEnvsForm(envs)
         form.show()
-
-    def conda_activate(self):
-        """Activate a conda environment by running a subprocess that does a compas_rhino install.
-
-        Returns
-        -------
-        None
-
-        """
-        pass
 
     def rhinopython_searchpaths(self):
         """Modify the Rhino Python search paths.
@@ -306,28 +276,8 @@ class UI(Singleton):
         None
 
         """
-        import System
-        import Rhino.UI
-
-        from .rhino.forms import SearchPathsForm
-
         dialog = SearchPathsForm()
-
-        if not dialog.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow):
-            return
-
-        paths = []
-        for path in Rhino.Runtime.PythonScript.SearchPaths:
-            paths.append(path)
-        paths[:] = paths[:3]
-        for row in dialog.data:
-            path = row[0]
-            path = path.strip()
-            if path:
-                paths.append(path)
-
-        paths = System.Array[System.String](paths)
-        Rhino.Runtime.PythonScript.SearchPaths = paths
+        dialog.show()
 
     # ========================================================================
     # Scene
@@ -361,10 +311,9 @@ class UI(Singleton):
         None
 
         """
-        from .rhino.forms import SceneObjectsForm
-
         form = SceneObjectsForm(self.scene)
-        form.show()
+        if form.show():
+            self.scene.update()
 
     # ========================================================================
     # State
@@ -455,8 +404,6 @@ class UI(Singleton):
 
         """
         if not self.dirname:
-            from .rhino.forms import FileForm
-
             path = FileForm.save(self.dirname, self.basename)
             if not path:
                 return
@@ -482,8 +429,6 @@ class UI(Singleton):
         None
 
         """
-        from .rhino.forms import FileForm
-
         path = FileForm.save(self.dirname, self.basename)
         if not path:
             return
@@ -507,19 +452,18 @@ class UI(Singleton):
         None
 
         """
-        from .rhino.forms import FileForm
-
-        path = FileForm.open(self.dirname or os.path.expanduser("~"))
+        path = FileForm.open(self.dirname)
         if not path:
             return
 
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
 
+        self.scene.clear()
+
         with open(path, "rb") as f:
             self.state = pickle.load(f)
 
-        self.scene.clear()
         self.scene.update()
 
     # ========================================================================
@@ -534,8 +478,6 @@ class UI(Singleton):
         None
 
         """
-        from compas_ui.rhino.forms.settings import SettingsForm
-
         form = SettingsForm(self.settings)
         if form.show():
             self.settings.update(form.settings)

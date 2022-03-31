@@ -21,20 +21,18 @@ class CondaEnvsForm(Eto.Forms.Dialog[bool]):
 
         self.table = Eto.Forms.GridView()
         self.table.ShowHeader = True
-        # self.table.GridLines = Eto.Forms.GridLines.Horizontal
-
         self.table.DataStore = envs
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Name"
         column.Editable = False
-        column.DataCell = Eto.Forms.TextBoxCell(0)
+        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Path"
-        column.Editable = True
-        column.DataCell = Eto.Forms.TextBoxCell(1)
+        column.Editable = False
+        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
 
         layout.AddRow(self.table)
