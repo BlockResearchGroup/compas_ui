@@ -9,6 +9,26 @@ import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
 
+from .meshdata import MeshDataForm
+
+
+class LinkCell(Eto.Forms.CustomCell):
+    def __init__(self, parent):
+        self.parent = parent
+
+    def OnCreateCell(self, args):
+        def on_click(sender, e):
+            form = MeshDataForm(data)
+            if form.ShowModal(self.parent):
+                self.parent.scene.update()
+
+        data = args.Item.GetValue(4)
+        text = str(data)
+        control = Eto.Forms.Button(Text=text)
+        control.Click += on_click
+
+        return control
+
 
 class SceneObjectsForm(Eto.Forms.Dialog[bool]):
     def __init__(self, scene, title="Scene Objects", width=800, height=500):
@@ -30,7 +50,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "Type"
+        column.HeaderText = "Object"
         column.Editable = False
         column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
@@ -50,7 +70,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Data"
         column.Editable = False
-        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
+        column.DataCell = LinkCell(self)
         self.table.Columns.Add(column)
 
         collection = Eto.Forms.TreeGridItemCollection()
@@ -61,7 +81,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
                     obj.__class__.__name__,
                     obj.name,
                     obj.visible,
-                    str(obj.item),
+                    obj.item,
                 )
             )
             collection.Add(item)
