@@ -3,8 +3,8 @@ from __future__ import division
 from __future__ import print_function
 
 import inspect
+from uuid import uuid4
 from abc import abstractmethod
-from abc import abstractproperty
 from collections import defaultdict
 
 import compas
@@ -169,6 +169,7 @@ class Object(object):
 
     def __init__(self, item, name=None, visible=True, settings=None):
         super(Object, self).__init__()
+        self._guid = None
         self._item = None
         self._artist = None
         self.item = item
@@ -206,9 +207,11 @@ class Object(object):
                 state[name] = None
         self.__dict__.update(state)
 
-    @abstractproperty
-    def data(self):
-        raise NotImplementedError
+    @property
+    def guid(self):
+        if not self._guid:
+            self._guid = uuid4()
+        return self._guid
 
     @property
     def item(self):
@@ -217,7 +220,6 @@ class Object(object):
     @item.setter
     def item(self, item):
         self._item = item
-        self._guids = []
         self._artist = None
 
     @property
