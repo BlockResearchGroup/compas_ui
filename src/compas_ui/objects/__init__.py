@@ -46,6 +46,7 @@ from compas.datastructures import VolMesh
 
 from compas.plugins import plugin
 
+
 @plugin(category="ui")
 def register_objects():
     Object.register(Mesh, MeshObject, context=None)
