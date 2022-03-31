@@ -25,7 +25,8 @@ def error(title="Error", showLocalTraceback=True):
                     text = "".join(text)
                 else:
                     text = str(error)
-                ErrorForm(text, title=title)
+                form = ErrorForm(text, title=title)
+                form.show()
 
         return wrapper
 
@@ -93,7 +94,6 @@ class ErrorForm(Eto.Forms.Dialog[bool]):
         layout.AddRow(None, self.ok)
         layout.EndVertical()
         self.Content = layout
-        self.show()
 
     @property
     def ok(self):

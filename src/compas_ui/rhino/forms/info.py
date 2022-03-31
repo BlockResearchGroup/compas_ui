@@ -30,7 +30,6 @@ class InfoForm(Eto.Forms.Dialog[bool]):
         layout.AddRow(None, self.ok)
         layout.EndVertical()
         self.Content = layout
-        self.show()
 
     @property
     def ok(self):

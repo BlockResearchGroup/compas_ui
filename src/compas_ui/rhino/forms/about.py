@@ -16,7 +16,6 @@ class AboutForm:
         self.dialog.Title = plugin["title"]
         self.dialog.Version = plugin["version"]
         self.dialog.Website = System.Uri(plugin["website"])
-        self.show()
 
     def show(self):
         self.dialog.ShowDialog(Rhino.UI.RhinoEtoApp.MainWindow)

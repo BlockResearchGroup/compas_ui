@@ -28,7 +28,6 @@ class SplashForm(Eto.Forms.Dialog[bool]):
         layout.BeginVertical()
         layout.AddRow(webview)
         layout.EndVertical()
-
         self.Content = layout
 
     def action(self, sender, e):

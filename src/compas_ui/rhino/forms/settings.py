@@ -166,7 +166,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         return self._values
 
     def on_ok(self, sender, event):
-        """Callback for the OK event."""
         try:
 
             def set_value(items, setting):
@@ -186,9 +185,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         self.Close(True)
 
     def on_cancel(self, sender, event):
-        """Callback for the CANCEL event."""
         self.Close(False)
 
     def show(self):
-        """Show the form dialog."""
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
