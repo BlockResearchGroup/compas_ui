@@ -7,8 +7,6 @@ import Rhino.UI
 
 
 class Mouse(Rhino.UI.MouseCallback):
-    """"""
-
     def __init__(self, parent=None):
         super(Mouse, self).__init__()
         self.parent = parent
