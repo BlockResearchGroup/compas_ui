@@ -173,7 +173,7 @@ class Scene(Singleton):
         """
         highlight_objects(self, guids)
 
-    def speckle_push(self):
+    def speckle_push(self, message=None):
         from compas_ui.ui import UI
 
         for obj in self.objects:
@@ -181,7 +181,7 @@ class Scene(Singleton):
 
         state = self.state
         del state['data']
-        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name='scene')
+        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name='scene', message=message)
         print("scene pushed:", self.stream_id)
         return self.stream_id
 

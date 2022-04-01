@@ -254,13 +254,13 @@ class Object(object):
     def move(self):
         raise NotImplementedError
 
-    def speckle_push(self):
+    def speckle_push(self, message=None):
         from compas_ui.ui import UI
         state = self.state
         for key in state:
             if key.startswith('_guid'):
                 state[key] = None
-        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name=self.name)
+        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name=self.name, message=message)
         return self.stream_id
 
     def speckle_pull(self):
