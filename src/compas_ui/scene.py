@@ -67,6 +67,7 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
+        self.stream_id = None
 
     @property
     def state(self):
@@ -78,20 +79,23 @@ class Scene(Singleton):
                 data[guid] = obj.item
             objects.append({
                 'item': guid,
+                'stream_id': obj.stream_id,
                 'name': obj.name,
                 'visible': obj.visible,
                 'settings': obj.settings,
             })
-        return {'data': data, 'objects': objects, 'settings': self.settings}
+        return {'data': data, 'objects': objects, 'settings': self.settings, 'stream_id': self.stream_id}
 
     @state.setter
     def state(self, state):
         self.objects = []
-        for obj in state['objects']:
-            item = state['data'][obj['item']]
-            self.add(item, name=obj['name'], visible=obj['visible'], settings=obj['settings'])
+        for obj_state in state['objects']:
+            item = state['data'][obj_state['item']]
+            obj = self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
+            obj.stream_id = obj_state['stream_id']
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state['settings'])
+        self.stream_id = state['stream_id']
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.
@@ -168,3 +172,28 @@ class Scene(Singleton):
 
         """
         highlight_objects(self, guids)
+
+    def speckle_push(self):
+        from compas_ui.ui import UI
+
+        for obj in self.objects:
+            print("obj pushed:", obj.speckle_push())
+
+        state = self.state
+        del state['data']
+        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name='scene')
+        print("scene pushed:", self.stream_id)
+        return self.stream_id
+
+    def speckle_pull(self):
+        from compas_ui.ui import UI
+        self.clear()
+        ui = UI()
+        state = ui.proxy.speckle_pull(stream_id=self.state['stream_id'])
+        state['data'] = {}
+        for obj in state['objects']:
+            guid = obj['item']
+            object_state = ui.proxy.speckle_pull(stream_id=obj['stream_id'])
+            state['data'][guid] = object_state['_item']
+        self.state = state
+        self.update()
