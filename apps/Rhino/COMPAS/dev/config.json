@@ -208,7 +208,11 @@
     },
     "settings": {
         "cloud": {
-            "background": true
+            "background": false,
+            "speckle": {
+                "host": "speckle.xyz",
+                "token": "4b6a06f4c7b114e3b4115e1bba5536261cb4d3bf20"
+            }
         }
     }
 }

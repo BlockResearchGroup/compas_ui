@@ -34,6 +34,7 @@ from .singleton import Singleton
 from .session import Session
 from .scene import Scene
 from .controller import Controller
+from .project import Project
 
 from .rhino.forms import AboutForm
 from .rhino.forms import CondaEnvsForm
@@ -97,7 +98,7 @@ class UI(Singleton):
         self.scene = Scene(settings=self.settings.get("scene"))
         self.controller = controller_class(self)
         self.proxy = None
-        self.project = {"stream_id": "", "name": "Untitled"}
+        self.project = Project(self)
 
         with open(self.dbname, "wb") as f:
             pickle.dump([], f)
@@ -494,9 +495,10 @@ class UI(Singleton):
         None
 
         """
-        form = SettingsForm(self.project)
+        form = SettingsForm(self.project.state)
         if form.show():
-            self.project.update(form.settings)
+            # self.project.update(form.settings)
+            pass
 
     # ========================================================================
     # User data

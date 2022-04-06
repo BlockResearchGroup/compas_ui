@@ -1,11 +1,11 @@
-__commandname__ = "COMPAS__scene_pull"
+__commandname__ = "COMPAS__project_pull"
 
 
 def RunCommand(is_interactive):
     from compas_ui.ui import UI
 
     ui = UI()
-    ui.proxy.project_from_speckle(ui)
+    ui.project.pull()
 
 
 if __name__ == "__main__":

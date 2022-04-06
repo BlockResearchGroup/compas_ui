@@ -6,7 +6,7 @@ def RunCommand(is_interactive):
 
     ui = UI()
     ui.update_project()
-    ui.record()
+    # ui.record()
 
 
 if __name__ == "__main__":
