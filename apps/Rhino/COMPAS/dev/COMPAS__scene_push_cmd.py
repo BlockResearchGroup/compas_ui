@@ -5,7 +5,7 @@ def RunCommand(is_interactive):
     from compas_ui.ui import UI
 
     ui = UI()
-    ui.scene.speckle_push()
+    ui.proxy.project_to_speckle(ui)
 
 
 if __name__ == "__main__":

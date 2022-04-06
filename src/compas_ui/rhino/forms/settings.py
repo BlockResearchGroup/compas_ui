@@ -129,9 +129,14 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             keys.sort()
             for key in keys:
                 value = items[key]
-                item = Eto.Forms.TreeGridItem(Values=(key, value))
                 if isinstance(value, dict):
+                    item = Eto.Forms.TreeGridItem(Values=(key, None))
                     add_items(item.Children, value)
+                elif isinstance(value, list):
+                    item = Eto.Forms.TreeGridItem(Values=(key, None))
+                    add_items(item.Children, {str(i): v for i, v in enumerate(value)})
+                else:
+                    item = Eto.Forms.TreeGridItem(Values=(key, value))
                 parent.Add(item)
 
         add_items(treecollection, self.settings)

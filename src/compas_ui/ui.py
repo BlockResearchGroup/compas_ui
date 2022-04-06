@@ -97,6 +97,7 @@ class UI(Singleton):
         self.scene = Scene(settings=self.settings.get("scene"))
         self.controller = controller_class(self)
         self.proxy = None
+        self.project = {"stream_id": "", "name": "Untitled"}
 
         with open(self.dbname, "wb") as f:
             pickle.dump([], f)
@@ -112,6 +113,7 @@ class UI(Singleton):
         state["session"] = self.session.data
         state["scene"] = self.scene.state
         state["settings"] = self.settings
+        state["project"] = self.project
         return state
 
     @state.setter
@@ -119,6 +121,7 @@ class UI(Singleton):
         self.session.data = state["session"]
         self.scene.state = state["scene"]
         self.settings = state["settings"]
+        self.project = state["project"]
 
     # ========================================================================
     # Init
@@ -482,6 +485,18 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
+    
+    def update_project(self):
+        """Update the settings of the app.
+
+        Returns
+        -------
+        None
+
+        """
+        form = SettingsForm(self.project)
+        if form.show():
+            self.project.update(form.settings)
 
     # ========================================================================
     # User data

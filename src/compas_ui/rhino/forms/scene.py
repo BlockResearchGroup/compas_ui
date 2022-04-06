@@ -157,7 +157,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         layout.BeginVertical(
             Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
         )
-        layout.AddRow(Eto.Forms.Label(Text="Scene"), self.stream, self.push, self.pull, None)
+        layout.AddRow(self.push, self.pull, None)
         layout.EndVertical()
 
         layout.BeginVertical(
@@ -183,15 +183,6 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
             collection.Add(item)
 
         self.table.DataStore = collection
-
-    @property
-    def stream(self):
-        self.StreamTextBox = Eto.Forms.TextBox(Text=str(self.scene.stream_id))
-
-        def on_change(sender, e):
-            self.scene.stream_id = self.StreamTextBox.Text
-        self.StreamTextBox.TextChanged += on_change
-        return self.StreamTextBox
 
     @property
     def push(self):
