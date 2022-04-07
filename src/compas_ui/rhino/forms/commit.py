@@ -2,9 +2,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from ast import literal_eval
-from email import message
-
 import Rhino
 import Rhino.UI
 import Eto.Drawing

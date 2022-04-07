@@ -24,6 +24,7 @@ from compas.plugins import pluggable
 
 from compas_ui.objects import Object
 from compas_ui.singleton import Singleton
+from uuid import uuid4
 
 
 @pluggable(category='ui')
@@ -64,10 +65,17 @@ class Scene(Singleton):
 
     def __init__(self, settings=None):
         super(Scene, self).__init__()
+        self._guid = None
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
         self.stream_id = None
+
+    @property
+    def guid(self):
+        if not self._guid:
+            self._guid = uuid4()
+        return self._guid
 
     @property
     def state(self):

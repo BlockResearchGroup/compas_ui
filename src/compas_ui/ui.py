@@ -341,7 +341,7 @@ class UI(Singleton):
             history.append(self.state)
             h = len(history)
             if h > self._depth:
-                history = history[h - self._depth :]  # noqa : E203
+                history = history[h - self._depth:]  # noqa : E203
             self._current = len(history) - 1
 
         with open(self.dbname, "wb") as f:
@@ -486,7 +486,7 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
-    
+
     def update_project(self):
         """Update the settings of the app.
 
@@ -495,6 +495,7 @@ class UI(Singleton):
         None
 
         """
+        self.project.update()
         form = SettingsForm(self.project.state)
         if form.show():
             # self.project.update(form.settings)
