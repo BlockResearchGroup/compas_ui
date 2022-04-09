@@ -30,24 +30,25 @@ import compas_rhino
 
 from compas_cloud import Proxy
 
-from .singleton import Singleton
-from .session import Session
-from .scene import Scene
-from .controller import Controller
+from compas_ui.singleton import Singleton
+from compas_ui.session import Session
+from compas_ui.scene import Scene
+from compas_ui.controller import Controller
 
-from .rhino.forms import AboutForm
-from .rhino.forms import CondaEnvsForm
+from compas_ui.rhino.forms import AboutForm
+from compas_ui.rhino.forms import CondaEnvsForm
 
-# from .rhino.forms import ErrorForm
-from .rhino.forms import FileForm
-from .rhino.forms import FolderForm
+# from compas_ui.rhino.forms import ErrorForm
+from compas_ui.rhino.forms import error as catcherror
+from compas_ui.rhino.forms import FileForm
+from compas_ui.rhino.forms import FolderForm
 
-# from .rhino.forms import InfoForm
-# from .rhino.forms import MeshDataForm
-from .rhino.forms import SceneObjectsForm
-from .rhino.forms import SearchPathsForm
-from .rhino.forms import SettingsForm
-from .rhino.forms import SplashForm
+# from compas_ui.rhino.forms import InfoForm
+# from compas_ui.rhino.forms import MeshDataForm
+from compas_ui.rhino.forms import SceneObjectsForm
+from compas_ui.rhino.forms import SearchPathsForm
+from compas_ui.rhino.forms import SettingsForm
+from compas_ui.rhino.forms import SplashForm
 
 
 class UI(Singleton):
@@ -75,6 +76,7 @@ class UI(Singleton):
 
     """
 
+    @catcherror()
     def __init__(self, config=None, controller_class=None):
         if config is None:
             raise RuntimeError(
@@ -158,6 +160,7 @@ class UI(Singleton):
 
         return error(*args, **kwargs)
 
+    @catcherror()
     def splash(self, url):
         """Display a splash screen.
 
@@ -174,6 +177,7 @@ class UI(Singleton):
         browser = SplashForm(title=self.name, url=url)
         browser.show()
 
+    @catcherror()
     def about(self):
         """Display a standard dialog with information about the project.
 
@@ -185,12 +189,15 @@ class UI(Singleton):
         form = AboutForm(self.config["plugin"])
         form.show()
 
+    @catcherror
     def github(self):
         print("Go to github.")
 
+    @catcherror()
     def docs(self):
         print("Go to the docs.")
 
+    @catcherror()
     def examples(self):
         print("Go to the examples.")
 
@@ -198,6 +205,7 @@ class UI(Singleton):
     # Cloud
     # ========================================================================
 
+    @catcherror()
     def cloud_start(self):
         """Start the command server.
 
@@ -209,6 +217,7 @@ class UI(Singleton):
         settings = self.settings.get("cloud") or {}
         self.proxy = Proxy(**settings)
 
+    @catcherror()
     def cloud_restart(self):
         """Restart the command server.
 
@@ -222,6 +231,7 @@ class UI(Singleton):
         else:
             self.cloud_start()
 
+    @catcherror()
     def cloud_shutdown(self):
         """Shut down the command server.
 
@@ -237,6 +247,7 @@ class UI(Singleton):
     # Environments
     # ========================================================================
 
+    @catcherror()
     def conda_envs(self):
         """Display a list of available conda environments.
 
@@ -268,6 +279,7 @@ class UI(Singleton):
         form = CondaEnvsForm(envs)
         form.show()
 
+    @catcherror()
     def rhinopython_searchpaths(self):
         """Modify the Rhino Python search paths.
 
@@ -283,6 +295,7 @@ class UI(Singleton):
     # Scene
     # ========================================================================
 
+    @catcherror()
     def scene_clear(self):
         """Clear all objects from the scene.
 
@@ -292,7 +305,9 @@ class UI(Singleton):
 
         """
         self.scene.clear()
+        self.record()
 
+    @catcherror()
     def scene_update(self):
         """Update the scene.
 
@@ -302,7 +317,9 @@ class UI(Singleton):
 
         """
         self.scene.update()
+        self.record()
 
+    @catcherror()
     def scene_objects(self):
         """Display a form with all objects in the scene.
 
@@ -314,11 +331,13 @@ class UI(Singleton):
         form = SceneObjectsForm(self.scene)
         if form.show():
             self.scene.update()
+            self.record()
 
     # ========================================================================
     # State
     # ========================================================================
 
+    @catcherror()
     def record(self):
         """Record the current state of the UI.
 
@@ -343,6 +362,7 @@ class UI(Singleton):
         with open(self.dbname, "wb") as f:
             pickle.dump(history, f)
 
+    @catcherror()
     def undo(self):
         """Undo changes in the UI by rewinding to a recorded state.
 
@@ -369,6 +389,7 @@ class UI(Singleton):
 
         self.scene.update()
 
+    @catcherror()
     def redo(self):
         """Redo changes in the app by forwarding to a recorded state.
 
@@ -395,6 +416,7 @@ class UI(Singleton):
 
         self.scene.update()
 
+    @catcherror()
     def save(self):
         """Save the current state of the app to a pickle file.
 
@@ -416,6 +438,7 @@ class UI(Singleton):
         with open(path, "wb+") as f:
             pickle.dump(self.state, f)
 
+    @catcherror()
     def saveas(self):
         """Save the current state of the app to a pickle file with a specific name.
 
@@ -439,6 +462,7 @@ class UI(Singleton):
         with open(path, "wb+") as f:
             pickle.dump(self.state, f)
 
+    @catcherror()
     def load(self):
         """Restore a saved state of the app from a selected pickle file.
 
@@ -465,11 +489,13 @@ class UI(Singleton):
             self.state = pickle.load(f)
 
         self.scene.update()
+        self.record()
 
     # ========================================================================
     # Settings
     # ========================================================================
 
+    @catcherror()
     def update_settings(self):
         """Update the settings of the app.
 
@@ -482,11 +508,13 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
+            self.record()
 
     # ========================================================================
     # User data
     # ========================================================================
 
+    @catcherror()
     def get_real(self, message, minval=None, maxval=None, default=None):
         """Get a real number from the user.
 
@@ -512,6 +540,7 @@ class UI(Singleton):
         if value:
             return float(value)
 
+    @catcherror()
     def get_integer(self, message, minval=None, maxval=None, default=None):
         """Get an integer number from the user.
 
@@ -537,6 +566,7 @@ class UI(Singleton):
         if value:
             return int(value)
 
+    @catcherror()
     def get_string(self, message, options=None, default=None):
         """Get a string from the user.
 
