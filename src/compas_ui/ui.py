@@ -76,7 +76,6 @@ class UI(Singleton):
 
     """
 
-    @catcherror()
     def __init__(self, config=None, controller_class=None):
         if config is None:
             raise RuntimeError(
