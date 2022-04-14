@@ -2,8 +2,6 @@ import os
 import compas_rhino
 from compas.utilities import flatten
 
-from compas_ui.rhino.forms import error as catcherror
-
 
 class Controller(object):
     def __init__(self, ui):
@@ -17,7 +15,6 @@ class Controller(object):
     # Datastructures
     # ========================================================================
 
-    @catcherror()
     def mesh_create(self):
         """Create a COMPAS mesh."""
         from compas.datastructures import Mesh
@@ -126,19 +123,15 @@ class Controller(object):
         self.ui.scene.update()
         self.ui.record()
 
-    @catcherror()
     def mesh_modify(self):
         """Create a COMPAS mesh."""
 
-    @catcherror()
     def mesh_delete(self):
         """Delete a COMPAS mesh."""
 
-    @catcherror()
     def mesh_export(self):
         """Export a COMPAS mesh."""
 
-    @catcherror()
     def mesh_select_vertices(self, meshobj):
         """Select vertices of a mesh object through the UI.
 
@@ -188,7 +181,6 @@ class Controller(object):
 
         return vertices
 
-    @catcherror()
     def mesh_select_edges(self, meshobj):
         """Select edges of a mesh object through the UI.
 

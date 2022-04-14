@@ -1,5 +1,7 @@
 import os
 import json
+from compas_ui.ui import UI
+
 
 __commandname__ = "COMPAS__init"
 
@@ -11,8 +13,8 @@ with open(os.path.join(HERE, "config.json")) as f:
     CONFIG = json.load(f)
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    from compas_ui.ui import UI
 
     UI.reset()
     ui = UI(config=CONFIG)

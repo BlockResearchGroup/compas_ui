@@ -1,8 +1,11 @@
+from compas_ui.ui import UI
+
+
 __commandname__ = "COMPAS__scene_load"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    from compas_ui.ui import UI
 
     ui = UI()
     stream_id = ui.get_string(message="Stream id:")

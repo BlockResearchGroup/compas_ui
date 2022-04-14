@@ -1,8 +1,11 @@
+from compas_ui.ui import UI
+
+
 __commandname__ = "COMPAS__undo"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    from compas_ui.ui import UI
 
     ui = UI()
     ui.undo()

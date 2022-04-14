@@ -1,6 +1,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+import ast
 
 import Rhino
 import Rhino.UI
@@ -17,8 +18,9 @@ class AttributesForm(Eto.Forms.Dialog[bool]):
             except Exception as e:
                 print(e)
 
+        self.attributes = dict(zip(names, values))
         self.names = names
-        self.values = values
+        self.values = [str(value) for value in values]
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
@@ -28,20 +30,23 @@ class AttributesForm(Eto.Forms.Dialog[bool]):
 
         table = Eto.Forms.GridView()
         table.ShowHeader = True
-        table.DataStore = list(zip(names, values))
+        table.DataStore = list(zip(self.names, self.values))
 
         self.data = table.DataStore
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Name"
         column.Editable = False
-        column.DataCell = Eto.Forms.TextBoxCell(table.Columns.Count)
+        cell = Eto.Forms.TextBoxCell(0)
+        column.DataCell = cell
         table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Value"
         column.Editable = True
-        column.DataCell = Eto.Forms.TextBoxCell(table.Columns.Count)
+        cell = Eto.Forms.TextBoxCell(1)
+        cell.AutoSelectMode = Eto.Forms.AutoSelectMode.OnFocus
+        column.DataCell = cell
         table.Columns.Add(column)
 
         table.CellFormatting += on_cell_formatting
@@ -73,17 +78,71 @@ class AttributesForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     def on_ok(self, sender, event):
-        # try:
-        #     for i, row in enumerate(self.data):
-        #         if self.names[i] == row[0]:
-        #             self.values[i] = row[1]
-        # except Exception as e:
-        #     print(e)
-        #     self.Close(False)
-        self.Close(True)
+        try:
+            for row in self.data:
+                name = row[0]
+                value = row[1]
+                if value != "-":
+                    try:
+                        value = ast.literal_eval(value)
+                    except Exception as e:
+                        print(e)
+                    else:
+                        value = None
+                self.attributes[name] = value
+        except Exception as e:
+            print(e)
+            self.Close(False)
+        else:
+            self.Close(True)
 
     def on_cancel(self, sender, event):
         self.Close(False)
 
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+
+
+class Table(object):
+    """Wrapper for Eto grid view.
+
+    Parameters
+    ----------
+    cols
+    rows
+
+    """
+
+    def __init__(self, cols, rows):
+        def on_cell_formatting(sender, e):
+            try:
+                if not e.Column.Editable:
+                    e.ForegroundColor = Eto.Drawing.Colors.DarkGray
+            except Exception as e:
+                print(e)
+
+        self.widget = Eto.Forms.GridView()
+        self.widget.ShowHeader = True
+        self.widget.DataStore = rows
+
+        for i, col in enumerate(cols):
+            column = Eto.Forms.GridColumn()
+            column.HeaderText = col["name"]
+            column.Editable = col["is_editable"]
+            if col["is_checkbox"]:
+                cell = Eto.Forms.CheckBoxCell(i)
+                column.DataCell = cell
+            else:
+                cell = Eto.Forms.TextBoxCell(i)
+                cell.AutoSelectMode = Eto.Forms.AutoSelectMode.OnFocus
+                cell.VerticalAlignment = Eto.Forms.VerticalAlignment.Center
+                cell.TextAlignment = Eto.Forms.TextAlignment.Right
+                column.DataCell = cell
+
+            self.widget.Columns.Add(column)
+
+        self.widget.CellFormatting += on_cell_formatting
+
+        self.cols = cols
+        self.rows = rows
+        self.data = self.widget.DataStore

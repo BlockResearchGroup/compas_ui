@@ -1,8 +1,11 @@
+from compas_ui.ui import UI
+
+
 __commandname__ = "COMPAS__redo"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    from compas_ui.ui import UI
 
     ui = UI()
     ui.redo()
