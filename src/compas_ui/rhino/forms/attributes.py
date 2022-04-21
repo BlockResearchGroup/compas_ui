@@ -30,7 +30,7 @@ class AttributesForm(Eto.Forms.Dialog[bool]):
 
         self.table = table = Eto.Forms.GridView()
         table.ShowHeader = True
-        table.DataStore = list(zip(self.names, self.values))
+        table.DataStore = [list(row) for row in zip(self.names, self.values)]
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Name"
