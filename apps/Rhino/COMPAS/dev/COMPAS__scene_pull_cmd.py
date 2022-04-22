@@ -1,15 +1,14 @@
 from compas_ui.ui import UI
 
 
-__commandname__ = "COMPAS__load"
+__commandname__ = "COMPAS__scene_pull"
 
 
 @UI.error()
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.load()
-    ui.record()
+    ui.scene.speckle_pull()
 
 
 if __name__ == "__main__":

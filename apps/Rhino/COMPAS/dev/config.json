@@ -19,6 +19,11 @@
         "description": "COMPAS UI provides...",
         "website": "https://compas.dev"
     },
+    "settings": {
+        "cloud": {
+            "background": true
+        }
+    },
     "ui": {
         "icons": {
             "bitmap": "",

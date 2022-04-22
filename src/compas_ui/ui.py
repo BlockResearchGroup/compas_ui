@@ -30,25 +30,24 @@ import compas_rhino
 
 from compas_cloud import Proxy
 
-from .singleton import Singleton
-from .session import Session
-from .scene import Scene
-from .controller import Controller
-from .project import Project
+from compas_ui.singleton import Singleton
+from compas_ui.session import Session
+from compas_ui.scene import Scene
+from compas_ui.controller import Controller
 
-from .rhino.forms import AboutForm
-from .rhino.forms import CondaEnvsForm
+from compas_ui.rhino.forms import AboutForm
+from compas_ui.rhino.forms import CondaEnvsForm
 
-# from .rhino.forms import ErrorForm
-from .rhino.forms import FileForm
-from .rhino.forms import FolderForm
+# from compas_ui.rhino.forms import ErrorForm
+from compas_ui.rhino.forms import FileForm
+from compas_ui.rhino.forms import FolderForm
 
-# from .rhino.forms import InfoForm
-# from .rhino.forms import MeshDataForm
-from .rhino.forms import SceneObjectsForm
-from .rhino.forms import SearchPathsForm
-from .rhino.forms import SettingsForm
-from .rhino.forms import SplashForm
+# from compas_ui.rhino.forms import InfoForm
+# from compas_ui.rhino.forms import MeshDataForm
+from compas_ui.rhino.forms import SceneObjectsForm
+from compas_ui.rhino.forms import SearchPathsForm
+from compas_ui.rhino.forms import SettingsForm
+from compas_ui.rhino.forms import SplashForm
 
 
 class UI(Singleton):
@@ -296,6 +295,7 @@ class UI(Singleton):
 
         """
         self.scene.clear()
+        self.record()
 
     def scene_update(self):
         """Update the scene.
@@ -306,6 +306,7 @@ class UI(Singleton):
 
         """
         self.scene.update()
+        self.record()
 
     def scene_objects(self):
         """Display a form with all objects in the scene.
@@ -318,6 +319,7 @@ class UI(Singleton):
         form = SceneObjectsForm(self.scene)
         if form.show():
             self.scene.update()
+            self.record()
 
     # ========================================================================
     # State
@@ -469,6 +471,7 @@ class UI(Singleton):
             self.state = pickle.load(f)
 
         self.scene.update()
+        self.record()
 
     # ========================================================================
     # Settings
@@ -486,6 +489,7 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
+            self.record()
 
     def update_project(self):
         """Update the settings of the app.

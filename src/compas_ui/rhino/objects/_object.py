@@ -8,11 +8,6 @@ from compas_ui.objects import Object
 class RhinoObject(Object):
     """Base class for COMPAS Rhino objects.
 
-    Parameters
-    ----------
-    layer : str, optional
-        The layer for drawing.
-
     Attributes
     ----------
     layer : str
@@ -24,19 +19,10 @@ class RhinoObject(Object):
     def __init__(self, *args, **kwargs):
         super(RhinoObject, self).__init__(*args, **kwargs)
         self._guids = []
-        self.layer = kwargs.get('layer')
 
     # ==========================================================================
     # Properties
     # ==========================================================================
-
-    @property
-    def layer(self):
-        return self.artist.layer
-
-    @layer.setter
-    def layer(self, layer):
-        self.artist.layer = layer
 
     @property
     def guids(self):
@@ -45,10 +31,3 @@ class RhinoObject(Object):
     @guids.setter
     def guids(self, guids):
         self._guids = guids
-
-    # ==========================================================================
-    # Methods
-    # ==========================================================================
-
-    def clear_layer(self):
-        self.artist.clear_layer()

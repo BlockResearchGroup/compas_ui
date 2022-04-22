@@ -13,6 +13,7 @@ Classes
     :nosignatures:
 
     AboutForm
+    AttributesForm
     CondaEnvsForm
     ErrorForm
     FileForm
@@ -38,6 +39,7 @@ from __future__ import division
 from __future__ import print_function
 
 from .about import AboutForm
+from .attributes import AttributesForm
 from .conda import CondaEnvsForm
 from .error import ErrorForm, error
 from .filesystem import FileForm
@@ -52,6 +54,7 @@ from .splash import SplashForm
 
 __all__ = [
     "AboutForm",
+    "AttributesForm",
     "CondaEnvsForm",
     "ErrorForm",
     "error",
