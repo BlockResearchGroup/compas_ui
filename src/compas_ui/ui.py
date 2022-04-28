@@ -34,6 +34,7 @@ from compas_ui.singleton import Singleton
 from compas_ui.session import Session
 from compas_ui.scene import Scene
 from compas_ui.controller import Controller
+from compas_ui.project import Project
 
 from compas_ui.rhino.forms import AboutForm
 from compas_ui.rhino.forms import CondaEnvsForm

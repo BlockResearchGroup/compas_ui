@@ -24,6 +24,7 @@ from compas.plugins import pluggable
 
 from compas_ui.objects import Object
 from compas_ui.singleton import Singleton
+from compas_ui.stream import Stream
 from uuid import uuid4
 
 
@@ -69,7 +70,7 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
-        self.stream_id = None
+        self.stream = Stream(self)
 
     @property
     def guid(self):
@@ -87,23 +88,21 @@ class Scene(Singleton):
                 data[guid] = obj.item
             objects.append({
                 'item': guid,
-                'stream_id': obj.stream_id,
                 'name': obj.name,
                 'visible': obj.visible,
                 'settings': obj.settings,
             })
-        return {'data': data, 'objects': objects, 'settings': self.settings, 'stream_id': self.stream_id}
+        return {'data': data, 'objects': objects, 'settings': self.settings, 'stream': self.stream}
 
     @state.setter
     def state(self, state):
         self.objects = []
         for obj_state in state['objects']:
             item = state['data'][obj_state['item']]
-            obj = self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
-            obj.stream_id = obj_state['stream_id']
+            self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state['settings'])
-        self.stream_id = state['stream_id']
+        self.stream.state = state['stream']
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.

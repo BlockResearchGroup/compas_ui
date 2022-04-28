@@ -1,12 +1,10 @@
-import compas
-import json
-
+from compas_ui.stream import Stream
 
 class Project(object):
 
     def __init__(self, ui):
         self._ui = ui
-        self.stream_id = None
+        self.stream = Stream(self)
         self.name = "Untitled"
         self.data = {}
         self.scenes = {}
@@ -25,86 +23,50 @@ class Project(object):
             self._ui = UI()
         return self._ui
 
-    def update(self):
-        """Update the project state base on what's available in the scene."""
-
+    @property
+    def state(self):
+        # gather data stream_states
         self.data.clear()
         for obj in self.ui.scene.objects:
-            # Update data states
             if str(obj.item.guid) not in self.data:
-                stream_id = None
-                if hasattr(obj.item, 'stream_id'):
-                    stream_id = obj.item.stream_id
-                item_state = json.loads(compas.json_dumps(obj.item))
-                self.data[str(obj.item.guid)] = {"name": str(obj.item.name), "stream_id": stream_id, "state": item_state, "_pointer": obj.item}
+                if not hasattr(obj.item, 'stream'):
+                    obj.item.stream = Stream(obj.item) # Create stream if not present
+                self.data[str(obj.item.guid)] = obj.item.stream.state
 
-        # Update scene states
-        # TODO: this needs to be adjusted when multi scenes are supported.
+        # gather scene stream_states
         self.scenes.clear()
         for scene in [self.ui.scene]:
-            scene_state = scene.state
-            del scene_state['data']
-            self.scenes[str(scene.guid)] = {"name": str(self.name), "stream_id": scene.stream_id, "state": scene_state, "_pointer": scene}
+            self.scenes[str(scene.guid)] = scene.stream.state
 
         # Update session data
         self.session = self.ui.session.data
 
-    @property
-    def state(self):
         state = self.__dict__.copy()
-        # Exclude _ui and _pointer from the state
-        for key, collection in list(state.items()):
-            if key.startswith('_'):
-                del state[key]
-            elif isinstance(collection, dict):
-                for wrapper in collection.values():
-                    if "_pointer" in wrapper:
-                        del wrapper['_pointer']
+        del state['_ui']
         return state
 
     @state.setter
     def state(self, state):
         self.__dict__.update(state)
+        self.ui.session.data = self.ui.session
 
-    def push(self, message=None):
-
-        self.update()
-
-        # Push data
-        for guid, wrapper in self.data.items():
-            wrapper['_pointer'].stream_id = self.ui.proxy.speckle_push(stream_id=wrapper["stream_id"], item=wrapper["state"], name=wrapper["name"]+".data", message=message)
-            print("data pushed:", wrapper['_pointer'].stream_id)
-
-        # Push scene
-        for guid, wrapper in self.scenes.items():
-            wrapper['_pointer'].stream_id = self.ui.proxy.speckle_push(stream_id=wrapper["stream_id"], item=wrapper["state"], name=wrapper["name"]+".scene", message=message)
-            print("scene pushed:", wrapper['_pointer'].stream_id)
-
-        # Push project
-        self.stream_id = self.ui.proxy.speckle_push(stream_id=self.stream_id, item=self.state, name=self.name+".project", message=message)
-        print("project pushed:", self.stream_id)
-
-    def pull(self):
-        # Load project
-        self.state = self.ui.proxy.speckle_pull(self.stream_id)
-
+    def load_from_stream(self):
         # Load data
         data = {}
-        for guid, wrapper in self.state['data'].items():
-            item = self.ui.proxy.speckle_pull(wrapper['stream_id'])
-            item._guid = guid
+        for guid, stream_state in self.state['data'].items():
+            # Recreate data item from stream state
+            item = self.ui.proxy.speckle_operation("checkout", stream_state)
+            item.stream = Stream.from_state(item, stream_state)
             data[guid] = item
 
         # Load scene
         # TODO: this needs to be adjusted when multi scenes are supported.
-        self.ui.scene.clear()
-        for guid, wrapper in self.state['scenes'].items():
-            scene_state = self.ui.proxy.speckle_pull(wrapper["stream_id"])
+        scene = self.ui.scene
+        for guid, stream_state in self.state['scenes'].items():
+            scene.clear()
+            scene_state = self.ui.proxy.speckle_operation("checkout", stream_state)
             scene_state['data'] = data
-            self.ui.scene.state = scene_state
-            wrapper["_pointer"] = self.ui.scene
-            self.ui.scene._guid = guid
-        self.ui.scene.update()
-
-        # Load session
-        self.ui.session.data = self.state['session']
+            scene.state = scene_state
+            scene._guid = guid
+            scene.stream = Stream.from_state(scene, stream_state)
+            scene.update()
