@@ -35,19 +35,22 @@ from compas_ui.session import Session
 from compas_ui.scene import Scene
 from compas_ui.controller import Controller
 
-from compas_ui.rhino.forms import AboutForm
-from compas_ui.rhino.forms import CondaEnvsForm
+try:
+    from compas_ui.rhino.forms import AboutForm
+    from compas_ui.rhino.forms import CondaEnvsForm
 
-# from compas_ui.rhino.forms import ErrorForm
-from compas_ui.rhino.forms import FileForm
-from compas_ui.rhino.forms import FolderForm
+    # from compas_ui.rhino.forms import ErrorForm
+    from compas_ui.rhino.forms import FileForm
+    from compas_ui.rhino.forms import FolderForm
 
-# from compas_ui.rhino.forms import InfoForm
-# from compas_ui.rhino.forms import MeshDataForm
-from compas_ui.rhino.forms import SceneObjectsForm
-from compas_ui.rhino.forms import SearchPathsForm
-from compas_ui.rhino.forms import SettingsForm
-from compas_ui.rhino.forms import SplashForm
+    # from compas_ui.rhino.forms import InfoForm
+    # from compas_ui.rhino.forms import MeshDataForm
+    from compas_ui.rhino.forms import SceneObjectsForm
+    from compas_ui.rhino.forms import SearchPathsForm
+    from compas_ui.rhino.forms import SettingsForm
+    from compas_ui.rhino.forms import SplashForm
+except ImportError:
+    pass
 
 
 class UI(Singleton):
