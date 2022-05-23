@@ -19,6 +19,13 @@
         "description": "COMPAS UI provides...",
         "website": "https://compas.dev"
     },
+    "packages": [
+        "compas",
+        "compas_rhino",
+        "compas_ghpython",
+        "compas_cloud",
+        "compas_ui"
+    ],
     "settings": {
         "cloud": {
             "background": true
@@ -44,7 +51,7 @@
             },
             {
                 "name": "COMPAS__cloud_start",
-                "menu_text": "cloud Start"
+                "menu_text": "Cloud Start"
             },
             {
                 "name": "COMPAS__conda_envs",
