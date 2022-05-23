@@ -123,7 +123,7 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
 
     def show(self):
         """Show the form dialog."""
-        return self.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow)
+        return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
 
 
 class Page(object):

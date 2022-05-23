@@ -23,7 +23,7 @@ def _update_named_values(names, values, message='', title='Update named values')
     except Exception:
         values = ShowPropertyListBox(message, title, names, values)
     else:
-        if dialog.ShowModal(Rhino.UI.RhinoEtoUI.MainWindow):
+        if dialog.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow):
             values = dialog.values
         else:
             values = None
