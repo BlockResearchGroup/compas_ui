@@ -147,7 +147,7 @@ class Controller(object):
         mesh = meshobj.mesh
 
         options = ["All", "Boundary", "Corners", "ByContinuousEdges", "Manual"]
-        mode = self.get_string(message="Selection mode.", options=options)
+        mode = self.ui.get_string(message="Selection mode.", options=options)
         if not mode:
             return
 
@@ -161,12 +161,12 @@ class Controller(object):
         elif mode == "Boundary":
             vertices = list(set(flatten(mesh.vertices_on_boundaries())))
             guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "Corners":
             vertices = mesh.corner_vertices()
             guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "ByContinuousEdges":
             temp = meshobj.select_edges()
@@ -174,7 +174,7 @@ class Controller(object):
                 set(flatten([mesh.vertices_on_edge_loop(key) for key in temp]))
             )
             guids = [vertex_guid[vertex] for vertex in vertices]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "Manual":
             vertices = meshobj.select_vertices()
@@ -196,7 +196,7 @@ class Controller(object):
         mesh = meshobj.mesh
 
         options = ["All", "AllBoundaryEdges", "Continuous", "Parallel", "Manual"]
-        mode = self.get_string(message="Selection mode.", options=options)
+        mode = self.ui.get_string(message="Selection mode.", options=options)
         if not mode:
             return
 
@@ -211,19 +211,19 @@ class Controller(object):
         elif mode == "AllBoundaryEdges":
             edges = list(set(flatten(mesh.edges_on_boundaries())))
             guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "Continuous":
             temp = meshobj.select_edges()
             edges = list(set(flatten([mesh.edge_loop(edge) for edge in temp])))
             guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "Parallel":
             temp = meshobj.select_edges()
             edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
             guids = [edge_guid[edge] for edge in edges]
-            self.scene.highlight_objects(guids)
+            self.ui.scene.highlight_objects(guids)
 
         elif mode == "Manual":
             edges = meshobj.select_edges()
