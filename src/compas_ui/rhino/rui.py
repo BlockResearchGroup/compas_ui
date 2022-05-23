@@ -219,15 +219,18 @@ class Rui(object):
         :class:`Rui`
 
         """
-        # here = os.path.dirname(configpath)
+        root = os.path.dirname(configpath)
 
         with open(configpath, "r") as f:
             config = json.load(f)
 
         self = cls(ruipath)
         self.init()
-        # self.add_bitmap(os.path.join(here, config["ui"]["icons"]["bitmap"]))
-        # self.add_bitmap_items(config["ui"]["icons"]["images"])
+        if config["ui"]["icons"]["bitmap"]:
+            bitmap = os.path.join(root, config["ui"]["icons"]["bitmap"])
+            if os.path.exists(bitmap):
+                self.add_bitmap(bitmap)
+                self.add_bitmap_items(config["ui"]["icons"]["images"])
         self.add_macros(config["ui"]["commands"])
         self.add_menus(config["ui"]["menus"])
         self.add_toolbars(config["ui"]["toolbars"])
