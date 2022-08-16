@@ -99,24 +99,24 @@
 <h1>Object</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_ui.objects.Object">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.objects.</span></span><span class="sig-name descname"><span class="pre">Object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/objects/object.py#L118"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.objects.</span></span><span class="sig-name descname"><span class="pre">Object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/objects/object.py#L120"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for all objects.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – A COMPAS data object.</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – A COMPAS data object.</p></li>
 <li><p><strong>scene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.scenes.Scene</span></code>, optional) – A scene object.</p></li>
 <li><p><strong>name</strong> (<em>str, optional</em>) – The name of the object.</p></li>
 <li><p><strong>visible</strong> (<em>bool, optional</em>) – Toggle for the visibility of the object.</p></li>
 <li><p><strong>settings</strong> (<em>dict[str, Any], optional</em>) – A dictionary of settings.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes</dt>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – The COMPAS data object assignd to this scene object.</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – The COMPAS data object assignd to this scene object.</p></li>
 <li><p><strong>scene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.scenes.Scene</span></code>) – The scene.</p></li>
-<li><p><strong>artist</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.artists.Artist.html#compas.artists.Artist" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.artists.Artist</span></code></a>) – The artist matching the type of <cite>item</cite>.</p></li>
+<li><p><strong>artist</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.artists.Artist.html#compas.artists.Artist" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.artists.Artist</span></code></a>) – The artist matching the type of <cite>item</cite>.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – The name of the object.
 This is an alias for the name of <cite>item</cite>.</p></li>
 <li><p><strong>visible</strong> (<em>bool</em>) – Toggle for the visibility of the object in the scene.</p></li>
@@ -127,10 +127,6 @@ This dict starts from the settings of the <cite>artist</cite>.</p></li>
 </dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.clear.html#compas_ui.objects.Object.clear" title="compas_ui.objects.Object.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
 <td><p></p></td>
