@@ -2,6 +2,11 @@ import os
 import json
 from compas_ui.ui import UI
 
+# TODO: auto start the cloud
+# TODO: change splash screen
+# TODO: check why loading takes so long
+# TODO: check if current environment has compas_ui
+
 
 __commandname__ = "COMPAS__init"
 

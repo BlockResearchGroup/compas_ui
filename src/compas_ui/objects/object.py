@@ -14,6 +14,8 @@ from compas.plugins import PluginValidator
 
 from compas_ui.objects import ObjectNotRegistered
 
+# TODO: move speckle stuff to dev branch
+
 
 def __getstate__(self):
     """Return a serializable state of the artist."""
@@ -189,22 +191,22 @@ class Object(object):
     def state(self):
         state = self.__dict__.copy()
         for name in state:
-            if name.startswith('_conduit'):
+            if name.startswith("_conduit"):
                 state[name] = None
-            elif name == '_artist':
+            elif name == "_artist":
                 state[name] = None
-            elif name == '_scene':
+            elif name == "_scene":
                 state[name] = None
         return state
 
     @state.setter
     def state(self, state):
         for name in state:
-            if name.startswith('_conduit'):
+            if name.startswith("_conduit"):
                 state[name] = None
-            elif name == '_artist':
+            elif name == "_artist":
                 state[name] = None
-            elif name == '_scene':
+            elif name == "_scene":
                 state[name] = None
         self.__dict__.update(state)
 
@@ -256,14 +258,18 @@ class Object(object):
 
     def speckle_push(self):
         from compas_ui.ui import UI
+
         state = self.state
         for key in state:
-            if key.startswith('_guid'):
+            if key.startswith("_guid"):
                 state[key] = None
-        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name=self.name)
+        self.stream_id = UI().proxy.speckle_push(
+            stream_id=self.state["stream_id"], item=state, name=self.name
+        )
         return self.stream_id
 
     def speckle_pull(self):
         from compas_ui.ui import UI
-        self.state = UI().proxy.speckle_pull(stream_id=self.state['stream_id'])
+
+        self.state = UI().proxy.speckle_pull(stream_id=self.state["stream_id"])
         return self.state

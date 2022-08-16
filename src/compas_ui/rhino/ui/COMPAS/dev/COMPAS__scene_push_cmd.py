@@ -1,5 +1,8 @@
 from compas_ui.ui import UI
 
+# TODO: clarify intensions (speckle seems too dev for now)
+# TODO: move to dev branch
+
 
 __commandname__ = "COMPAS__scene_push"
 

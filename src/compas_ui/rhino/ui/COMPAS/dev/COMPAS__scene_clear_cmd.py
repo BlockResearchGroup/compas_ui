@@ -1,5 +1,7 @@
 from compas_ui.ui import UI
 
+# TODO: turn off recording for now
+
 
 __commandname__ = "COMPAS__scene_clear"
 

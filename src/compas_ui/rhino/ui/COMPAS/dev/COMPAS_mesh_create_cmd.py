@@ -1,5 +1,7 @@
 from compas_ui.ui import UI
 
+# TODO: disable recording for now
+
 
 __commandname__ = "COMPAS_mesh_create"
 

@@ -1,5 +1,7 @@
 from compas_ui.ui import UI
 
+# TODO: disable for now
+
 
 __commandname__ = "COMPAS__undo"
 

@@ -14,6 +14,10 @@ from compas.colors import Color
 
 from .object import Object
 
+# TODO: color settings should be on the artist
+# TODO: provide form for evey scene object with separate pages for scene settings, artist settings, data, ...
+# TODO: remove the transformations and view coordinates? (specific to form/force diagram context)
+
 
 class MeshObject(Object):
     """Base class for all scene objects representing meshes.

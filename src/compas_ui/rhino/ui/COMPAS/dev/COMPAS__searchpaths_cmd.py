@@ -1,5 +1,8 @@
 from compas_ui.ui import UI
 
+# TODO: inspect current search paths
+# TODO: provide option to set/edit search paths as alternative for installed conda envs
+
 
 __commandname__ = "COMPAS__searchpaths"
 

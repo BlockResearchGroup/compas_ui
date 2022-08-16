@@ -1,5 +1,9 @@
 from compas_ui.ui import UI
 
+# TODO: clarify intensions (speckle seems too dev for now)
+# TODO: clarify difference with load
+# TODO: move to dev branch
+
 
 __commandname__ = "COMPAS__scene_pull"
 
