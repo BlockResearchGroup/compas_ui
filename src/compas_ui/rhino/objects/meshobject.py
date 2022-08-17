@@ -89,44 +89,62 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             return
         self.artist.vertex_xyz = self.vertex_xyz
 
-        if self.settings['show.vertices']:
+        if self.settings["show.vertices"]:
             vertices = list(self.mesh.vertices())
-            guids = self.artist.draw_vertices(vertices=vertices, color=self.settings['color.vertices'])
+            guids = self.artist.draw_vertices(
+                vertices=vertices, color=self.settings["color.vertices"]
+            )
             self.guids += guids
             self.guid_vertex = zip(guids, vertices)
 
-            if self.settings['show.vertexlabels']:
+            if self.settings["show.vertexlabels"]:
                 text = {vertex: str(vertex) for vertex in vertices}
-                self.guids += self.artist.draw_vertexlabels(text=text, color=self.settings['color.vertices'])
+                self.guids += self.artist.draw_vertexlabels(
+                    text=text, color=self.settings["color.vertices"]
+                )
 
-            if self.settings['show.vertexnormals']:
-                self.guids += self.artist.draw_vertexnormals(vertices=vertices, color=self.settings['color.vertices'])
+            if self.settings["show.vertexnormals"]:
+                self.guids += self.artist.draw_vertexnormals(
+                    vertices=vertices, color=self.settings["color.vertices"]
+                )
 
-        if self.settings['show.edges']:
+        if self.settings["show.edges"]:
             edges = list(self.mesh.edges())
-            guids = self.artist.draw_edges(edges=edges, color=self.settings['color.edges'])
+            guids = self.artist.draw_edges(
+                edges=edges, color=self.settings["color.edges"]
+            )
             self.guids += guids
             self.guid_edge = zip(guids, edges)
 
-            if self.settings['show.edgelabels']:
+            if self.settings["show.edgelabels"]:
                 text = {edge: "{}-{}".format(*edge) for edge in edges}
-                self.guids += self.artist.draw_edgelabels(text=text, color=self.settings['color.edges'])
+                self.guids += self.artist.draw_edgelabels(
+                    text=text, color=self.settings["color.edges"]
+                )
 
-        if self.settings['show.mesh']:
-            self.guids += self.artist.draw(color=self.settings['color.faces'], disjoint=True)
+        if self.settings["show.mesh"]:
+            self.guids += self.artist.draw(
+                color=self.settings["color.faces"], disjoint=True
+            )
 
-        elif self.settings['show.faces']:
+        elif self.settings["show.faces"]:
             faces = list(self.mesh.faces())
-            guids = self.artist.draw_faces(faces=faces, color=self.settings['color.faces'])
+            guids = self.artist.draw_faces(
+                faces=faces, color=self.settings["color.faces"]
+            )
             self.guids += guids
             self.guid_face = zip(guids, faces)
 
-            if self.settings['show.facelabels']:
+            if self.settings["show.facelabels"]:
                 text = {face: str(face) for face in faces}
-                self.guids += self.artist.draw_facelabels(text=text, color=self.settings['color.faces'])
+                self.guids += self.artist.draw_facelabels(
+                    text=text, color=self.settings["color.faces"]
+                )
 
-            if self.settings['show.facenormals']:
-                self.guids += self.artist.draw_facenormals(faces=faces, color=self.settings['color.faces'])
+            if self.settings["show.facenormals"]:
+                self.guids += self.artist.draw_facenormals(
+                    faces=faces, color=self.settings["color.faces"]
+                )
 
     def select_vertex(self, message="Select one vertex."):
         """Select one vertex of the mesh.
@@ -161,7 +179,9 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         """
         guids = compas_rhino.select_points(message=message)
-        vertices = [self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex]
+        vertices = [
+            self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex
+        ]
         return vertices
 
     def select_faces(self, message="Select faces."):
@@ -334,6 +354,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             The name of axis or plane to move on. Defaut is the 'z'-axis.
 
         """
+
         def OnDynamicDraw(sender, e):
             draw = e.Display.DrawDottedLine
             end = e.CurrentPoint
@@ -348,22 +369,22 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         direction = direction.lower()
 
-        color = Rhino.UIlicationSettings.UIearanceSettings.FeedbackColor
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
         connectors = []
 
         for vertex in vertices:
-            a = Rhino.Geometry.Point3d(* self.mesh.vertex_coordinates(vertex))
+            a = Rhino.Geometry.Point3d(*self.mesh.vertex_coordinates(vertex))
             nbrs = self.mesh.vertex_neighbors(vertex)
             for nbr in nbrs:
-                b = Rhino.Geometry.Point3d(* self.mesh.vertex_coordinates(nbr))
+                b = Rhino.Geometry.Point3d(*self.mesh.vertex_coordinates(nbr))
                 if nbr in vertices:
                     lines.append((a, b))
                 else:
                     connectors.append((a, b))
 
         gp = Rhino.Input.Custom.GetPoint()
-        gp.SetCommandPrompt('Point to move from?')
+        gp.SetCommandPrompt("Point to move from?")
         gp.Get()
 
         if gp.CommandResult() != Rhino.Commands.Result.Success:
@@ -371,25 +392,31 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         start = gp.Point()
 
-        if direction == 'x':
-            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(1, 0, 0))
-        elif direction == 'y':
-            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 1, 0))
-        elif direction == 'z':
-            geometry = Rhino.Geometry.Line(start, start + Rhino.Geometry.Vector3d(0, 0, 1))
-        elif direction == 'xy':
+        if direction == "x":
+            geometry = Rhino.Geometry.Line(
+                start, start + Rhino.Geometry.Vector3d(1, 0, 0)
+            )
+        elif direction == "y":
+            geometry = Rhino.Geometry.Line(
+                start, start + Rhino.Geometry.Vector3d(0, 1, 0)
+            )
+        elif direction == "z":
+            geometry = Rhino.Geometry.Line(
+                start, start + Rhino.Geometry.Vector3d(0, 0, 1)
+            )
+        elif direction == "xy":
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 0, 1))
-        elif direction == 'yz':
+        elif direction == "yz":
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(1, 0, 0))
-        elif direction == 'zx':
+        elif direction == "zx":
             geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 1, 0))
 
-        gp.SetCommandPrompt('Point to move to?')
+        gp.SetCommandPrompt("Point to move to?")
         gp.SetBasePoint(start, False)
         gp.DrawLineFromPoint(start, True)
         gp.DynamicDraw += OnDynamicDraw
 
-        if direction in ('x', 'y', 'z'):
+        if direction in ("x", "y", "z"):
             gp.Constrain(geometry)
         else:
             gp.Constrain(geometry, False)
@@ -402,7 +429,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
         end = gp.Point()
         vector = list(end - start)
         for vertex in vertices:
-            xyz = self.mesh.vertex_attributes(vertex, 'xyz')
-            self.mesh.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+            xyz = self.mesh.vertex_attributes(vertex, "xyz")
+            self.mesh.vertex_attributes(vertex, "xyz", add_vectors(xyz, vector))
 
         return True
