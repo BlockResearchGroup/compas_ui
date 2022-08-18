@@ -330,21 +330,22 @@ class UI(Singleton):
         None
 
         """
-        with open(self.dbname, "rb") as f:
-            history = pickle.load(f)
+        pass
+        # with open(self.dbname, "rb") as f:
+        #     history = pickle.load(f)
 
-            if self._current > -1:
-                if self._current < len(history) - 1:
-                    history = history[: self._current + 1]
+        #     if self._current > -1:
+        #         if self._current < len(history) - 1:
+        #             history = history[: self._current + 1]
 
-            history.append(self.state)
-            h = len(history)
-            if h > self._depth:
-                history = history[h - self._depth :]  # noqa : E203
-            self._current = len(history) - 1
+        #     history.append(self.state)
+        #     h = len(history)
+        #     if h > self._depth:
+        #         history = history[h - self._depth :]  # noqa : E203
+        #     self._current = len(history) - 1
 
-        with open(self.dbname, "wb") as f:
-            pickle.dump(history, f)
+        # with open(self.dbname, "wb") as f:
+        #     pickle.dump(history, f)
 
     def undo(self):
         """Undo changes in the UI by rewinding to a recorded state.
