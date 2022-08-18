@@ -10,7 +10,7 @@ import Eto.Forms
 
 
 class AttributesForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, names, values, title="Attributes", width=500, height=800):
+    def __init__(self, names, values, title="Attributes", width=500, height=500):
         def on_cell_formatting(sender, e):
             try:
                 if not e.Column.Editable:

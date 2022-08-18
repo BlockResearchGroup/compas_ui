@@ -76,7 +76,7 @@ class CustomCell(Eto.Forms.CustomCell):
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, settings, title="Settings", width=500, height=800):
+    def __init__(self, settings, title="Settings", width=500, height=500):
         self._settings = None
         self._names = None
         self._values = None
