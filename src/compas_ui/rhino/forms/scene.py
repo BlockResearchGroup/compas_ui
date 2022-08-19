@@ -155,8 +155,6 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
                 for obj in self.scene.objects:
                     if obj.guid == guid:
                         obj.name = row.GetValue(2)
-                        print("setting", obj.name)
-                        print("visible", row.GetValue(3))
                         obj.visible = bool(row.GetValue(3))
                         break
                 update_objects(row.Children)
