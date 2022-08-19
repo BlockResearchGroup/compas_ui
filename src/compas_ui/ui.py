@@ -100,7 +100,7 @@ class UI(Singleton):
 
         with open(self.dbname, "wb") as f:
             pickle.dump([], f)
-        self.record()
+        # self.record()
 
     @property
     def dbname(self):
@@ -292,7 +292,7 @@ class UI(Singleton):
 
         """
         self.scene.clear()
-        self.record()
+        # self.record()
 
     def scene_update(self):
         """Update the scene.
@@ -303,7 +303,7 @@ class UI(Singleton):
 
         """
         self.scene.update()
-        self.record()
+        # self.record()
 
     def scene_objects(self):
         """Display a form with all objects in the scene.
@@ -316,7 +316,7 @@ class UI(Singleton):
         form = SceneObjectsForm(self.scene)
         if form.show():
             self.scene.update()
-            self.record()
+            # self.record()
 
     # ========================================================================
     # State
@@ -330,22 +330,21 @@ class UI(Singleton):
         None
 
         """
-        pass
-        # with open(self.dbname, "rb") as f:
-        #     history = pickle.load(f)
+        with open(self.dbname, "rb") as f:
+            history = pickle.load(f)
 
-        #     if self._current > -1:
-        #         if self._current < len(history) - 1:
-        #             history = history[: self._current + 1]
+            if self._current > -1:
+                if self._current < len(history) - 1:
+                    history = history[: self._current + 1]
 
-        #     history.append(self.state)
-        #     h = len(history)
-        #     if h > self._depth:
-        #         history = history[h - self._depth :]  # noqa : E203
-        #     self._current = len(history) - 1
+            history.append(self.state)
+            h = len(history)
+            if h > self._depth:
+                history = history[h - self._depth :]  # noqa : E203
+            self._current = len(history) - 1
 
-        # with open(self.dbname, "wb") as f:
-        #     pickle.dump(history, f)
+        with open(self.dbname, "wb") as f:
+            pickle.dump(history, f)
 
     def undo(self):
         """Undo changes in the UI by rewinding to a recorded state.
@@ -469,7 +468,7 @@ class UI(Singleton):
             self.state = pickle.load(f)
 
         self.scene.update()
-        self.record()
+        # self.record()
 
     # ========================================================================
     # Settings
@@ -487,7 +486,7 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
-            self.record()
+            # self.record()
 
     # ========================================================================
     # User data

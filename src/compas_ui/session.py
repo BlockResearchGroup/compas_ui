@@ -85,7 +85,7 @@ class Session(Singleton):
         self.name = name or self.__class__.__name__
         self.extension = extension
         self.autosave = autosave
-        self.record()
+        # self.record()
 
     def __str__(self):
         return json_dumps(self.data, pretty=True)
@@ -136,7 +136,7 @@ class Session(Singleton):
         self._history = []
         self._current = -1
         self.data = {}
-        self.record()
+        # self.record()
 
     def record(self):
         """Add the current data to recorded history making it available for undo/redo.
