@@ -117,12 +117,6 @@
                         "type": "separator"
                     },
                     {
-                        "command": "COMPAS__undo"
-                    },
-                    {
-                        "command": "COMPAS__redo"
-                    },
-                    {
                         "command": "COMPAS__save"
                     },
                     {
@@ -201,10 +195,6 @@
                                 "items": []
                             }
                         ]
-                    },
-                    {
-                        "name": "Robots",
-                        "items": []
                     },
                     {
                         "type": "separator"

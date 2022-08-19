@@ -103,7 +103,7 @@ class UI(Singleton):
 
         with open(self.dbname, "wb") as f:
             pickle.dump([], f)
-        self.record()
+        # self.record()
 
     @property
     def dbname(self):
@@ -295,7 +295,7 @@ class UI(Singleton):
 
         """
         self.scene.clear()
-        self.record()
+        # self.record()
 
     def scene_update(self):
         """Update the scene.
@@ -306,7 +306,7 @@ class UI(Singleton):
 
         """
         self.scene.update()
-        self.record()
+        # self.record()
 
     def scene_objects(self):
         """Display a form with all objects in the scene.
@@ -319,7 +319,7 @@ class UI(Singleton):
         form = SceneObjectsForm(self.scene)
         if form.show():
             self.scene.update()
-            self.record()
+            # self.record()
 
     # ========================================================================
     # State
@@ -471,7 +471,7 @@ class UI(Singleton):
             self.state = pickle.load(f)
 
         self.scene.update()
-        self.record()
+        # self.record()
 
     # ========================================================================
     # Settings
@@ -489,7 +489,7 @@ class UI(Singleton):
         if form.show():
             self.settings.update(form.settings)
             self.scene.update()
-            self.record()
+            # self.record()
 
     # ========================================================================
     # User data

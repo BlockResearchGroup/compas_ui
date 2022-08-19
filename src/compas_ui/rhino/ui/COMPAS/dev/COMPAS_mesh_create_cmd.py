@@ -12,7 +12,7 @@ def RunCommand(is_interactive):
     ui = UI()
 
     ui.controller.mesh_create()
-    ui.record()
+    # ui.record()
 
 
 if __name__ == "__main__":
