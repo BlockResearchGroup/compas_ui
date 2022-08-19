@@ -1,6 +1,5 @@
 import os
 import sys
-import imp
 import json
 from shutil import copyfile
 from subprocess import call
