@@ -180,6 +180,8 @@ class Object(object):
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
+        self._scene = None
+        self.parent = None
 
     def __getstate__(self):
         return self.state
@@ -190,6 +192,9 @@ class Object(object):
     @property
     def state(self):
         state = self.__dict__.copy()
+        state["guid"] = str(self.guid)
+        if self.parent:
+            state["parent"] = str(self.parent.guid)
         for name in state:
             if name.startswith("_conduit"):
                 state[name] = None
@@ -209,6 +214,21 @@ class Object(object):
             elif name == "_scene":
                 state[name] = None
         self.__dict__.update(state)
+
+    @property
+    def children(self):
+        return list(filter(lambda x: x.parent == self, self._scene.objects))
+
+    def add(self, item, **kwargs):
+        if isinstance(item, Object):
+            obj = item
+        else:
+            obj = self._scene.add(item, **kwargs)
+        obj.parent = self
+        return obj
+
+    def remove(self, obj):
+        obj = self._scene.remove(obj)
 
     @property
     def guid(self):

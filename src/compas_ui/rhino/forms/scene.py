@@ -63,15 +63,15 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.ShowHeader = True
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "GUID"
+        column.HeaderText = "Object"
         column.Editable = False
-        column.Visible = False
         column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "Object"
+        column.HeaderText = "GUID"
         column.Editable = False
+        column.Visible = False
         column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
         self.table.Columns.Add(column)
 
@@ -100,18 +100,25 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.Columns.Add(column)
 
         collection = Eto.Forms.TreeGridItemCollection()
-        for obj in self.scene.objects:
-            item = Eto.Forms.TreeGridItem(
-                Values=(
-                    str(obj.guid),
-                    obj.__class__.__name__,
-                    obj.name,
-                    obj.visible,
-                    obj,
-                    obj.item,
+
+        def add_items(parent, objects):
+            for obj in objects:
+                item = Eto.Forms.TreeGridItem(
+                    Values=(
+                        obj.__class__.__name__,
+                        str(obj.guid),
+                        obj.name,
+                        obj.visible,
+                        obj,
+                        obj.item,
+                    )
                 )
-            )
-            collection.Add(item)
+                if obj.children:
+                    add_items(item.Children, obj.children)
+                parent.Add(item)
+
+        root_objects = [obj for obj in self.scene.objects if obj.parent is None]
+        add_items(collection, root_objects)
 
         self.table.DataStore = collection
 
@@ -142,13 +149,19 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     def on_ok(self, sender, event):
-        for row in self.table.DataStore:
-            guid = uuid.UUID(row.GetValue(0))
-            for obj in self.scene.objects:
-                if obj.guid == guid:
-                    obj.name = row.GetValue(2)
-                    obj.visible = bool(row.GetValue(3))
-                    break
+        def update_objects(collection):
+            for row in collection:
+                guid = uuid.UUID(row.GetValue(1))
+                for obj in self.scene.objects:
+                    if obj.guid == guid:
+                        obj.name = row.GetValue(2)
+                        print("setting", obj.name)
+                        print("visible", row.GetValue(3))
+                        obj.visible = bool(row.GetValue(3))
+                        break
+                update_objects(row.Children)
+
+        update_objects(self.table.DataStore)
         self.Close(True)
 
     def on_cancel(self, sender, event):
