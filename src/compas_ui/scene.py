@@ -68,7 +68,6 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
-        self.stream_id = None
 
     @property
     def state(self):
@@ -83,13 +82,12 @@ class Scene(Singleton):
             objects.append({
                 'guid': guid,
                 'item': item_guid,
-                'stream_id': obj.stream_id,
                 'name': obj.name,
                 'visible': obj.visible,
                 'settings': obj.settings,
                 'parent': parent_guid,
             })
-        return {'data': data, 'objects': objects, 'settings': self.settings, 'stream_id': self.stream_id}
+        return {'data': data, 'objects': objects, 'settings': self.settings}
 
     @state.setter
     def state(self, state):
@@ -98,14 +96,12 @@ class Scene(Singleton):
             item = state['data'][obj_state['item']]
             obj = self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
             obj._guid = uuid.UUID(obj_state['guid'])
-            obj.stream_id = obj_state['stream_id']
         for obj_state in state['objects']:
             if obj_state['parent']:
                 obj = self.get_by_guid(obj_state['guid'])
                 obj.parent = self.get_by_guid(obj_state['parent'])
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state['settings'])
-        self.stream_id = state['stream_id']
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.

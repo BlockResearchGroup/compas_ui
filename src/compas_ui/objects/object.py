@@ -172,7 +172,6 @@ class Object(object):
         self._guid = None
         self._item = None
         self._artist = None
-        self.stream_id = None
         self.item = item
         self.name = name
         self.visible = visible
