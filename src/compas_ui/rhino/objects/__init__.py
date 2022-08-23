@@ -44,13 +44,14 @@ from ._object import RhinoObject
 from .meshobject import RhinoMeshObject
 from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject
-
+from compas_ui.objects.group import Group
 
 @plugin(category="ui", requires=["Rhino"])
 def register_objects():
     RhinoObject.register(Mesh, RhinoMeshObject, context="Rhino")
     RhinoObject.register(Network, RhinoNetworkObject, context="Rhino")
     RhinoObject.register(VolMesh, RhinoVolMeshObject, context="Rhino")
+    RhinoObject.register(list, Group, context="Rhino")
     print("Rhino Objects registered.")
 
 
