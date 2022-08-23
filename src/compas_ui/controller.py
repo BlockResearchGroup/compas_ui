@@ -121,7 +121,7 @@ class Controller(object):
 
         self.ui.scene.add(mesh, name=name)
         self.ui.scene.update()
-        self.ui.record()
+        # self.ui.record()
 
     def mesh_modify(self):
         """Create a COMPAS mesh."""

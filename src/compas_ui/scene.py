@@ -201,28 +201,3 @@ class Scene(Singleton):
 
         """
         highlight_objects(self, guids)
-
-    def speckle_push(self):
-        from compas_ui.ui import UI
-
-        for obj in self.objects:
-            print("obj pushed:", obj.speckle_push())
-
-        state = self.state
-        del state['data']
-        self.stream_id = UI().proxy.speckle_push(stream_id=self.state['stream_id'], item=state, name='scene')
-        print("scene pushed:", self.stream_id)
-        return self.stream_id
-
-    def speckle_pull(self):
-        from compas_ui.ui import UI
-        self.clear()
-        ui = UI()
-        state = ui.proxy.speckle_pull(stream_id=self.state['stream_id'])
-        state['data'] = {}
-        for obj in state['objects']:
-            guid = obj['item']
-            object_state = ui.proxy.speckle_pull(stream_id=obj['stream_id'])
-            state['data'][guid] = object_state['_item']
-        self.state = state
-        self.update()

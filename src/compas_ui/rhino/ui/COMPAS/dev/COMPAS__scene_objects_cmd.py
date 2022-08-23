@@ -15,7 +15,7 @@ def RunCommand(is_interactive):
 
     ui = UI()
     ui.scene_objects()
-    ui.record()
+    # ui.record()
 
 
 if __name__ == "__main__":

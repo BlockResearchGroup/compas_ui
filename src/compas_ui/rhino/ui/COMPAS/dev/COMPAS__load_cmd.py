@@ -11,7 +11,7 @@ def RunCommand(is_interactive):
 
     ui = UI()
     ui.load()
-    ui.record()
+    # ui.record()
 
 
 if __name__ == "__main__":
