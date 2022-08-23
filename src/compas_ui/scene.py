@@ -24,6 +24,7 @@ from compas.plugins import pluggable
 
 from compas_ui.objects import Object
 from compas_ui.singleton import Singleton
+import uuid
 
 
 @pluggable(category='ui')
@@ -67,24 +68,26 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
-        self.stream_id = None
 
     @property
     def state(self):
         data = {}
         objects = []
         for obj in self.objects:
-            guid = str(obj.item.guid)
-            if guid not in data:
-                data[guid] = obj.item
+            item_guid = str(obj.item.guid)
+            guid = str(obj.guid)
+            parent_guid = str(obj.parent.guid) if obj.parent else None
+            if item_guid not in data:
+                data[item_guid] = obj.item
             objects.append({
-                'item': guid,
-                'stream_id': obj.stream_id,
+                'guid': guid,
+                'item': item_guid,
                 'name': obj.name,
                 'visible': obj.visible,
                 'settings': obj.settings,
+                'parent': parent_guid,
             })
-        return {'data': data, 'objects': objects, 'settings': self.settings, 'stream_id': self.stream_id}
+        return {'data': data, 'objects': objects, 'settings': self.settings}
 
     @state.setter
     def state(self, state):
@@ -92,10 +95,13 @@ class Scene(Singleton):
         for obj_state in state['objects']:
             item = state['data'][obj_state['item']]
             obj = self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
-            obj.stream_id = obj_state['stream_id']
+            obj._guid = uuid.UUID(obj_state['guid'])
+        for obj_state in state['objects']:
+            if obj_state['parent']:
+                obj = self.get_by_guid(obj_state['guid'])
+                obj.parent = self.get_by_guid(obj_state['parent'])
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state['settings'])
-        self.stream_id = state['stream_id']
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.
@@ -113,6 +119,7 @@ class Scene(Singleton):
 
         """
         obj = Object(item, **kwargs)
+        obj._scene = self
         # implement __hash__ on Data
         # to allow for
         # self.objects[item] = obj
@@ -142,6 +149,24 @@ class Scene(Singleton):
             if name == obj.name:
                 objects.append(obj)
         return objects
+
+    def get_by_guid(self, guid):
+        """Get a scene object by its guid.
+
+        Parameters
+        ----------
+        name : str
+            The guid of the object.
+
+        Returns
+        -------
+        :class:`compas_ui.objects.Object`
+
+        """
+        guid = uuid.UUID(guid)
+        for obj in self.objects:
+            if guid == obj._guid:
+                return obj
 
     def update(self):
         """Update the scene.
