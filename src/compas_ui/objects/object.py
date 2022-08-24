@@ -167,7 +167,7 @@ class Object(object):
         PluginValidator.ensure_implementations(cls)
         return super(Object, cls).__new__(cls)
 
-    def __init__(self, item, name=None, visible=True, settings=None):
+    def __init__(self, item, scene=None, name=None, visible=True, settings=None):
         super(Object, self).__init__()
         self._guid = None
         self._item = None
@@ -177,7 +177,7 @@ class Object(object):
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
-        self._scene = None
+        self._scene = scene
         self.parent = None
 
     def __getstate__(self):

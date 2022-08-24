@@ -118,8 +118,7 @@ class Scene(Singleton):
         :class:`compas_ui.objects.Object`
 
         """
-        obj = Object(item, **kwargs)
-        obj._scene = self
+        obj = Object(item, scene=self, **kwargs)
         # implement __hash__ on Data
         # to allow for
         # self.objects[item] = obj

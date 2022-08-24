@@ -12,23 +12,26 @@ import Eto.Forms
 from .meshdata import MeshDataForm
 from .settings import SettingsForm
 
+from compas.datastructures import Mesh
+
 
 class SettingsCell(Eto.Forms.CustomCell):
     def __init__(self, parent):
         self.parent = parent
 
     def OnCreateCell(self, args):
-        def on_click(sender, e):
-            form = SettingsForm(obj.settings)
-            if form.ShowModal(self.parent):
-                obj.settings.update(form.settings)
-                self.parent.scene.update()
+        if isinstance(args.Item.GetValue(5), Mesh):
+            def on_click(sender, e):
+                form = SettingsForm(obj.settings)
+                if form.ShowModal(self.parent):
+                    obj.settings.update(form.settings)
+                    self.parent.scene.update()
 
-        obj = args.Item.GetValue(4)
-        control = Eto.Forms.Button(Text="Settings")
-        control.Click += on_click
+            obj = args.Item.GetValue(4)
+            control = Eto.Forms.Button(Text="Settings")
+            control.Click += on_click
 
-        return control
+            return control
 
 
 class ItemCell(Eto.Forms.CustomCell):
@@ -36,18 +39,19 @@ class ItemCell(Eto.Forms.CustomCell):
         self.parent = parent
 
     def OnCreateCell(self, args):
-        def on_click(sender, e):
-            # switch between data types
-            form = MeshDataForm(data)
-            if form.ShowModal(self.parent):
-                self.parent.scene.update()
+        if isinstance(args.Item.GetValue(5), Mesh):
+            def on_click(sender, e):
+                # switch between data types
+                form = MeshDataForm(data)
+                if form.ShowModal(self.parent):
+                    self.parent.scene.update()
 
-        data = args.Item.GetValue(5)
-        text = "{} Data".format(data.__class__.__name__)
-        control = Eto.Forms.Button(Text=text)
-        control.Click += on_click
+            data = args.Item.GetValue(5)
+            text = "{} Data".format(data.__class__.__name__)
+            control = Eto.Forms.Button(Text=text)
+            control.Click += on_click
 
-        return control
+            return control
 
 
 class SceneObjectsForm(Eto.Forms.Dialog[bool]):
