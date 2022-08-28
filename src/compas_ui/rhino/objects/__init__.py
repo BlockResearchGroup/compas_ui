@@ -40,7 +40,7 @@ from ._modify import (  # noqa : F401 F403
     mesh_move_face,
 )
 
-from ._object import RhinoObject
+from .object import RhinoObject
 from .meshobject import RhinoMeshObject
 from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject

@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import inspect
+import uuid
 from uuid import uuid4
 from abc import abstractmethod
 from collections import defaultdict
@@ -13,63 +14,6 @@ from compas.plugins import pluggable
 from compas.plugins import PluginValidator
 
 from compas_ui.objects import ObjectNotRegistered
-
-
-def __getstate__(self):
-    """Return a serializable state of the artist."""
-    state = self.__dict__.copy()
-
-    if "_vertex_color" in self.__dict__:
-        if self.__dict__["_vertex_color"] is not None:
-            state["_vertex_color"] = dict(self.__dict__["_vertex_color"])
-    if "_node_color" in self.__dict__:
-        if self.__dict__["_node_color"] is not None:
-            state["_node_color"] = dict(self.__dict__["_node_color"])
-    if "_edge_color" in self.__dict__:
-        if self.__dict__["_edge_color"] is not None:
-            state["_edge_color"] = dict(self.__dict__["_edge_color"])
-    if "_face_color" in self.__dict__:
-        if self.__dict__["_face_color"] is not None:
-            state["_face_color"] = dict(self.__dict__["_face_color"])
-    if "_cell_color" in self.__dict__:
-        if self.__dict__["_cell_color"] is not None:
-            state["_cell_color"] = dict(self.__dict__["_cell_color"])
-
-    return state
-
-
-def __setstate__(self, state):
-    """Assign a deserialized state to the artist and recreate the descriptors."""
-
-    original = state.copy()
-
-    if "_vertex_color" in state:
-        state["_vertex_color"] = None
-    if "_node_color" in state:
-        state["_node_color"] = None
-    if "_edge_color" in state:
-        state["_edge_color"] = None
-    if "_face_color" in state:
-        state["_face_color"] = None
-    if "_cell_color" in state:
-        state["_cell_color"] = None
-
-    self.__dict__.update(state)
-
-    if "_vertex_color" in original:
-        self.vertex_color = original["_vertex_color"]
-    if "_node_color" in state:
-        self.node_color = original["_node_color"]
-    if "_edge_color" in state:
-        self.edge_color = original["_edge_color"]
-    if "_face_color" in state:
-        self.face_color = original["_face_color"]
-    if "_cell_color" in state:
-        self.cell_color = original["_cell_color"]
-
-
-Artist.__getstate__ = __getstate__
-Artist.__setstate__ = __setstate__
 
 
 @pluggable(category="ui", selector="collect_all")
@@ -172,12 +116,12 @@ class Object(object):
         self._guid = None
         self._item = None
         self._artist = None
+        self._scene = None
         self.item = item
         self.name = name
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
-        self._scene = None
         self.parent = None
 
     def __getstate__(self):
@@ -188,29 +132,25 @@ class Object(object):
 
     @property
     def state(self):
-        state = self.__dict__.copy()
-        state["guid"] = str(self.guid)
-        if self.parent:
-            state["parent"] = str(self.parent.guid)
-        for name in state:
-            if name.startswith("_conduit"):
-                state[name] = None
-            elif name == "_artist":
-                state[name] = None
-            elif name == "_scene":
-                state[name] = None
-        return state
+        return {
+            "guid": str(self.guid),
+            "name": self.name,
+            "item": str(self.item.guid),
+            "parent": str(self.parent.guid) if self.parent else None,
+            "settings": self.settings,
+            "artist": self.artist.state,
+            "visible": self.visible,
+        }
 
     @state.setter
     def state(self, state):
-        for name in state:
-            if name.startswith("_conduit"):
-                state[name] = None
-            elif name == "_artist":
-                state[name] = None
-            elif name == "_scene":
-                state[name] = None
-        self.__dict__.update(state)
+        self._guid = uuid.UUID(state["guid"])
+        self.name = state["name"]
+        self.settings.update(state["settings"])
+        self.artist.state = state["artists"]
+        self.visible = state["visible"]
+        # parent?
+        # item?
 
     @property
     def children(self):

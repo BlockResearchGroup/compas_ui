@@ -21,12 +21,14 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import pickle
-import tempfile
 from subprocess import Popen
 from subprocess import PIPE
+import tempfile
 
+import compas
 import compas_rhino
+
+from compas.utilities import timestamp
 
 from compas_cloud import Proxy
 
@@ -38,13 +40,8 @@ from compas_ui.controller import Controller
 try:
     from compas_ui.rhino.forms import AboutForm
     from compas_ui.rhino.forms import CondaEnvsForm
-
-    # from compas_ui.rhino.forms import ErrorForm
     from compas_ui.rhino.forms import FileForm
     from compas_ui.rhino.forms import FolderForm
-
-    # from compas_ui.rhino.forms import InfoForm
-    # from compas_ui.rhino.forms import MeshDataForm
     from compas_ui.rhino.forms import SceneObjectsForm
     from compas_ui.rhino.forms import SearchPathsForm
     from compas_ui.rhino.forms import SettingsForm
@@ -84,30 +81,26 @@ class UI(Singleton):
                 "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
             )
 
-        controller_class = controller_class or Controller
-
         self._current = -1
-        self._depth = 20
+        self._depth = 53
+        self._history = []
+        self._tempdir = tempfile.gettempdir()
+        self._controller_class = controller_class or Controller
 
         self.config = config
+        self.settings = self.config["settings"] or {}
+
         self.name = self.config["plugin"]["title"]
         self.condadir = None
         self.dirname = None
         self.basename = "{}.ui".format(self.name)
-        self.settings = self.config["settings"] or {}
 
         self.session = Session(name=self.name)
         self.scene = Scene(settings=self.settings.get("scene"))
-        self.controller = controller_class(self)
+        self.controller = self._controller_class(self)
         self.proxy = None
 
-        with open(self.dbname, "wb") as f:
-            pickle.dump([], f)
-        # self.record()
-
-    @property
-    def dbname(self):
-        return os.path.join(tempfile.gettempdir(), "{}.history".format(self.name))
+        self.cloud_start()
 
     @property
     def state(self):
@@ -132,8 +125,6 @@ class UI(Singleton):
         UI._instances = {}
 
     def restart(self):
-        with open(self.dbname, "wb") as f:
-            pickle.dump([], f)
         self.session.reset()
         self.scene.clear()
 
@@ -295,7 +286,7 @@ class UI(Singleton):
 
         """
         self.scene.clear()
-        # self.record()
+        self.record()
 
     def scene_update(self):
         """Update the scene.
@@ -306,7 +297,7 @@ class UI(Singleton):
 
         """
         self.scene.update()
-        # self.record()
+        self.record()
 
     def scene_objects(self):
         """Display a form with all objects in the scene.
@@ -319,13 +310,13 @@ class UI(Singleton):
         form = SceneObjectsForm(self.scene)
         if form.show():
             self.scene.update()
-            # self.record()
+            self.record()
 
     # ========================================================================
     # State
     # ========================================================================
 
-    def record(self):
+    def record(self, eventname=None):
         """Record the current state of the UI.
 
         Returns
@@ -333,21 +324,20 @@ class UI(Singleton):
         None
 
         """
-        with open(self.dbname, "rb") as f:
-            history = pickle.load(f)
+        if self._current > -1:
+            if self._current < len(self._history) - 1:
+                self._history[:] = self._history[: self._current + 1]
 
-            if self._current > -1:
-                if self._current < len(history) - 1:
-                    history = history[: self._current + 1]
+        filename = "COMPAS_UI.history.{}".format(timestamp())
+        filepath = os.path.join(self._tempdir, filename)
 
-            history.append(self.state)
-            h = len(history)
-            if h > self._depth:
-                history = history[h - self._depth :]  # noqa : E203
-            self._current = len(history) - 1
+        compas.json_dump(self.state, filepath)
+        self._history.append((filename, eventname))
 
-        with open(self.dbname, "wb") as f:
-            pickle.dump(history, f)
+        h = len(self._history)
+        if h > self._depth:
+            self._history[:] = self._history[h - self._depth :]
+        self._current = len(self._history) - 1
 
     def undo(self):
         """Undo changes in the UI by rewinding to a recorded state.
@@ -357,8 +347,6 @@ class UI(Singleton):
         None
 
         """
-        self.scene.clear()
-
         if self._current < 0:
             print("Nothing to undo!")
             return
@@ -367,12 +355,12 @@ class UI(Singleton):
             print("Nothing more to undo!")
             return
 
-        with open(self.dbname, "rb") as f:
-            history = pickle.load(f)
-
         self._current -= 1
-        self.state = history[self._current]
+        filename, _ = self._history[self._current]
+        filepath = os.path.join(self._tempdir, filename)
 
+        self.scene.clear()
+        self.state = compas.json_load(filepath)
         self.scene.update()
 
     def redo(self):
@@ -383,22 +371,20 @@ class UI(Singleton):
         None
 
         """
-        self.scene.clear()
-
         if self._current < 0:
             print("Nothing to redo!")
             return
 
-        with open(self.dbname, "rb") as f:
-            history = pickle.load(f)
-
-        if self._current == len(history) - 1:
+        if self._current == len(self._history) - 1:
             print("Nothing more to redo!")
             return
 
         self._current += 1
-        self.state = history[self._current]
+        filename, _ = self._history[self._current]
+        filepath = os.path.join(self._tempdir, filename)
 
+        self.scene.clear()
+        self.state = compas.json_load(filepath)
         self.scene.update()
 
     def save(self):
@@ -418,9 +404,7 @@ class UI(Singleton):
             self.basename = os.path.basename(path)
 
         path = os.path.join(self.dirname, self.basename)
-
-        with open(path, "wb+") as f:
-            pickle.dump(self.state, f)
+        compas.json_dump(self.state, path, pretty=True)
 
     def saveas(self):
         """Save the current state of the app to a pickle file with a specific name.
@@ -441,9 +425,7 @@ class UI(Singleton):
 
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
-
-        with open(path, "wb+") as f:
-            pickle.dump(self.state, f)
+        compas.json_dump(self.state, path, pretty=True)
 
     def load(self):
         """Restore a saved state of the app from a selected pickle file.
@@ -466,12 +448,9 @@ class UI(Singleton):
         self.basename = os.path.basename(path)
 
         self.scene.clear()
-
-        with open(path, "rb") as f:
-            self.state = pickle.load(f)
-
+        self.state = compas.json_load(path)
         self.scene.update()
-        # self.record()
+        self.record()
 
     # ========================================================================
     # Settings
@@ -488,8 +467,6 @@ class UI(Singleton):
         form = SettingsForm(self.settings)
         if form.show():
             self.settings.update(form.settings)
-            self.scene.update()
-            # self.record()
 
     # ========================================================================
     # User data

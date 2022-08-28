@@ -43,6 +43,7 @@ __all__ = ["HOME", "DATA", "DOCS", "TEMP"]
 
 __all_plugins__ = [
     'compas_ui.rhino.objects',
+    'compas_ui.rhino.artists',
     'compas_ui.rhino.scene',
     'compas_ui.rhino.install',
 ]
