@@ -8,7 +8,7 @@ from compas_ui.ui import UI
 # TODO: provide overview of installed packages per environment
 
 
-__commandname__ = "COMPAS__conda_envs"
+__commandname__ = "COMPAS_conda_envs"
 
 
 @UI.error()

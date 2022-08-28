@@ -7,7 +7,7 @@ from compas_ui.ui import UI
 # TODO: links instead of buttons?
 
 
-__commandname__ = "COMPAS__scene_objects"
+__commandname__ = "COMPAS_scene_objects"
 
 
 @UI.error()

@@ -7,7 +7,7 @@ from compas_ui.ui import UI
 # TODO: only do something if any of the settings is dirty
 
 
-__commandname__ = "COMPAS__settings"
+__commandname__ = "COMPAS_settings"
 
 
 @UI.error()

@@ -1,16 +1,16 @@
 from compas_ui.ui import UI
 
-# TODO: deactivate for now
+# TODO: disable for now
 
 
-__commandname__ = "COMPAS__redo"
+__commandname__ = "COMPAS_undo"
 
 
 @UI.error()
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.redo()
+    ui.undo()
 
 
 if __name__ == "__main__":

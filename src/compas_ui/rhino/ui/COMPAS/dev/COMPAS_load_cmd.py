@@ -3,7 +3,7 @@ from compas_ui.ui import UI
 # TODO: turn off recording for now
 
 
-__commandname__ = "COMPAS__load"
+__commandname__ = "COMPAS_load"
 
 
 @UI.error()

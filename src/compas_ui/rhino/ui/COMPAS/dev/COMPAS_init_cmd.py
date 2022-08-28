@@ -8,7 +8,7 @@ from compas_ui.ui import UI
 # TODO: check if current environment has compas_ui
 
 
-__commandname__ = "COMPAS__init"
+__commandname__ = "COMPAS_init"
 
 
 HERE = os.path.dirname(__file__)

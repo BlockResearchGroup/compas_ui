@@ -1,14 +1,14 @@
 from compas_ui.ui import UI
 
 
-__commandname__ = "COMPAS__saveas"
+__commandname__ = "COMPAS_save"
 
 
 @UI.error()
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.saveas()
+    ui.save()
 
 
 if __name__ == "__main__":
