@@ -92,22 +92,6 @@
             {
                 "name": "COMPAS_mesh_create",
                 "menu_text": "Mesh Create"
-            },
-            {
-                "name": "COMPAS_mesh_edit",
-                "menu_text": "Mesh Edit"
-            },
-            {
-                "name": "COMPAS_mesh_delete",
-                "menu_text": "Mesh Delete"
-            },
-            {
-                "name": "COMPAS_mesh_smooth",
-                "menu_text": "Mesh Edit"
-            },
-            {
-                "name": "COMPAS_mesh_subdivide",
-                "menu_text": "Mesh Edit"
             }
         ],
         "menus": [
