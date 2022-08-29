@@ -404,7 +404,7 @@ class UI(Singleton):
             self.basename = os.path.basename(path)
 
         path = os.path.join(self.dirname, self.basename)
-        compas.json_dump(self.state, path, pretty=True)
+        compas.json_dump(self.state, path)
 
     def saveas(self):
         """Save the current state of the app to a pickle file with a specific name.
@@ -425,7 +425,7 @@ class UI(Singleton):
 
         self.dirname = os.path.dirname(path)
         self.basename = os.path.basename(path)
-        compas.json_dump(self.state, path, pretty=True)
+        compas.json_dump(self.state, path)
 
     def load(self):
         """Restore a saved state of the app from a selected pickle file.
