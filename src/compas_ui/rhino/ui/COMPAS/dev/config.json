@@ -19,13 +19,7 @@
         "description": "COMPAS UI provides...",
         "website": "https://compas.dev"
     },
-    "packages": [
-        "compas",
-        "compas_rhino",
-        "compas_ghpython",
-        "compas_cloud",
-        "compas_ui"
-    ],
+    "packages": [],
     "settings": {
         "cloud": {
             "background": true
