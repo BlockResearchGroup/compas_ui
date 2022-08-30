@@ -114,6 +114,8 @@ class Scene(Singleton):
     def active_object(self, obj):
         if isinstance(obj, Object):
             self._active_object = obj
+        elif obj is None:
+            self._active_object = None
         else:
             raise TypeError("The active object must be a compas_ui.objects.Object.")
 
