@@ -8,9 +8,7 @@ from .object import Object
 
 class LineObject(Object):
 
-    SETTINGS = {
-        "show_points": False,
-    }
+    SETTINGS = {}
 
     def __init__(self, *args, **kwargs):
         super(LineObject, self).__init__(*args, **kwargs)
