@@ -3,14 +3,14 @@ from compas_ui.ui import UI
 # TODO: turn off recording for now
 
 
-__commandname__ = "COMPAS__load"
+__commandname__ = "COMPAS_scene_clear"
 
 
 @UI.error()
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.load()
+    ui.scene_clear()
     # ui.record()
 
 

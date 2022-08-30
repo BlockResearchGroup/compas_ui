@@ -18,7 +18,7 @@ from ._modify import mesh_move_vertex
 from ._modify import mesh_move_vertices
 from ._modify import mesh_move_face
 
-from ._object import RhinoObject
+from .object import RhinoObject
 
 
 class RhinoMeshObject(RhinoObject, MeshObject):

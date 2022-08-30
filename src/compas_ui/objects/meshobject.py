@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import uuid
 from functools import reduce
 from operator import mul
 
@@ -62,6 +63,36 @@ class MeshObject(Object):
         self._location = None
         self._scale = None
         self._rotation = None
+
+    @property
+    def state(self):
+        return {
+            "guid": str(self.guid),
+            "name": self.name,
+            "item": str(self.item.guid),
+            "parent": str(self.parent.guid) if self.parent else None,
+            "settings": self.settings,
+            "artist": self.artist.state,
+            "visible": self.visible,
+            "anchor": self.anchor,
+            "location": self.location,
+            "scale": self.scale,
+            "rotation": self.rotation,
+        }
+
+    @state.setter
+    def state(self, state):
+        self._guid = uuid.UUID(state["guid"])
+        self.name = state["name"]
+        self.settings.update(state["settings"])
+        self.artist.state = state["artists"]
+        self.visible = state["visible"]
+        # parent?
+        # item?
+        self.anchor = state["anchor"]
+        self.location = state["location"]
+        self.scale = state["scale"]
+        self.rotation = state["rotation"]
 
     @property
     def mesh(self):

@@ -27,17 +27,17 @@ from compas_ui.singleton import Singleton
 import uuid
 
 
-@pluggable(category='ui')
+@pluggable(category="ui")
 def update_scene(self):
     raise NotImplementedError
 
 
-@pluggable(category='ui')
+@pluggable(category="ui")
 def clear_scene(self):
     raise NotImplementedError
 
 
-@pluggable(category='ui')
+@pluggable(category="ui")
 def highlight_objects(self):
     raise NotImplementedError
 
@@ -74,34 +74,34 @@ class Scene(Singleton):
         data = {}
         objects = []
         for obj in self.objects:
-            item_guid = str(obj.item.guid)
-            guid = str(obj.guid)
-            parent_guid = str(obj.parent.guid) if obj.parent else None
-            if item_guid not in data:
-                data[item_guid] = obj.item
-            objects.append({
-                'guid': guid,
-                'item': item_guid,
-                'name': obj.name,
-                'visible': obj.visible,
-                'settings': obj.settings,
-                'parent': parent_guid,
-            })
-        return {'data': data, 'objects': objects, 'settings': self.settings}
+            objstate = obj.state
+            if objstate["item"] not in data:
+                data[objstate["item"]] = obj.item
+            objects.append(objstate)
+        return {
+            "data": data,
+            "objects": objects,
+            "settings": self.settings,
+        }
 
     @state.setter
     def state(self, state):
         self.objects = []
-        for obj_state in state['objects']:
-            item = state['data'][obj_state['item']]
-            obj = self.add(item, name=obj_state['name'], visible=obj_state['visible'], settings=obj_state['settings'])
-            obj._guid = uuid.UUID(obj_state['guid'])
-        for obj_state in state['objects']:
-            if obj_state['parent']:
-                obj = self.get_by_guid(obj_state['guid'])
-                obj.parent = self.get_by_guid(obj_state['parent'])
+        for objstate in state["objects"]:
+            item = state["data"][objstate["item"]]
+            obj = self.add(
+                item,
+                name=objstate["name"],
+                visible=objstate["visible"],
+                settings=objstate["settings"],
+            )
+            obj._guid = uuid.UUID(objstate["guid"])
+        for objstate in state["objects"]:
+            if objstate["parent"]:
+                obj = self.get_by_guid(objstate["guid"])
+                obj.parent = self.get_by_guid(objstate["parent"])
         self.settings = Scene.SETTINGS.copy()
-        self.settings.update(state['settings'])
+        self.settings.update(state["settings"])
 
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.
@@ -164,7 +164,7 @@ class Scene(Singleton):
         """
         guid = uuid.UUID(guid)
         for obj in self.objects:
-            if guid == obj._guid:
+            if guid == obj.guid:
                 return obj
 
     def update(self):

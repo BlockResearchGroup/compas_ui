@@ -12,6 +12,7 @@ Classes
     :toctree: generated/
     :nosignatures:
 
+    RhinoLineObject
     RhinoMeshObject
     RhinoNetworkObject
     RhinoVolMeshObject
@@ -22,6 +23,7 @@ from __future__ import division
 from __future__ import print_function
 
 from compas.plugins import plugin
+from compas.geometry import Line
 from compas.datastructures import Mesh
 from compas.datastructures import Network
 from compas.datastructures import VolMesh
@@ -40,7 +42,8 @@ from ._modify import (  # noqa : F401 F403
     mesh_move_face,
 )
 
-from ._object import RhinoObject
+from .object import RhinoObject
+from .lineobject import RhinoLineObject
 from .meshobject import RhinoMeshObject
 from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject
@@ -48,6 +51,7 @@ from compas_ui.objects.group import Group
 
 @plugin(category="ui", requires=["Rhino"])
 def register_objects():
+    RhinoObject.register(Line, RhinoLineObject, context="Rhino")
     RhinoObject.register(Mesh, RhinoMeshObject, context="Rhino")
     RhinoObject.register(Network, RhinoNetworkObject, context="Rhino")
     RhinoObject.register(VolMesh, RhinoVolMeshObject, context="Rhino")
@@ -57,6 +61,7 @@ def register_objects():
 
 __all__ = [
     "RhinoObject",
+    "RhinoLineObject",
     "RhinoMeshObject",
     "RhinoNetworkObject",
     "RhinoVolMeshObject",

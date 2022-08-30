@@ -1,14 +1,14 @@
 from compas_ui.ui import UI
 
 
-__commandname__ = "COMPAS__about"
+__commandname__ = "COMPAS_cloud_restart"
 
 
 @UI.error()
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.about()
+    ui.cloud_restart()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from compas_ui.ui import UI
 
 
-__commandname__ = "COMPAS__save"
+__commandname__ = "COMPAS_save"
 
 
 @UI.error()

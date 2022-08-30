@@ -19,13 +19,7 @@
         "description": "COMPAS UI provides...",
         "website": "https://compas.dev"
     },
-    "packages": [
-        "compas",
-        "compas_rhino",
-        "compas_ghpython",
-        "compas_cloud",
-        "compas_ui"
-    ],
+    "packages": [],
     "settings": {
         "cloud": {
             "background": true
@@ -38,67 +32,55 @@
         },
         "commands": [
             {
-                "name": "COMPAS__about",
-                "menu_text": "About"
-            },
-            {
-                "name": "COMPAS__cloud_restart",
+                "name": "COMPAS_cloud_restart",
                 "menu_text": "Cloud Restart"
             },
             {
-                "name": "COMPAS__cloud_shutdown",
+                "name": "COMPAS_cloud_shutdown",
                 "menu_text": "Cloud Shutdown"
             },
             {
-                "name": "COMPAS__cloud_start",
+                "name": "COMPAS_cloud_start",
                 "menu_text": "Cloud Start"
             },
             {
-                "name": "COMPAS__conda_envs",
-                "menu_text": "Conda Environments"
-            },
-            {
-                "name": "COMPAS__init",
+                "name": "COMPAS_init",
                 "menu_text": "Init"
             },
             {
-                "name": "COMPAS__load",
+                "name": "COMPAS_load",
                 "menu_text": "Load"
             },
             {
-                "name": "COMPAS__redo",
+                "name": "COMPAS_redo",
                 "menu_text": "Redo"
             },
             {
-                "name": "COMPAS__save",
+                "name": "COMPAS_save",
                 "menu_text": "Save"
             },
             {
-                "name": "COMPAS__saveas",
+                "name": "COMPAS_saveas",
                 "menu_text": "SaveAs"
             },
             {
-                "name": "COMPAS__scene_clear",
+                "name": "COMPAS_scene_clear",
                 "menu_text": "Scene Clear"
             },
             {
-                "name": "COMPAS__scene_objects",
+                "name": "COMPAS_scene_objects",
                 "menu_text": "Scene Objects"
             },
             {
-                "name": "COMPAS__scene_update",
+                "name": "COMPAS_scene_update",
                 "menu_text": "Scene Update"
             },
             {
-                "name": "COMPAS__searchpaths",
-                "menu_text": "Rhino Search Paths"
-            },
-            {
-                "name": "COMPAS__settings",
+                "name": "COMPAS_settings",
                 "menu_text": "Settings"
             },
             {
-                "name": "COMPAS__undo",
+                "name": "COMPAS_undo",
                 "menu_text": "Undo"
             },
             {
@@ -111,19 +93,19 @@
                 "name": "COMPAS",
                 "items": [
                     {
-                        "command": "COMPAS__init"
+                        "command": "COMPAS_init"
                     },
                     {
                         "type": "separator"
                     },
                     {
-                        "command": "COMPAS__save"
+                        "command": "COMPAS_save"
                     },
                     {
-                        "command": "COMPAS__saveas"
+                        "command": "COMPAS_saveas"
                     },
                     {
-                        "command": "COMPAS__load"
+                        "command": "COMPAS_load"
                     },
                     {
                         "type": "separator"
@@ -132,13 +114,13 @@
                         "name": "Scene",
                         "items": [
                             {
-                                "command": "COMPAS__scene_clear"
+                                "command": "COMPAS_scene_clear"
                             },
                             {
-                                "command": "COMPAS__scene_update"
+                                "command": "COMPAS_scene_update"
                             },
                             {
-                                "command": "COMPAS__scene_objects"
+                                "command": "COMPAS_scene_objects"
                             }
                         ]
                     },
@@ -146,21 +128,13 @@
                         "name": "Cloud",
                         "items": [
                             {
-                                "command": "COMPAS__cloud_start"
+                                "command": "COMPAS_cloud_start"
                             },
                             {
-                                "command": "COMPAS__cloud_restart"
+                                "command": "COMPAS_cloud_restart"
                             },
                             {
-                                "command": "COMPAS__cloud_shutdown"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Conda",
-                        "items": [
-                            {
-                                "command": "COMPAS__conda_envs"
+                                "command": "COMPAS_cloud_shutdown"
                             }
                         ]
                     },
@@ -189,18 +163,8 @@
                             {
                                 "name": "Volumetric Meshes",
                                 "items": []
-                            },
-                            {
-                                "name": "Assemblies",
-                                "items": []
                             }
                         ]
-                    },
-                    {
-                        "type": "separator"
-                    },
-                    {
-                        "command": "COMPAS__about"
                     }
                 ]
             }

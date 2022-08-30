@@ -1,7 +1,7 @@
 from compas_ui.ui import UI
 
 
-__commandname__ = "COMPAS__scene_update"
+__commandname__ = "COMPAS_scene_update"
 
 
 @UI.error()

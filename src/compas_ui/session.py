@@ -77,7 +77,7 @@ class Session(Singleton):
 
     """
 
-    def __init__(self, name=None, directory=None, extension='json', autosave=False):
+    def __init__(self, name=None, directory=None, extension="json", autosave=False):
         self._history = []
         self._current = -1
         self.data = {}
@@ -106,7 +106,7 @@ class Session(Singleton):
 
     @property
     def filename(self):
-        return '{}.{}'.format(self.name, self.extension)
+        return "{}.{}".format(self.name, self.extension)
 
     @property
     def filepath(self):
@@ -116,7 +116,7 @@ class Session(Singleton):
     def filepath(self, filepath):
         dirname, basename = os.path.split(filepath)
         filename, extension = os.path.splitext(basename)
-        extension = extension.replace('.', '')
+        extension = extension.replace(".", "")
         self.directory = dirname
         self.name = filename
         self.extension = extension
@@ -150,7 +150,7 @@ class Session(Singleton):
             if self._current < len(self._history) - 1:
                 # remove everything that comes after current
                 # but keep current
-                self._history[:] = self._history[:self._current + 1]
+                self._history[:] = self._history[: self._current + 1]
 
         self._history.append(json_dumps(self.data))
         self._current = len(self._history) - 1

@@ -14,6 +14,7 @@ Classes
     :nosignatures:
 
     Object
+    LineObject
     MeshObject
     NetworkObject
     VolMeshObject
@@ -36,15 +37,18 @@ from __future__ import division
 
 from .exceptions import ObjectNotRegistered
 from .object import Object
+
+from .lineobject import LineObject
 from .meshobject import MeshObject
 from .networkobject import NetworkObject
 from .volmeshobject import VolMeshObject
 
 
 __all__ = [
-    'ObjectNotRegistered',
-    'Object',
-    'MeshObject',
-    'NetworkObject',
-    'VolMeshObject'
+    "ObjectNotRegistered",
+    "Object",
+    "LineObject",
+    "MeshObject",
+    "NetworkObject",
+    "VolMeshObject",
 ]
