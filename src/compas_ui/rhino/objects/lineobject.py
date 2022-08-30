@@ -45,11 +45,11 @@ class RhinoLineObject(RhinoObject, LineObject):
 
             import compas_rhino
             from compas.geometry import Line
-            from compas_ui.rhino.objects.lineobject import LineObject
+            from compas_ui.objects import Object
 
             line = Line([0, 0, 0], [1, 0, 0])
-            lineobj = LineObject(line)
 
+            lineobj = Object(line)
             lineobj.draw()
 
             compas_rhino.redraw()
@@ -95,11 +95,11 @@ class RhinoLineObject(RhinoObject, LineObject):
 
             import compas_rhino
             from compas.geometry import Line
-            from compas_ui.rhino.objects.lineobject import LineObject
+            from compas_ui.objects import Object
 
             line = Line([0, 0, 0], [1, 0, 0])
-            lineobj = LineObject(line)
 
+            lineobj = Object(line)
             lineobj.draw()
 
             compas_rhino.redraw()
