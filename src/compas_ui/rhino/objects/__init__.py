@@ -49,6 +49,7 @@ from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject
 from compas_ui.objects.group import Group
 
+
 @plugin(category="ui", requires=["Rhino"])
 def register_objects():
     RhinoObject.register(Line, RhinoLineObject, context="Rhino")

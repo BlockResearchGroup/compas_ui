@@ -4,6 +4,7 @@ from __future__ import print_function
 
 from .object import Object
 
+
 class Group(Object):
     def __init__(self, items, **kwargs):
         super(Group, self).__init__(items, **kwargs)
