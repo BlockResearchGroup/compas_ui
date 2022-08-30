@@ -49,13 +49,14 @@ from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject
 
 
-@plugin(category="ui", requires=["Rhino"])
+@plugin(category='ui', requires=["Rhino"])
 def register_objects():
     RhinoObject.register(Line, RhinoLineObject, context="Rhino")
     RhinoObject.register(Mesh, RhinoMeshObject, context="Rhino")
     RhinoObject.register(Network, RhinoNetworkObject, context="Rhino")
     RhinoObject.register(VolMesh, RhinoVolMeshObject, context="Rhino")
-    print("Rhino Objects registered.")
+
+    print("UI Rhino Objects registered.")
 
 
 __all__ = [
