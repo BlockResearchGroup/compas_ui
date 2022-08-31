@@ -15,64 +15,99 @@ from .settings import SettingsForm
 from compas.datastructures import Mesh
 
 
-class SettingsCell(Eto.Forms.CustomCell):
+class ObjCell(Eto.Forms.CustomCell):
+
     def __init__(self, parent):
         self.parent = parent
 
+
+class ObjNameCell(ObjCell):
+
     def OnCreateCell(self, args):
-        if isinstance(args.Item.GetValue(6), Mesh):
+        obj = args.Item.GetValue(0)
+        control = Eto.Forms.TextBox()
+        control.Text = obj.name
+        control.ShowBorder = False
+
+        def on_text_changed(sender, e):
+            obj.name = sender.Text
+
+        control.TextChanged += on_text_changed
+
+        return control
+
+
+class ObjTypeCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        obj = args.Item.GetValue(0)
+        control = Eto.Forms.Label(Text=obj.item.__class__.__name__)
+        return control
+
+
+class VisibleCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        def on_click(sender, e):
+            obj.visible = sender.Checked
+            self.parent.scene.update()
+
+        obj = args.Item.GetValue(0)
+        control = Eto.Forms.CheckBox()
+        control.Checked = obj.visible
+        control.CheckedChanged += on_click
+
+        return control
+
+
+class SettingsCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        obj = args.Item.GetValue(0)
+        if isinstance(obj.item, Mesh):
             def on_click(sender, e):
                 form = SettingsForm(obj.settings)
                 if form.ShowModal(self.parent):
                     obj.settings.update(form.settings)
                     self.parent.scene.update()
 
-            obj = args.Item.GetValue(5)
             control = Eto.Forms.Button(Text="Settings")
             control.Click += on_click
 
             return control
 
 
-class ItemCell(Eto.Forms.CustomCell):
-    def __init__(self, parent):
-        self.parent = parent
+class ItemCell(ObjCell):
 
     def OnCreateCell(self, args):
-        if isinstance(args.Item.GetValue(6), Mesh):
+        obj = args.Item.GetValue(0)
+        if isinstance(obj.item, Mesh):
             def on_click(sender, e):
                 # switch between data types
-                form = MeshDataForm(data)
+                form = MeshDataForm(obj.item)
                 if form.ShowModal(self.parent):
                     self.parent.scene.update()
 
-            data = args.Item.GetValue(6)
-            text = "{} Data".format(data.__class__.__name__)
+            text = "{} Data".format(obj.item.__class__.__name__)
             control = Eto.Forms.Button(Text=text)
             control.Click += on_click
 
             return control
 
 
-class ActiveCell(Eto.Forms.CustomCell):
-    def __init__(self, parent):
-        self.parent = parent
+class ActiveCell(ObjCell):
 
     def OnCreateCell(self, args):
         def on_click(sender, e):
-            if self.parent.scene.active_object == obj:
-                self.parent.scene.active_object = None
-            else:
-                self.parent.scene.active_object = obj
-
+            self.parent.scene.active_object = obj
             for _obj, _control in self.parent.active_controls:
                 if _obj != obj:
                     _control.Checked = self.parent.scene.active_object == _obj
 
             print("active object:", self.parent.scene.active_object)
 
-        obj = args.Item.GetValue(5)
-        control = Eto.Forms.CheckBox()
+        obj = args.Item.GetValue(0)
+        control = Eto.Forms.RadioButton()
         control.Checked = obj.active
         control.MouseDown += on_click
         self.parent.active_controls.append((obj, control))
@@ -93,34 +128,27 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.table.ShowHeader = True
 
         column = Eto.Forms.GridColumn()
+        column.HeaderText = "Object"
+        column.Editable = False
+        column.DataCell = ObjTypeCell(self)
+        self.table.Columns.Add(column)
+
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = "Name"
+        column.Editable = False
+        column.DataCell = ObjNameCell(self)
+        self.table.Columns.Add(column)
+
+        column = Eto.Forms.GridColumn()
         column.HeaderText = "Active"
         column.Editable = False
         column.DataCell = ActiveCell(self)
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
-        column.HeaderText = "Object"
-        column.Editable = False
-        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
-        column.HeaderText = "GUID"
-        column.Editable = False
-        column.Visible = False
-        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
-        column.HeaderText = "Name"
-        column.Editable = True
-        column.DataCell = Eto.Forms.TextBoxCell(self.table.Columns.Count)
-        self.table.Columns.Add(column)
-
-        column = Eto.Forms.GridColumn()
         column.HeaderText = "Visible"
-        column.Editable = True
-        column.DataCell = Eto.Forms.CheckBoxCell(self.table.Columns.Count)
+        column.Editable = False
+        column.DataCell = VisibleCell(self)
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
@@ -139,17 +167,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
 
         def add_items(parent, objects):
             for obj in objects:
-                item = Eto.Forms.TreeGridItem(
-                    Values=(
-                        obj.active,
-                        obj.item.__class__.__name__,
-                        str(obj.guid),
-                        obj.name,
-                        obj.visible,
-                        obj,
-                        obj.item,
-                    )
-                )
+                item = Eto.Forms.TreeGridItem(Values=(obj,))
                 if obj.children:
                     add_items(item.Children, obj.children)
                 parent.Add(item)
@@ -166,42 +184,8 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         layout.AddRow(self.table)
         layout.EndVertical()
 
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
-        layout.AddRow(None, self.ok, self.cancel)
-        layout.EndVertical()
         self.Content = layout
         self.active_controls = []
-
-    @property
-    def ok(self):
-        self.DefaultButton = Eto.Forms.Button(Text="OK")
-        self.DefaultButton.Click += self.on_ok
-        return self.DefaultButton
-
-    @property
-    def cancel(self):
-        self.AbortButton = Eto.Forms.Button(Text="Cancel")
-        self.AbortButton.Click += self.on_cancel
-        return self.AbortButton
-
-    def on_ok(self, sender, event):
-        def update_objects(collection):
-            for row in collection:
-                guid = uuid.UUID(row.GetValue(2))
-                for obj in self.scene.objects:
-                    if obj.guid == guid:
-                        obj.name = row.GetValue(3)
-                        obj.visible = bool(row.GetValue(4))
-                        break
-                update_objects(row.Children)
-
-        update_objects(self.table.DataStore)
-        self.Close(True)
-
-    def on_cancel(self, sender, event):
-        self.Close(False)
 
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
