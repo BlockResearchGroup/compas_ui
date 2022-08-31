@@ -43,8 +43,7 @@ class ItemCell(Eto.Forms.CustomCell):
                 self.parent.scene.update()
 
         data = args.Item.GetValue(5)
-        text = "{} Data".format(data.__class__.__name__)
-        control = Eto.Forms.Button(Text=text)
+        control = Eto.Forms.Button(Text="Data")
         control.Click += on_click
 
         return control
@@ -105,7 +104,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
             for obj in objects:
                 item = Eto.Forms.TreeGridItem(
                     Values=(
-                        obj.__class__.__name__,
+                        obj.item.__class__.__name__,
                         str(obj.guid),
                         obj.name,
                         obj.visible,
