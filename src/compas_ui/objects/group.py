@@ -1,19 +1,21 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-from .object import Object
+from compas.data import Data
 
 
-class Group(Object):
-    def __init__(self, items, **kwargs):
-        super(Group, self).__init__(items, **kwargs)
-        for item in items:
-            self.add(item)
+class Group(Data):
+    def __init__(self, items=None):
+        super(Group, self).__init__()
+        self.items = items or set()
 
-    def clear(self):
-        for child in self.children:
-            self.remove(child)
+    def add(self, item):
+        self.items.add(item)
 
-    def draw(self):
-        pass
+    def remove(self, item):
+        self.items.remove(item)
+
+    @property
+    def data(self):
+        return {'items': list(self.items)}
+
+    @data.setter
+    def data(self, data):
+        self.items = set(data['items'])

@@ -135,9 +135,6 @@ class Scene(Singleton):
 
         """
         obj = Object(item, scene=self, **kwargs)
-        # implement __hash__ on Data
-        # to allow for
-        # self.objects[item] = obj
         self.objects.append(obj)
         self.active_object = obj
         return obj

@@ -20,16 +20,16 @@ class SettingsCell(Eto.Forms.CustomCell):
         self.parent = parent
 
     def OnCreateCell(self, args):
-        if isinstance(args.Item.GetValue(5), Mesh):
+        if isinstance(args.Item.GetValue(6), Mesh):
             def on_click(sender, e):
                 form = SettingsForm(obj.settings)
                 if form.ShowModal(self.parent):
                     obj.settings.update(form.settings)
                     self.parent.scene.update()
 
-        obj = args.Item.GetValue(5)
-        control = Eto.Forms.Button(Text="Settings")
-        control.Click += on_click
+            obj = args.Item.GetValue(5)
+            control = Eto.Forms.Button(Text="Settings")
+            control.Click += on_click
 
             return control
 
@@ -39,17 +39,17 @@ class ItemCell(Eto.Forms.CustomCell):
         self.parent = parent
 
     def OnCreateCell(self, args):
-        if isinstance(args.Item.GetValue(5), Mesh):
+        if isinstance(args.Item.GetValue(6), Mesh):
             def on_click(sender, e):
                 # switch between data types
                 form = MeshDataForm(data)
                 if form.ShowModal(self.parent):
                     self.parent.scene.update()
 
-        data = args.Item.GetValue(5)
-        text = "{} Data".format(data.__class__.__name__)
-        control = Eto.Forms.Button(Text=text)
-        control.Click += on_click
+            data = args.Item.GetValue(6)
+            text = "{} Data".format(data.__class__.__name__)
+            control = Eto.Forms.Button(Text=text)
+            control.Click += on_click
 
             return control
 

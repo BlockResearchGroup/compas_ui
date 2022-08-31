@@ -50,6 +50,7 @@ from .meshobject import RhinoMeshObject
 from .networkobject import RhinoNetworkObject
 from .volmeshobject import RhinoVolMeshObject
 from compas_ui.objects.group import Group
+from compas_ui.objects.groupobject import GroupObject
 
 
 @plugin(category="ui", requires=["Rhino"])
@@ -59,7 +60,7 @@ def register_objects():
     RhinoObject.register(Mesh, RhinoMeshObject, context="Rhino")
     RhinoObject.register(Network, RhinoNetworkObject, context="Rhino")
     RhinoObject.register(VolMesh, RhinoVolMeshObject, context="Rhino")
-    RhinoObject.register(list, Group, context="Rhino")
+    RhinoObject.register(Group, GroupObject, context="Rhino")
 
     print("UI Rhino Objects registered.")
 

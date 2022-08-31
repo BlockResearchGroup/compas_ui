@@ -116,13 +116,12 @@ class Object(object):
         self._guid = None
         self._item = None
         self._artist = None
-        self._scene = None
+        self._scene = scene
         self.item = item
         self.name = name
         self.visible = visible
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
-        self._scene = scene
         self.parent = None
 
     def __getstate__(self):
