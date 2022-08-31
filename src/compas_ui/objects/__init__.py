@@ -44,6 +44,7 @@ from .curveobject import CurveObject
 from .meshobject import MeshObject
 from .networkobject import NetworkObject
 from .volmeshobject import VolMeshObject
+from .group import Group
 
 
 __all__ = [
@@ -54,4 +55,5 @@ __all__ = [
     "MeshObject",
     "NetworkObject",
     "VolMeshObject",
+    "Group",
 ]
