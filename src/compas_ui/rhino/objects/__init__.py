@@ -41,7 +41,6 @@ from ._modify import (  # noqa : F401 F403
     mesh_update_edge_attributes,
     mesh_move_vertex,
     mesh_move_vertices,
-    mesh_move_face,
 )
 
 from .object import RhinoObject

@@ -5,7 +5,8 @@ from __future__ import division
 import ast
 import compas_rhino
 
-from compas.geometry import add_vectors
+from compas.geometry import Point
+from compas_rhino.conversions import vector_to_compas
 
 import Rhino
 import Rhino.UI
@@ -17,7 +18,7 @@ except ImportError:
     from Rhino.UI.Dialogs import ShowPropertyListBox
 
 
-def _update_named_values(names, values, message='', title='Update named values'):
+def _update_named_values(names, values, message="", title="Update named values"):
     try:
         dialog = PropertyListForm(names, values)
     except Exception:
@@ -31,7 +32,8 @@ def _update_named_values(names, values, message='', title='Update named values')
 
 
 def network_update_attributes(network):
-    """Update the attributes of a network.
+    """
+    Update the attributes of a network.
 
     Parameters
     ----------
@@ -58,7 +60,8 @@ def network_update_attributes(network):
 
 
 def network_update_node_attributes(network, nodes, names=None):
-    """Update the attributes of the nodes of a network.
+    """
+    Update the attributes of the nodes of a network.
 
     Parameters
     ----------
@@ -84,13 +87,13 @@ def network_update_node_attributes(network, nodes, names=None):
         for i, name in enumerate(names):
             for node in nodes[1:]:
                 if values[i] != network.node_attribute(node, name):
-                    values[i] = '-'
+                    values[i] = "-"
                     break
     values = map(str, values)
     values = _update_named_values(names, values)
     if values:
         for name, value in zip(names, values):
-            if value == '-':
+            if value == "-":
                 continue
             for node in nodes:
                 try:
@@ -102,7 +105,8 @@ def network_update_node_attributes(network, nodes, names=None):
 
 
 def network_update_edge_attributes(network, edges, names=None):
-    """Update the attributes of the edges of a network.
+    """
+    Update the attributes of the edges of a network.
 
     Parameters
     ----------
@@ -129,13 +133,13 @@ def network_update_edge_attributes(network, edges, names=None):
         for i, name in enumerate(names):
             for edge in edges[1:]:
                 if values[i] != network.edge_attribute(edge, name):
-                    values[i] = '-'
+                    values[i] = "-"
                     break
     values = map(str, values)
     values = _update_named_values(names, values)
     if values:
         for name, value in zip(names, values):
-            if value == '-':
+            if value == "-":
                 continue
             for edge in edges:
                 try:
@@ -148,7 +152,8 @@ def network_update_edge_attributes(network, edges, names=None):
 
 
 def network_move_node(network, node, constraint=None, allow_off=False):
-    """Move on node of the network.
+    """
+    Move on node of the network.
 
     Parameters
     ----------
@@ -163,6 +168,7 @@ def network_move_node(network, node, constraint=None, allow_off=False):
         Allow the node to move off the constraint.
 
     """
+
     def OnDynamicDraw(sender, e):
         for ep in nbrs:
             sp = e.CurrentPoint
@@ -174,7 +180,7 @@ def network_move_node(network, node, constraint=None, allow_off=False):
 
     gp = Rhino.Input.Custom.GetPoint()
 
-    gp.SetCommandPrompt('Point to move to?')
+    gp.SetCommandPrompt("Point to move to?")
     gp.DynamicDraw += OnDynamicDraw
     if constraint:
         gp.Constrain(constraint, allow_off)
@@ -183,12 +189,13 @@ def network_move_node(network, node, constraint=None, allow_off=False):
     if gp.CommandResult() != Rhino.Commands.Result.Success:
         return False
 
-    network.node_attributes(node, 'xyz', list(gp.Point()))
+    network.node_attributes(node, "xyz", list(gp.Point()))
     return True
 
 
 def mesh_update_attributes(mesh):
-    """Update the attributes of a mesh.
+    """
+    Update the attributes of a mesh.
 
     Parameters
     ----------
@@ -216,7 +223,8 @@ def mesh_update_attributes(mesh):
 
 
 def mesh_update_vertex_attributes(mesh, vertices, names=None):
-    """Update the attributes of selected vertices of a given datastructure.
+    """
+    Update the attributes of selected vertices of a given datastructure.
 
     Parameters
     ----------
@@ -242,13 +250,13 @@ def mesh_update_vertex_attributes(mesh, vertices, names=None):
         for i, name in enumerate(names):
             for vertex in vertices[1:]:
                 if values[i] != mesh.vertex_attribute(vertex, name):
-                    values[i] = '-'
+                    values[i] = "-"
                     break
     values = map(str, values)
     values = _update_named_values(names, values)
     if values:
         for name, value in zip(names, values):
-            if value == '-':
+            if value == "-":
                 continue
             for vertex in vertices:
                 try:
@@ -261,7 +269,8 @@ def mesh_update_vertex_attributes(mesh, vertices, names=None):
 
 # rename to modify
 def mesh_update_face_attributes(mesh, faces, names=None):
-    """Update the attributes of the faces of a mesh.
+    """
+    Update the attributes of the faces of a mesh.
 
     Parameters
     ----------
@@ -285,13 +294,13 @@ def mesh_update_face_attributes(mesh, faces, names=None):
         for i, name in enumerate(names):
             for face in faces[1:]:
                 if values[i] != mesh.face_attribute(face, name):
-                    values[i] = '-'
+                    values[i] = "-"
                     break
     values = map(str, values)
     values = _update_named_values(names, values)
     if values:
         for name, value in zip(names, values):
-            if value == '-':
+            if value == "-":
                 continue
             for face in faces:
                 try:
@@ -303,7 +312,8 @@ def mesh_update_face_attributes(mesh, faces, names=None):
 
 
 def mesh_update_edge_attributes(mesh, edges, names=None):
-    """Update the attributes of the edges of a mesh.
+    """
+    Update the attributes of the edges of a mesh.
 
     Parameters
     ----------
@@ -330,13 +340,13 @@ def mesh_update_edge_attributes(mesh, edges, names=None):
         for i, name in enumerate(names):
             for edge in edges[1:]:
                 if values[i] != mesh.edge_attribute(edge, name):
-                    values[i] = '-'
+                    values[i] = "-"
                     break
     values = map(str, values)
     values = _update_named_values(names, values)
     if values:
         for name, value in zip(names, values):
-            if value == '-':
+            if value == "-":
                 continue
             for edge in edges:
                 try:
@@ -348,49 +358,58 @@ def mesh_update_edge_attributes(mesh, edges, names=None):
     return False
 
 
-# def mesh_move(mesh):
-#     """"""
-#     color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+def mesh_move(mesh):
+    """
+    Move an entire mesh.
+    """
+    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
 
-#     vertex_xyz0 = {key: mesh.vertex_coordinates(key) for key in mesh.mesh.vertices()}
-#     vertex_xyz = {key: mesh.vertex_coordinates(key) for key in mesh.mesh.vertices()}
+    vertex_p0 = {v: Point3d(*mesh.vertex_coordinates(v)) for v in mesh.mesh.vertices()}
+    vertex_p1 = {v: Point3d(*mesh.vertex_coordinates(v)) for v in mesh.mesh.vertices()}
 
-#     edges = list(mesh.edges())
+    edges = list(mesh.edges())
 
-#     start = compas_rhino.pick_point('Point to move from?')
-#     if not start:
-#         return False
+    def OnDynamicDraw(sender, e):
+        current = e.CurrentPoint
+        vector = current - start
+        for vertex in vertex_p1:
+            vertex_p1[vertex] = vertex_p0[vertex] + vector
+        for u, v in iter(edges):
+            sp = vertex[u]
+            ep = vertex[v]
+            e.Display.DrawDottedLine(sp, ep, color)
 
-#     def OnDynamicDraw(sender, e):
-#         current = list(e.CurrentPoint)
-#         vector = subtract_vectors(current, start)
-#         for vertex in vertex_xyz:
-#             vertex_xyz[vertex] = add_vectors(vertex_xyz0[vertex], vector)
-#         for u, v in iter(edges):
-#             sp = vertex[u]
-#             ep = vertex[v]
-#             sp = Point3d(*sp)
-#             ep = Point3d(*ep)
-#             e.Display.DrawDottedLine(sp, ep, color)
+    gp = Rhino.Input.Custom.GetPoint()
 
-#     gp = Rhino.Input.Custom.GetPoint()
-#     gp.SetCommandPrompt('Point to move to?')
-#     gp.DynamicDraw += OnDynamicDraw
-#     gp.Get()
+    gp.SetCommandPrompt("Point to move from?")
+    gp.Get()
 
-#     if gp.CommandResult() == Rhino.Commands.Result.Success:
-#         end = list(gp.Point())
-#         vector = subtract_vectors(end, start)
-#         for vertex, attr in mesh.vertices(True):
-#             attr['x'] += vector[0]
-#             attr['y'] += vector[1]
-#             attr['z'] += vector[2]
-#         return True
-#     return False
+    if gp.CommandResult() != Rhino.Commands.Result.Success:
+        return False
+
+    start = gp.Point()
+
+    gp = Rhino.Input.Custom.GetPoint()
+    gp.SetCommandPrompt("Point to move to?")
+    gp.DynamicDraw += OnDynamicDraw
+    gp.Get()
+
+    if gp.CommandResult() != Rhino.Commands.Result.Success:
+        return False
+
+    end = gp.Point()
+
+    vector = vector_to_compas(end - start)
+    for _, attr in mesh.vertices(True):
+        attr["x"] += vector[0]
+        attr["y"] += vector[1]
+        attr["z"] += vector[2]
+    return True
 
 
 def mesh_move_vertex(mesh, vertex, constraint=None, allow_off=True):
-    """Move on vertex of the mesh.
+    """
+    Move on vertex of the mesh.
 
     Parameters
     ----------
@@ -414,7 +433,7 @@ def mesh_move_vertex(mesh, vertex, constraint=None, allow_off=True):
 
     gp = Rhino.Input.Custom.GetPoint()
 
-    gp.SetCommandPrompt('Point to move to?')
+    gp.SetCommandPrompt("Point to move to?")
     gp.DynamicDraw += OnDynamicDraw
     if constraint:
         gp.Constrain(constraint, allow_off)
@@ -423,12 +442,13 @@ def mesh_move_vertex(mesh, vertex, constraint=None, allow_off=True):
     if gp.CommandResult() != Rhino.Commands.Result.Success:
         return False
 
-    mesh.vertex_attributes(vertex, 'xyz', list(gp.Point()))
+    mesh.vertex_attributes(vertex, "xyz", list(gp.Point()))
     return True
 
 
 def mesh_move_vertices(mesh, vertices):
-    """Move on vertices of the mesh.
+    """
+    Move on vertices of the mesh.
 
     Parameters
     ----------
@@ -452,7 +472,7 @@ def mesh_move_vertices(mesh, vertices):
         nbrs = mesh.vertex_neighbors(vertex)
         for nbr in nbrs:
             b = mesh.vertex_coordinates(nbr)
-            line = [Point3d(* a), Point3d(* b)]
+            line = [Point3d(*a), Point3d(*b)]
             if nbr in vertices:
                 lines.append(line)
             else:
@@ -460,7 +480,7 @@ def mesh_move_vertices(mesh, vertices):
 
     gp = Rhino.Input.Custom.GetPoint()
 
-    gp.SetCommandPrompt('Point to move from?')
+    gp.SetCommandPrompt("Point to move from?")
     gp.Get()
     if gp.CommandResult() != Rhino.Commands.Result.Success:
         return False
@@ -478,7 +498,7 @@ def mesh_move_vertices(mesh, vertices):
             a = a + vector
             e.Display.DrawDottedLine(a, b, color)
 
-    gp.SetCommandPrompt('Point to move to?')
+    gp.SetCommandPrompt("Point to move to?")
     gp.SetBasePoint(start, False)
     gp.DrawLineFromPoint(start, True)
     gp.DynamicDraw += OnDynamicDraw
@@ -487,49 +507,51 @@ def mesh_move_vertices(mesh, vertices):
         return False
 
     end = gp.Point()
-    vector = list(end - start)
+    vector = vector_to_compas(end - start)
 
     for vertex in vertices:
-        xyz = mesh.vertex_attributes(vertex, 'xyz')
-        mesh.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+        point = Point(*mesh.vertex_attributes(vertex, "xyz"))
+        mesh.vertex_attributes(vertex, "xyz", point + vector)
     return True
 
 
-def mesh_move_face(mesh, face, constraint=None, allow_off=True):
-    """Move a face of the mesh to a different location and update the data structure.
+# def mesh_move_face(mesh, face, constraint=None, allow_off=True):
+#     """
+#     Move a face of the mesh to a different location and update the data structure.
 
-    Parameters
-    ----------
-    mesh : :class:`compas.datastructures.Mesh`
-    face : int
+#     Parameters
+#     ----------
+#     mesh : :class:`compas.datastructures.Mesh`
+#     face : int
 
-    Returns
-    -------
-    bool
-        True if the update was successful.
-        False otherwise.
+#     Returns
+#     -------
+#     bool
+#         True if the update was successful.
+#         False otherwise.
 
-    """
-    def OnDynamicDraw(sender, e):
-        for ep in nbrs:
-            sp = e.CurrentPoint
-            e.Display.DrawDottedLine(sp, ep, color)
+#     """
 
-    color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
-    nbrs = [mesh.face_coordinates(nbr) for nbr in mesh.face_neighbors(face)]
-    nbrs = [Point3d(*xyz) for xyz in nbrs]
+#     def OnDynamicDraw(sender, e):
+#         for ep in nbrs:
+#             sp = e.CurrentPoint
+#             e.Display.DrawDottedLine(sp, ep, color)
 
-    gp = Rhino.Input.Custom.GetPoint()
+#     color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+#     nbrs = [mesh.face_coordinates(nbr) for nbr in mesh.face_neighbors(face)]
+#     nbrs = [Point3d(*xyz) for xyz in nbrs]
 
-    gp.SetCommandPrompt('Point to move to?')
-    gp.DynamicDraw += OnDynamicDraw
-    if constraint:
-        gp.Constrain(constraint, allow_off)
+#     gp = Rhino.Input.Custom.GetPoint()
 
-    gp.Get()
+#     gp.SetCommandPrompt("Point to move to?")
+#     gp.DynamicDraw += OnDynamicDraw
+#     if constraint:
+#         gp.Constrain(constraint, allow_off)
 
-    if gp.CommandResult() == Rhino.Commands.Result.Success:
-        mesh.face_attributes(face, 'xyz', list(gp.Point()))
-        return True
+#     gp.Get()
 
-    return False
+#     if gp.CommandResult() == Rhino.Commands.Result.Success:
+#         mesh.face_attributes(face, "xyz", list(gp.Point()))
+#         return True
+
+#     return False
