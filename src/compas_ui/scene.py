@@ -134,8 +134,7 @@ class Scene(Singleton):
         :class:`compas_ui.objects.Object`
 
         """
-        obj = Object(item, **kwargs)
-        obj._scene = self
+        obj = Object(item, scene=self, **kwargs)
         self.objects.append(obj)
         self.active_object = obj
         return obj
