@@ -168,6 +168,13 @@ class Object(object):
         obj = self._scene.remove(obj)
 
     @property
+    def active(self):
+        if self._scene:
+            return self._scene.active_object is self
+        else:
+            return False
+
+    @property
     def guid(self):
         if not self._guid:
             self._guid = uuid4()
