@@ -58,6 +58,8 @@ class Scene(Singleton):
         The objects in the scene.
     settings : dict[str, Any]
         The visualization settings.
+    active_object : :class:`compas_ui.objects.Object`
+        The active object that is currently being operated on.
 
     """
 
@@ -68,6 +70,7 @@ class Scene(Singleton):
         self.objects = []
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(settings or {})
+        self._active_object = None
 
     @property
     def state(self):
@@ -103,6 +106,19 @@ class Scene(Singleton):
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state["settings"])
 
+    @property
+    def active_object(self):
+        return self._active_object
+
+    @active_object.setter
+    def active_object(self, obj):
+        if isinstance(obj, Object):
+            self._active_object = obj
+        elif obj is None:
+            self._active_object = None
+        else:
+            raise TypeError("The active object must be a compas_ui.objects.Object.")
+
     def add(self, item, **kwargs):
         """Add a COMPAS data item to the scene.
 
@@ -123,6 +139,7 @@ class Scene(Singleton):
         # to allow for
         # self.objects[item] = obj
         self.objects.append(obj)
+        self.active_object = obj
         return obj
 
     def remove(self, obj):

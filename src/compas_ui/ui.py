@@ -87,6 +87,7 @@ class UI(Singleton):
         self._tempdir = tempfile.gettempdir()
         self._controller_class = controller_class or Controller
 
+        self.registry = {}
         self.config = config
         self.settings = self.config["settings"] or {}
 

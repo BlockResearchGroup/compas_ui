@@ -6,12 +6,12 @@ import uuid
 from .object import Object
 
 
-class LineObject(Object):
+class CurveObject(Object):
 
     SETTINGS = {}
 
     def __init__(self, *args, **kwargs):
-        super(LineObject, self).__init__(*args, **kwargs)
+        super(CurveObject, self).__init__(*args, **kwargs)
 
     @property
     def state(self):
@@ -34,12 +34,12 @@ class LineObject(Object):
         self.visible = state["visible"]
 
     @property
-    def line(self):
+    def curve(self):
         return self.item
 
-    @line.setter
-    def line(self, line):
-        self.item = line
+    @curve.setter
+    def curve(self, curve):
+        self.item = curve
 
     def move(self):
         raise NotImplementedError
@@ -48,4 +48,7 @@ class LineObject(Object):
         raise NotImplementedError
 
     def move_end(self):
+        raise NotImplementedError
+
+    def move_knot(self):
         raise NotImplementedError

@@ -12,7 +12,6 @@ from ._modify import mesh_update_face_attributes
 from ._modify import mesh_update_edge_attributes
 from ._modify import mesh_move_vertex
 from ._modify import mesh_move_vertices
-from ._modify import mesh_move_face
 
 from .object import RhinoObject
 
@@ -309,7 +308,6 @@ class RhinoVolMeshObject(RhinoObject, VolMeshObject):
         """
         return mesh_move_vertices(self.volmesh, vertices)
 
-    # it is not entirely clear what is meant with this in terms of face/halfface
     def move_face(self, face):
         """Move a single face of the volmesh object and update the data structure accordingly.
 
@@ -324,4 +322,4 @@ class RhinoVolMeshObject(RhinoObject, VolMeshObject):
             True if the operation was successful.
             False otherwise.
         """
-        return mesh_move_face(self.volmesh, face)
+        raise NotImplementedError

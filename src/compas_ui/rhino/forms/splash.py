@@ -10,7 +10,7 @@ import Eto.Forms
 
 
 class SplashForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, title, url, width=800, height=400):
+    def __init__(self, title, url, width=800, height=450):
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)

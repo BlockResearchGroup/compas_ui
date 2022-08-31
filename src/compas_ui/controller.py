@@ -12,7 +12,11 @@ class Controller(object):
     # ========================================================================
 
     # ========================================================================
-    # Datastructures
+    # Datastructures: Network
+    # ========================================================================
+
+    # ========================================================================
+    # Datastructures: Mesh
     # ========================================================================
 
     def mesh_create(self):
@@ -29,12 +33,21 @@ class Controller(object):
             return
 
         if option == "FromFile":
-            path = FileForm.open(self.ui.dirname or os.path.expanduser("~"))
-            if not path:
-                return
+            if "mesh_create.FromFile.dirname" not in self.ui.registry:
+                path = FileForm.open(self.ui.dirname or os.path.expanduser("~"))
+                if not path:
+                    return
+            else:
+                dirname = self.ui.registry["mesh_create.FromFile.dirname"]
+                path = FileForm.open(dirname or os.path.expanduser("~"))
+                if not path:
+                    return
 
+            dirname = os.path.dirname(path)
             basename = os.path.basename(path)
             _, ext = os.path.splitext(path)
+
+            self.ui.registry["mesh_create.FromFile.dirname"] = dirname
 
             if ext == ".obj":
                 mesh = Mesh.from_obj(path)
@@ -55,13 +68,19 @@ class Controller(object):
                 return
 
             U = self.ui.get_integer(
-                "Number of faces in the U direction?", minval=1, maxval=1000, default=10
+                "Number of faces in the U direction?",
+                minval=1,
+                maxval=1000,
+                default=10,
             )
             if not U:
                 return
 
             V = self.ui.get_integer(
-                "Number of faces in the V direction?", minval=1, maxval=1000, default=U
+                "Number of faces in the V direction?",
+                minval=1,
+                maxval=1000,
+                default=U,
             )
             if not V:
                 return
@@ -84,22 +103,34 @@ class Controller(object):
 
         elif option == "FromMeshgrid":
             dx = self.ui.get_real(
-                "Span in the X direction?", minval=1, maxval=100, default=10
+                "Span in the X direction?",
+                minval=1,
+                maxval=100,
+                default=10,
             )
             if not dx:
                 return
             nx = self.ui.get_integer(
-                "Number of faces in the X direction?", minval=1, maxval=1000, default=10
+                "Number of faces in the X direction?",
+                minval=1,
+                maxval=1000,
+                default=10,
             )
             if not nx:
                 return
             dy = self.ui.get_real(
-                "Span in the Y direction?", minval=1, maxval=100, default=dx
+                "Span in the Y direction?",
+                minval=1,
+                maxval=100,
+                default=dx,
             )
             if not dy:
                 return
             ny = self.ui.get_integer(
-                "Number of faces in the Y direction?", minval=1, maxval=1000, default=nx
+                "Number of faces in the Y direction?",
+                minval=1,
+                maxval=1000,
+                default=nx,
             )
             if not ny:
                 return
@@ -174,6 +205,7 @@ class Controller(object):
                 set(flatten([mesh.vertices_on_edge_loop(key) for key in temp]))
             )
             guids = [vertex_guid[vertex] for vertex in vertices]
+            compas_rhino.rs.UnselectAllObjects()
             self.ui.scene.highlight_objects(guids)
 
         elif mode == "Manual":
@@ -195,7 +227,14 @@ class Controller(object):
         """
         mesh = meshobj.mesh
 
-        options = ["All", "AllBoundaryEdges", "Continuous", "Parallel", "Manual"]
+        options = [
+            "All",
+            "AllBoundaryEdges",
+            "Continuous",
+            "Parallel",
+            "UV",
+            "Manual",
+        ]
         mode = self.ui.get_string(message="Selection mode.", options=options)
         if not mode:
             return
@@ -225,11 +264,18 @@ class Controller(object):
             guids = [edge_guid[edge] for edge in edges]
             self.ui.scene.highlight_objects(guids)
 
+        elif mode == "UV":
+            temp = meshobj.select_edges()
+            edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
+            edges = list(set(flatten([mesh.edge_loop(edge) for edge in edges])))
+            guids = [edge_guid[edge] for edge in edges]
+            self.ui.scene.highlight_objects(guids)
+
         elif mode == "Manual":
             edges = meshobj.select_edges()
 
         return edges
 
     # ========================================================================
-    # Robots
+    # Datastructures: VolMesh
     # ========================================================================

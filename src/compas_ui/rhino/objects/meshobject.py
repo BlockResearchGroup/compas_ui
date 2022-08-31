@@ -3,10 +3,13 @@ from __future__ import division
 from __future__ import print_function
 
 import Rhino
+import Rhino.UI
 import Rhino.Geometry
 
 import compas_rhino
-from compas.geometry import add_vectors
+
+from compas.geometry import Point
+from compas_rhino.conversions import vector_to_compas
 
 from compas_ui.objects import MeshObject
 
@@ -16,7 +19,6 @@ from ._modify import mesh_update_face_attributes
 from ._modify import mesh_update_edge_attributes
 from ._modify import mesh_move_vertex
 from ._modify import mesh_move_vertices
-from ._modify import mesh_move_face
 
 from .object import RhinoObject
 
@@ -292,6 +294,74 @@ class RhinoMeshObject(RhinoObject, MeshObject):
         """
         return mesh_update_face_attributes(self.mesh, faces, names=names)
 
+    def move(self):
+        """
+        Move the entire mesh to a different location.
+
+        Returns
+        -------
+        bool
+            True if the operation was successful.
+            False otherwise.
+
+        Examples
+        --------
+        .. code-block:: python
+
+            pass
+
+        """
+        mesh = self.mesh
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+
+        vertex_p0 = {
+            v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v))
+            for v in mesh.vertices()
+        }
+        vertex_p1 = {
+            v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v))
+            for v in mesh.vertices()
+        }
+
+        edges = list(mesh.edges())
+
+        def OnDynamicDraw(sender, e):
+            current = e.CurrentPoint
+            vector = current - start
+            for vertex in vertex_p1:
+                vertex_p1[vertex] = vertex_p0[vertex] + vector
+            for u, v in iter(edges):
+                sp = vertex[u]
+                ep = vertex[v]
+                e.Display.DrawDottedLine(sp, ep, color)
+
+        gp = Rhino.Input.Custom.GetPoint()
+
+        gp.SetCommandPrompt("Point to move from?")
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        start = gp.Point()
+
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt("Point to move to?")
+        gp.DynamicDraw += OnDynamicDraw
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        end = gp.Point()
+
+        vector = vector_to_compas(end - start)
+        for _, attr in mesh.vertices(True):
+            attr["x"] += vector[0]
+            attr["y"] += vector[1]
+            attr["z"] += vector[2]
+        return True
+
     def move_vertex(self, vertex):
         """Move a single vertex of the mesh object and update the data structure accordingly.
 
@@ -341,7 +411,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             False otherwise.
 
         """
-        return mesh_move_face(self.mesh, face)
+        raise NotImplementedError
 
     def move_vertices_direction(self, vertices, direction):
         """Move selected vertices along specified direction.
@@ -367,17 +437,17 @@ class RhinoMeshObject(RhinoObject, MeshObject):
                 a = a + vector
                 draw(a, b, color)
 
+        mesh = self.mesh
         direction = direction.lower()
-
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
         connectors = []
 
         for vertex in vertices:
-            a = Rhino.Geometry.Point3d(*self.mesh.vertex_coordinates(vertex))
-            nbrs = self.mesh.vertex_neighbors(vertex)
+            a = Rhino.Geometry.Point3d(*mesh.vertex_coordinates(vertex))
+            nbrs = mesh.vertex_neighbors(vertex)
             for nbr in nbrs:
-                b = Rhino.Geometry.Point3d(*self.mesh.vertex_coordinates(nbr))
+                b = Rhino.Geometry.Point3d(*mesh.vertex_coordinates(nbr))
                 if nbr in vertices:
                     lines.append((a, b))
                 else:
@@ -394,22 +464,34 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         if direction == "x":
             geometry = Rhino.Geometry.Line(
-                start, start + Rhino.Geometry.Vector3d(1, 0, 0)
+                start,
+                start + Rhino.Geometry.Vector3d(1, 0, 0),
             )
         elif direction == "y":
             geometry = Rhino.Geometry.Line(
-                start, start + Rhino.Geometry.Vector3d(0, 1, 0)
+                start,
+                start + Rhino.Geometry.Vector3d(0, 1, 0),
             )
         elif direction == "z":
             geometry = Rhino.Geometry.Line(
-                start, start + Rhino.Geometry.Vector3d(0, 0, 1)
+                start,
+                start + Rhino.Geometry.Vector3d(0, 0, 1),
             )
         elif direction == "xy":
-            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 0, 1))
+            geometry = Rhino.Geometry.Plane(
+                start,
+                Rhino.Geometry.Vector3d(0, 0, 1),
+            )
         elif direction == "yz":
-            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(1, 0, 0))
+            geometry = Rhino.Geometry.Plane(
+                start,
+                Rhino.Geometry.Vector3d(1, 0, 0),
+            )
         elif direction == "zx":
-            geometry = Rhino.Geometry.Plane(start, Rhino.Geometry.Vector3d(0, 1, 0))
+            geometry = Rhino.Geometry.Plane(
+                start,
+                Rhino.Geometry.Vector3d(0, 1, 0),
+            )
 
         gp.SetCommandPrompt("Point to move to?")
         gp.SetBasePoint(start, False)
@@ -427,9 +509,10 @@ class RhinoMeshObject(RhinoObject, MeshObject):
             return False
 
         end = gp.Point()
-        vector = list(end - start)
+        vector = vector_to_compas(end - start)
+
         for vertex in vertices:
-            xyz = self.mesh.vertex_attributes(vertex, "xyz")
-            self.mesh.vertex_attributes(vertex, "xyz", add_vectors(xyz, vector))
+            point = Point(*mesh.vertex_attributes(vertex, "xyz"))
+            mesh.vertex_attributes(vertex, "xyz", point + vector)
 
         return True

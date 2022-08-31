@@ -27,9 +27,9 @@ class SettingsCell(Eto.Forms.CustomCell):
                     obj.settings.update(form.settings)
                     self.parent.scene.update()
 
-            obj = args.Item.GetValue(4)
-            control = Eto.Forms.Button(Text="Settings")
-            control.Click += on_click
+        obj = args.Item.GetValue(5)
+        control = Eto.Forms.Button(Text="Settings")
+        control.Click += on_click
 
             return control
 
@@ -46,12 +46,38 @@ class ItemCell(Eto.Forms.CustomCell):
                 if form.ShowModal(self.parent):
                     self.parent.scene.update()
 
-            data = args.Item.GetValue(5)
-            text = "{} Data".format(data.__class__.__name__)
-            control = Eto.Forms.Button(Text=text)
-            control.Click += on_click
+        data = args.Item.GetValue(5)
+        text = "{} Data".format(data.__class__.__name__)
+        control = Eto.Forms.Button(Text=text)
+        control.Click += on_click
 
             return control
+
+
+class ActiveCell(Eto.Forms.CustomCell):
+    def __init__(self, parent):
+        self.parent = parent
+
+    def OnCreateCell(self, args):
+        def on_click(sender, e):
+            if self.parent.scene.active_object == obj:
+                self.parent.scene.active_object = None
+            else:
+                self.parent.scene.active_object = obj
+
+            for _obj, _control in self.parent.active_controls:
+                if _obj != obj:
+                    _control.Checked = self.parent.scene.active_object == _obj
+
+            print("active object:", self.parent.scene.active_object)
+
+        obj = args.Item.GetValue(5)
+        control = Eto.Forms.CheckBox()
+        control.Checked = obj.active
+        control.MouseDown += on_click
+        self.parent.active_controls.append((obj, control))
+
+        return control
 
 
 class SceneObjectsForm(Eto.Forms.Dialog[bool]):
@@ -65,6 +91,12 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.scene = scene
         self.table = Eto.Forms.TreeGridView()
         self.table.ShowHeader = True
+
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = "Active"
+        column.Editable = False
+        column.DataCell = ActiveCell(self)
+        self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Object"
@@ -109,7 +141,8 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
             for obj in objects:
                 item = Eto.Forms.TreeGridItem(
                     Values=(
-                        obj.__class__.__name__,
+                        obj.active,
+                        obj.item.__class__.__name__,
                         str(obj.guid),
                         obj.name,
                         obj.visible,
@@ -139,6 +172,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
         self.Content = layout
+        self.active_controls = []
 
     @property
     def ok(self):
@@ -155,11 +189,11 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
     def on_ok(self, sender, event):
         def update_objects(collection):
             for row in collection:
-                guid = uuid.UUID(row.GetValue(1))
+                guid = uuid.UUID(row.GetValue(2))
                 for obj in self.scene.objects:
                     if obj.guid == guid:
-                        obj.name = row.GetValue(2)
-                        obj.visible = bool(row.GetValue(3))
+                        obj.name = row.GetValue(3)
+                        obj.visible = bool(row.GetValue(4))
                         break
                 update_objects(row.Children)
 

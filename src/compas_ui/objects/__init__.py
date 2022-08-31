@@ -14,6 +14,7 @@ Classes
     :nosignatures:
 
     Object
+    CurveObject
     LineObject
     MeshObject
     NetworkObject
@@ -39,6 +40,7 @@ from .exceptions import ObjectNotRegistered
 from .object import Object
 
 from .lineobject import LineObject
+from .curveobject import CurveObject
 from .meshobject import MeshObject
 from .networkobject import NetworkObject
 from .volmeshobject import VolMeshObject
@@ -47,6 +49,7 @@ from .volmeshobject import VolMeshObject
 __all__ = [
     "ObjectNotRegistered",
     "Object",
+    "CurveObject",
     "LineObject",
     "MeshObject",
     "NetworkObject",

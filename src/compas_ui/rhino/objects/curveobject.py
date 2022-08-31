@@ -7,17 +7,17 @@ import compas_rhino
 
 from compas_rhino.conversions import point_to_rhino
 from compas_rhino.conversions import point_to_compas
-from compas_ui.objects import LineObject
+from compas_ui.objects import CurveObject
 from .object import RhinoObject
 
 
-class RhinoLineObject(RhinoObject, LineObject):
+class RhinoCurveObject(RhinoObject, CurveObject):
     """
-    Class for representing COMPAS lines in Rhino.
+    Class for representing COMPAS curves in Rhino.
     """
 
     def __init__(self, *args, **kwargs):
-        super(RhinoLineObject, self).__init__(*args, **kwargs)
+        super(RhinoCurveObject, self).__init__(*args, **kwargs)
 
     def clear(self):
         compas_rhino.delete_objects(self.guids, purge=True)
@@ -31,7 +31,7 @@ class RhinoLineObject(RhinoObject, LineObject):
 
     def move_start(self):
         """
-        Move the starting point of the line.
+        Move the starting point of the curve.
 
         Returns
         -------
@@ -44,44 +44,44 @@ class RhinoLineObject(RhinoObject, LineObject):
         .. code-block:: python
 
             import compas_rhino
-            from compas.geometry import Line
+            from compas.geometry import Curve
             from compas_ui.objects import Object
 
-            line = Line([0, 0, 0], [1, 0, 0])
+            curve = Curve([0, 0, 0], [1, 0, 0])
 
-            lineobj = Object(line)
-            lineobj.draw()
+            curveobj = Object(curve)
+            curveobj.draw()
 
             compas_rhino.redraw()
 
-            if lineobj.move_start():
-                lineobj.clear()
-                lineobj.draw()
+            if curveobj.move_start():
+                curveobj.clear()
+                curveobj.draw()
 
         """
-        start = point_to_rhino(self.line.start)
-        end = point_to_rhino(self.line.end)
+        start = point_to_rhino(self.curve.start)
+        end = point_to_rhino(self.curve.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
         def OnDynamicDraw(sender, e):
-            e.Display.DrawDottedLine(start, e.CurrentPoint, color)
+            e.Display.DrawDottedCurve(start, e.CurrentPoint, color)
 
         gp.SetCommandPrompt("Point to move to?")
         gp.SetBasePoint(end, False)
-        gp.DrawLineFromPoint(end, True)
+        gp.DrawCurveFromPoint(end, True)
         gp.DynamicDraw += OnDynamicDraw
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
 
         start = point_to_compas(gp.Point())
-        self.line.start = start
+        self.curve.start = start
         return True
 
     def move_end(self):
         """
-        Move the end point of the line.
+        Move the end point of the curve.
 
         Returns
         -------
@@ -94,37 +94,37 @@ class RhinoLineObject(RhinoObject, LineObject):
         .. code-block:: python
 
             import compas_rhino
-            from compas.geometry import Line
-            from compas_ui.objects import Object
+            from compas.geometry import Curve
+            from compas_ui.rhino.objects.curveobject import CurveObject
 
-            line = Line([0, 0, 0], [1, 0, 0])
+            curve = Curve([0, 0, 0], [1, 0, 0])
+            curveobj = CurveObject(curve)
 
-            lineobj = Object(line)
-            lineobj.draw()
+            curveobj.draw()
 
             compas_rhino.redraw()
 
-            if lineobj.move_end():
-                lineobj.clear()
-                lineobj.draw()
+            if curveobj.move_end():
+                curveobj.clear()
+                curveobj.draw()
 
         """
-        start = point_to_rhino(self.line.start)
-        end = point_to_rhino(self.line.end)
+        start = point_to_rhino(self.curve.start)
+        end = point_to_rhino(self.curve.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
         def OnDynamicDraw(sender, e):
-            e.Display.DrawDottedLine(end, e.CurrentPoint, color)
+            e.Display.DrawDottedCurve(end, e.CurrentPoint, color)
 
         gp.SetCommandPrompt("Point to move to?")
         gp.SetBasePoint(start, False)
-        gp.DrawLineFromPoint(start, True)
+        gp.DrawCurveFromPoint(start, True)
         gp.DynamicDraw += OnDynamicDraw
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
 
         end = point_to_compas(gp.Point())
-        self.line.end = end
+        self.curve.end = end
         return True
