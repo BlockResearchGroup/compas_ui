@@ -2,18 +2,9 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from compas_ui.artists import PrimitiveArtist
 from compas_rhino.artists import LineArtist
 
 
-class LineArtist(LineArtist):
-    @property
-    def state(self):
-        return {
-            "default_color": self.default_color,
-            "color": self.color,
-        }
-
-    @state.setter
-    def state(self, state):
-        self.default_color = state["default_color"]
-        self.color = state["color"]
+class LineArtist(LineArtist, PrimitiveArtist):
+    pass
