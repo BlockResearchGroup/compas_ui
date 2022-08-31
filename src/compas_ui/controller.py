@@ -227,7 +227,14 @@ class Controller(object):
         """
         mesh = meshobj.mesh
 
-        options = ["All", "AllBoundaryEdges", "Continuous", "Parallel", "Manual"]
+        options = [
+            "All",
+            "AllBoundaryEdges",
+            "Continuous",
+            "Parallel",
+            "UV",
+            "Manual",
+        ]
         mode = self.ui.get_string(message="Selection mode.", options=options)
         if not mode:
             return
@@ -254,6 +261,13 @@ class Controller(object):
         elif mode == "Parallel":
             temp = meshobj.select_edges()
             edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
+            guids = [edge_guid[edge] for edge in edges]
+            self.ui.scene.highlight_objects(guids)
+
+        elif mode == "UV":
+            temp = meshobj.select_edges()
+            edges = list(set(flatten([mesh.edge_strip(edge) for edge in temp])))
+            edges = list(set(flatten([mesh.edge_loop(edge) for edge in edges])))
             guids = [edge_guid[edge] for edge in edges]
             self.ui.scene.highlight_objects(guids)
 
