@@ -103,6 +103,7 @@ class NetworkObject(Object):
         origin = Point(0, 0, 0)
         nodes = list(self.network.nodes())
         xyz = self.network.nodes_attributes(['x', 'y', 'z'], keys=nodes)
+        xyz = transform_points(xyz, self.world_frame_transormation)
 
         stack = []
         if self.scale != 1.0:

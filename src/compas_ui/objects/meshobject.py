@@ -146,6 +146,7 @@ class MeshObject(Object):
         origin = Point(0, 0, 0)
         vertices = list(self.mesh.vertices())
         xyz = self.mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        xyz = transform_points(xyz, self.world_frame_transormation)
 
         stack = []
         if self.scale != 1:

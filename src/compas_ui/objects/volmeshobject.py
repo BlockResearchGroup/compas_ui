@@ -109,6 +109,7 @@ class VolMeshObject(Object):
         origin = Point(0, 0, 0)
         vertices = list(self.volmesh.vertices())
         xyz = self.volmesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        xyz = transform_points(xyz, self.world_frame_transormation)
 
         stack = []
         if self.scale != 1:
