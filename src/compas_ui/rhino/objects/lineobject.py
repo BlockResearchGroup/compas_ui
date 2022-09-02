@@ -24,6 +24,7 @@ class RhinoLineObject(RhinoObject, LineObject):
         self._guids = []
 
     def draw(self):
+        self.line_transformed = self.artist.line_transformed = self.line.transformed(self.world_frame_transormation)
         self.clear()
         if not self.visible:
             return
@@ -59,8 +60,8 @@ class RhinoLineObject(RhinoObject, LineObject):
                 lineobj.draw()
 
         """
-        start = point_to_rhino(self.line.start)
-        end = point_to_rhino(self.line.end)
+        start = point_to_rhino(self.line_transformed.start)
+        end = point_to_rhino(self.line_transformed.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
@@ -76,7 +77,7 @@ class RhinoLineObject(RhinoObject, LineObject):
             return False
 
         start = point_to_compas(gp.Point())
-        self.line.start = start
+        self.line.start = start.transformed(self.world_frame_transormation.inverted())
         return True
 
     def move_end(self):
@@ -109,8 +110,8 @@ class RhinoLineObject(RhinoObject, LineObject):
                 lineobj.draw()
 
         """
-        start = point_to_rhino(self.line.start)
-        end = point_to_rhino(self.line.end)
+        start = point_to_rhino(self.line_transformed.start)
+        end = point_to_rhino(self.line_transformed.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
@@ -126,5 +127,5 @@ class RhinoLineObject(RhinoObject, LineObject):
             return False
 
         end = point_to_compas(gp.Point())
-        self.line.end = end
+        self.line.end = end.transformed(self.world_frame_transormation.inverted())
         return True
