@@ -15,7 +15,6 @@ def RunCommand(is_interactive):
 
     ui = UI()
     ui.update_settings()
-    # ui.record()
 
 
 if __name__ == "__main__":
