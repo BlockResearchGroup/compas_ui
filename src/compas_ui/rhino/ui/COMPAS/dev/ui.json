@@ -1,0 +1,155 @@
+{
+    "icons": {
+        "bitmap": "",
+        "images": []
+    },
+    "commands": [
+        {
+            "name": "COMPAS_cloud_restart",
+            "menu_text": "Cloud Restart"
+        },
+        {
+            "name": "COMPAS_cloud_shutdown",
+            "menu_text": "Cloud Shutdown"
+        },
+        {
+            "name": "COMPAS_cloud_start",
+            "menu_text": "Cloud Start"
+        },
+        {
+            "name": "COMPAS_conda_envs",
+            "menu_text": "Conda environments"
+        },
+        {
+            "name": "COMPAS_init",
+            "menu_text": "Init"
+        },
+        {
+            "name": "COMPAS_load",
+            "menu_text": "Load"
+        },
+        {
+            "name": "COMPAS_mesh_create",
+            "menu_text": "Mesh Create"
+        },
+        {
+            "name": "COMPAS_redo",
+            "menu_text": "Redo"
+        },
+        {
+            "name": "COMPAS_save",
+            "menu_text": "Save"
+        },
+        {
+            "name": "COMPAS_saveas",
+            "menu_text": "SaveAs"
+        },
+        {
+            "name": "COMPAS_scene_clear",
+            "menu_text": "Scene Clear"
+        },
+        {
+            "name": "COMPAS_scene_objects",
+            "menu_text": "Scene Objects"
+        },
+        {
+            "name": "COMPAS_scene_update",
+            "menu_text": "Scene Update"
+        },
+        {
+            "name": "COMPAS_searchpaths",
+            "menu_text": "Seacrch Paths"
+        },
+        {
+            "name": "COMPAS_settings",
+            "menu_text": "Settings"
+        },
+        {
+            "name": "COMPAS_undo",
+            "menu_text": "Undo"
+        }
+    ],
+    "menus": [
+        {
+            "name": "COMPAS",
+            "items": [
+                {
+                    "command": "COMPAS_init"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "command": "COMPAS_save"
+                },
+                {
+                    "command": "COMPAS_saveas"
+                },
+                {
+                    "command": "COMPAS_load"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "name": "Scene",
+                    "items": [
+                        {
+                            "command": "COMPAS_scene_clear"
+                        },
+                        {
+                            "command": "COMPAS_scene_update"
+                        },
+                        {
+                            "command": "COMPAS_scene_objects"
+                        }
+                    ]
+                },
+                {
+                    "name": "Cloud",
+                    "items": [
+                        {
+                            "command": "COMPAS_cloud_start"
+                        },
+                        {
+                            "command": "COMPAS_cloud_restart"
+                        },
+                        {
+                            "command": "COMPAS_cloud_shutdown"
+                        }
+                    ]
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "name": "Geometry",
+                    "items": []
+                },
+                {
+                    "name": "DataStructures",
+                    "items": [
+                        {
+                            "name": "Networks",
+                            "items": []
+                        },
+                        {
+                            "name": "Meshes",
+                            "items": [
+                                {
+                                    "command": "COMPAS_mesh_create"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Volumetric Meshes",
+                            "items": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "toolbars": [],
+    "toolbargroups": []
+}

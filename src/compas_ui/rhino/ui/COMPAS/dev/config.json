@@ -2,174 +2,18 @@
     "plugin": {
         "id": "{6c18fcab-3ae5-4b03-b515-d33d8078b977}",
         "version": "0.0.1.0",
-        "title": "COMPAS",
+        "title": "COMPAS UI",
         "copyright": "ETH Zurich",
-        "designers": [
-            "Juney Lee"
-        ],
-        "developers": [
-            "Li Chen",
-            "Tom Van Mele"
-        ],
-        "documenters": [
-            "unknown :)"
-        ],
         "license": "MIT License",
         "logo": null,
         "description": "COMPAS UI provides...",
-        "website": "https://compas.dev"
+        "website": "https://compas.dev",
+        "authors": []
     },
     "packages": [],
     "settings": {
         "cloud": {
             "background": true
         }
-    },
-    "ui": {
-        "icons": {
-            "bitmap": "",
-            "images": []
-        },
-        "commands": [
-            {
-                "name": "COMPAS_cloud_restart",
-                "menu_text": "Cloud Restart"
-            },
-            {
-                "name": "COMPAS_cloud_shutdown",
-                "menu_text": "Cloud Shutdown"
-            },
-            {
-                "name": "COMPAS_cloud_start",
-                "menu_text": "Cloud Start"
-            },
-            {
-                "name": "COMPAS_init",
-                "menu_text": "Init"
-            },
-            {
-                "name": "COMPAS_load",
-                "menu_text": "Load"
-            },
-            {
-                "name": "COMPAS_redo",
-                "menu_text": "Redo"
-            },
-            {
-                "name": "COMPAS_save",
-                "menu_text": "Save"
-            },
-            {
-                "name": "COMPAS_saveas",
-                "menu_text": "SaveAs"
-            },
-            {
-                "name": "COMPAS_scene_clear",
-                "menu_text": "Scene Clear"
-            },
-            {
-                "name": "COMPAS_scene_objects",
-                "menu_text": "Scene Objects"
-            },
-            {
-                "name": "COMPAS_scene_update",
-                "menu_text": "Scene Update"
-            },
-            {
-                "name": "COMPAS_settings",
-                "menu_text": "Settings"
-            },
-            {
-                "name": "COMPAS_undo",
-                "menu_text": "Undo"
-            },
-            {
-                "name": "COMPAS_mesh_create",
-                "menu_text": "Mesh Create"
-            }
-        ],
-        "menus": [
-            {
-                "name": "COMPAS",
-                "items": [
-                    {
-                        "command": "COMPAS_init"
-                    },
-                    {
-                        "type": "separator"
-                    },
-                    {
-                        "command": "COMPAS_save"
-                    },
-                    {
-                        "command": "COMPAS_saveas"
-                    },
-                    {
-                        "command": "COMPAS_load"
-                    },
-                    {
-                        "type": "separator"
-                    },
-                    {
-                        "name": "Scene",
-                        "items": [
-                            {
-                                "command": "COMPAS_scene_clear"
-                            },
-                            {
-                                "command": "COMPAS_scene_update"
-                            },
-                            {
-                                "command": "COMPAS_scene_objects"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Cloud",
-                        "items": [
-                            {
-                                "command": "COMPAS_cloud_start"
-                            },
-                            {
-                                "command": "COMPAS_cloud_restart"
-                            },
-                            {
-                                "command": "COMPAS_cloud_shutdown"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "separator"
-                    },
-                    {
-                        "name": "Geometry",
-                        "items": []
-                    },
-                    {
-                        "name": "DataStructures",
-                        "items": [
-                            {
-                                "name": "Networks",
-                                "items": []
-                            },
-                            {
-                                "name": "Meshes",
-                                "items": [
-                                    {
-                                        "command": "COMPAS_mesh_create"
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Volumetric Meshes",
-                                "items": []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        "toolbars": [],
-        "toolbargroups": []
     }
 }
