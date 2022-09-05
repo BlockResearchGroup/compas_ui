@@ -30,6 +30,8 @@ import compas_rhino
 
 from compas.utilities import timestamp
 
+# from compas.plugins import pluggable
+
 from compas_cloud import Proxy
 
 from compas_ui.singleton import Singleton
@@ -38,16 +40,18 @@ from compas_ui.scene import Scene
 from compas_ui.controller import Controller
 
 try:
-    from compas_ui.rhino.forms import AboutForm
     from compas_ui.rhino.forms import CondaEnvsForm
     from compas_ui.rhino.forms import FileForm
     from compas_ui.rhino.forms import FolderForm
     from compas_ui.rhino.forms import SceneObjectsForm
     from compas_ui.rhino.forms import SearchPathsForm
-    from compas_ui.rhino.forms import SettingsForm
-    from compas_ui.rhino.forms import SplashForm
 except ImportError:
     pass
+
+
+# @pluggable(category="ui")
+# def init():
+#     pass
 
 
 class UI(Singleton):
@@ -102,6 +106,7 @@ class UI(Singleton):
         self.proxy = None
 
         self.cloud_start()
+        self.init()
 
     @property
     def state(self):
@@ -125,9 +130,15 @@ class UI(Singleton):
     def reset():
         UI._instances = {}
 
+    def init(self):
+        pass
+        # init(self)
+
     def restart(self):
         self.session.reset()
         self.scene.clear()
+        self.cloud_restart()
+        self.init()
 
     # ========================================================================
     # Info
@@ -152,42 +163,6 @@ class UI(Singleton):
         from .rhino.forms import error
 
         return error(*args, **kwargs)
-
-    def splash(self, url):
-        """Display a splash screen.
-
-        Parameters
-        ----------
-        url : str
-            The url of the html file.
-
-        Returns
-        -------
-        None
-
-        """
-        browser = SplashForm(title=self.name, url=url)
-        browser.show()
-
-    def about(self):
-        """Display a standard dialog with information about the project.
-
-        Returns
-        -------
-        None
-
-        """
-        form = AboutForm(self.config["plugin"])
-        form.show()
-
-    def github(self):
-        print("Go to github.")
-
-    def docs(self):
-        print("Go to the docs.")
-
-    def examples(self):
-        print("Go to the examples.")
 
     # ========================================================================
     # Cloud
@@ -452,22 +427,6 @@ class UI(Singleton):
         self.state = compas.json_load(path)
         self.scene.update()
         self.record()
-
-    # ========================================================================
-    # Settings
-    # ========================================================================
-
-    def update_settings(self):
-        """Update the settings of the app.
-
-        Returns
-        -------
-        None
-
-        """
-        form = SettingsForm(self.settings)
-        if form.show():
-            self.settings.update(form.settings)
 
     # ========================================================================
     # User data
