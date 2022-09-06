@@ -133,7 +133,6 @@ class UI(Singleton):
         self.session.reset()
         self.scene.clear()
         self.cloud_restart()
-        self.init()
 
     # ========================================================================
     # Info
