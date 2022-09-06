@@ -13,7 +13,7 @@ from compas.colors import Color
 class CustomCell(Eto.Forms.CustomCell):
 
     def OnGetIdentifier(self, args):
-        return args.Item.GetValue(1).__class__.__name__
+        return str(args.Row)
 
     def OnCreateCell(self, args):
         item = args.Item
