@@ -29,8 +29,7 @@ import compas
 import compas_rhino
 
 from compas.utilities import timestamp
-
-# from compas.plugins import pluggable
+from compas.plugins import pluggable
 
 from compas_cloud import Proxy
 
@@ -49,9 +48,9 @@ except ImportError:
     pass
 
 
-# @pluggable(category="ui")
-# def init():
-#     pass
+@pluggable(category="ui")
+def register(ui):
+    pass
 
 
 class UI(Singleton):
@@ -105,8 +104,8 @@ class UI(Singleton):
         self.controller = self._controller_class(self)
         self.proxy = None
 
+        register(self)
         self.cloud_start()
-        self.init()
 
     @property
     def state(self):
@@ -129,10 +128,6 @@ class UI(Singleton):
     @staticmethod
     def reset():
         UI._instances = {}
-
-    def init(self):
-        pass
-        # init(self)
 
     def restart(self):
         self.session.reset()
