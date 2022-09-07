@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Change on `SceneObjectsForm` is reflected realtime.
+* Locked `sphinx` to `4.5`
 
 ### Removed
 
