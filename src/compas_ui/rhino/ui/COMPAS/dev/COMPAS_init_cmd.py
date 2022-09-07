@@ -4,8 +4,6 @@ import json
 from compas_ui.ui import UI
 from compas_ui.rhino.forms import SplashForm
 
-# TODO: check if current environment has compas_ui
-
 
 __commandname__ = "COMPAS_init"
 
