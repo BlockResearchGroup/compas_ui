@@ -11,9 +11,5 @@
         "authors": []
     },
     "packages": [],
-    "settings": {
-        "cloud": {
-            "background": true
-        }
-    }
+    "settings": {}
 }

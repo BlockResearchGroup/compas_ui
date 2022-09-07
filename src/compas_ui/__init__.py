@@ -46,4 +46,5 @@ __all_plugins__ = [
     'compas_ui.rhino.artists',
     'compas_ui.rhino.scene',
     'compas_ui.rhino.install',
+    'compas_ui.rhino.register',
 ]

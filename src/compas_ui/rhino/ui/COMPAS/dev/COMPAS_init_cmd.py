@@ -22,7 +22,7 @@ def RunCommand(is_interactive):
     ui = UI(config=CONFIG)
     ui.scene_clear()
 
-    browser = SplashForm(title=ui.name, url=SPLASH)
+    browser = SplashForm(title="COMPAS", url=SPLASH)
     browser.show()
 
 

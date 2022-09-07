@@ -48,7 +48,7 @@ except ImportError:
     pass
 
 
-@pluggable(category="ui")
+@pluggable(category="ui", selector="collect_all")
 def register(ui):
     pass
 
@@ -78,33 +78,27 @@ class UI(Singleton):
 
     """
 
-    def __init__(self, config=None, controller_class=None):
+    def __init__(self, config=None):
         if config is None:
             raise RuntimeError(
-                "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
+                "Initialize the UI with a configuration dict first, for example: ui = UI(config={...})"
             )
 
         self._current = -1
         self._depth = 53
         self._history = []
         self._tempdir = tempfile.gettempdir()
-        self._controller_class = controller_class or Controller
+        self._dirname = None
+        self._basename = "COMPAS.ui"
 
         self.registry = {}
-        self.config = config
-        self.settings = self.config["settings"] or {}
-
-        self.name = self.config["plugin"]["title"]
-        self.condadir = None
-        self.dirname = None
-        self.basename = "{}.ui".format(self.name)
-
-        self.session = Session(name=self.name)
-        self.scene = Scene(settings=self.settings.get("scene"))
-        self.controller = self._controller_class(self)
+        self.session = Session()
+        self.scene = Scene()
+        self.controller = Controller(self)
         self.proxy = None
 
         register(self)
+
         self.cloud_start()
 
     @property
@@ -112,14 +106,14 @@ class UI(Singleton):
         state = {}
         state["session"] = self.session.data
         state["scene"] = self.scene.state
-        state["settings"] = self.settings
+        state["registry"] = self.registry
         return state
 
     @state.setter
     def state(self, state):
         self.session.data = state["session"]
         self.scene.state = state["scene"]
-        self.settings = state["settings"]
+        self.registry = state["registry"]
 
     # ========================================================================
     # Init
@@ -170,8 +164,7 @@ class UI(Singleton):
         None
 
         """
-        settings = self.settings.get("cloud") or {}
-        self.proxy = Proxy(**settings)
+        self.proxy = Proxy(background=True)
 
     def cloud_restart(self):
         """Restart the command server.
@@ -209,14 +202,11 @@ class UI(Singleton):
         None
 
         """
-        if not self.condadir:
-            folder = FolderForm.select()
-            if not folder:
-                return
-            self.condadir = folder
+        folder = FolderForm.select()
+        if not folder:
+            return
 
-        # replace with conda object
-        conda = os.path.join(self.condadir, "condabin", "conda")
+        conda = os.path.join(folder, "condabin", "conda")
         process = Popen(["{} info --envs".format(conda)], stdout=PIPE, shell=True)
         out = process.stdout.read().decode()
         lines = out.split("\n")
@@ -298,7 +288,7 @@ class UI(Singleton):
             if self._current < len(self._history) - 1:
                 self._history[:] = self._history[: self._current + 1]
 
-        filename = "COMPAS_UI.history.{}".format(timestamp())
+        filename = "COMPAS.history.{}".format(timestamp())
         filepath = os.path.join(self._tempdir, filename)
 
         compas.json_dump(self.state, filepath)
@@ -306,7 +296,7 @@ class UI(Singleton):
 
         h = len(self._history)
         if h > self._depth:
-            self._history[:] = self._history[h - self._depth:]
+            self._history[:] = self._history[h - self._depth :]
         self._current = len(self._history) - 1
 
     def undo(self):
@@ -365,15 +355,15 @@ class UI(Singleton):
         None
 
         """
-        if not self.dirname:
-            path = FileForm.save(self.dirname, self.basename)
+        if not self._dirname:
+            path = FileForm.save(self._dirname, self._basename)
             if not path:
                 return
 
-            self.dirname = os.path.dirname(path)
-            self.basename = os.path.basename(path)
+            self._dirname = os.path.dirname(path)
+            self._basename = os.path.basename(path)
 
-        path = os.path.join(self.dirname, self.basename)
+        path = os.path.join(self._dirname, self._basename)
         compas.json_dump(self.state, path)
 
     def saveas(self):
@@ -389,12 +379,12 @@ class UI(Singleton):
         None
 
         """
-        path = FileForm.save(self.dirname, self.basename)
+        path = FileForm.save(self._dirname, self._basename)
         if not path:
             return
 
-        self.dirname = os.path.dirname(path)
-        self.basename = os.path.basename(path)
+        self._dirname = os.path.dirname(path)
+        self._basename = os.path.basename(path)
         compas.json_dump(self.state, path)
 
     def load(self):
@@ -410,12 +400,12 @@ class UI(Singleton):
         None
 
         """
-        path = FileForm.open(self.dirname)
+        path = FileForm.open(self._dirname)
         if not path:
             return
 
-        self.dirname = os.path.dirname(path)
-        self.basename = os.path.basename(path)
+        self._dirname = os.path.dirname(path)
+        self._basename = os.path.basename(path)
 
         self.scene.clear()
         self.state = compas.json_load(path)
@@ -446,7 +436,10 @@ class UI(Singleton):
 
         """
         value = compas_rhino.rs.GetReal(
-            message=message, number=default, minimum=minval, maximum=maxval
+            message=message,
+            number=default,
+            minimum=minval,
+            maximum=maxval,
         )
         if value:
             return float(value)
@@ -471,7 +464,10 @@ class UI(Singleton):
 
         """
         value = compas_rhino.rs.GetInteger(
-            message=message, number=default, minimum=minval, maximum=maxval
+            message=message,
+            number=default,
+            minimum=minval,
+            maximum=maxval,
         )
         if value:
             return int(value)
@@ -494,7 +490,9 @@ class UI(Singleton):
 
         """
         value = compas_rhino.rs.GetString(
-            message, defaultString=default, strings=options
+            message,
+            defaultString=default,
+            strings=options,
         )
         if value:
             return str(value)
