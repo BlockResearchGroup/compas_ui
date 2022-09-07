@@ -10,8 +10,7 @@ SETTINGS = {
     "plugin_b": {
         "bool": True,
         "text": "text"
-    },
-    "asdfaf": True
+    }
 }
 
 # Create form with tabs on first level
