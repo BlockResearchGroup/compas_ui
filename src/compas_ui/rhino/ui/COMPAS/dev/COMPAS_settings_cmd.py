@@ -10,9 +10,9 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    form = SettingsForm(ui.settings)
+    form = SettingsForm(ui.registry, use_tab=True)
     if form.show():
-        ui.settings.update(form.settings)
+        ui.registry.update(form.settings)
 
 
 if __name__ == "__main__":
