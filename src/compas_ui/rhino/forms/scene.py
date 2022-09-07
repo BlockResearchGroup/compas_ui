@@ -87,8 +87,7 @@ class ItemCell(ObjCell):
                 if form.ShowModal(self.parent):
                     self.parent.scene.update()
 
-            text = "{} Data".format(obj.item.__class__.__name__)
-            control = Eto.Forms.Button(Text=text)
+            control = Eto.Forms.Button(Text="Data")
             control.Click += on_click
 
             return control
