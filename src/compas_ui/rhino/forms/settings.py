@@ -8,12 +8,47 @@ import Eto.Drawing
 import Eto.Forms
 import decimal
 from compas.colors import Color
+from ast import literal_eval
+from compas_rhino.forms import TextForm
 
 
 class CustomCell(Eto.Forms.CustomCell):
 
+    def __init__(self, parent):
+        self.parent = parent
+
     def OnGetIdentifier(self, args):
         return str(args.Row)
+
+
+class KeyCell(CustomCell):
+
+    def OnCreateCell(self, args):
+        item = args.Item
+        key = item.GetValue(0)
+        control = Eto.Forms.TextBox()
+        control.Text = str(key)
+
+        def on_text_changed(sender, e):
+            old_key = item.GetValue(0)
+            new_key = str(control.Text)
+            if new_key and not old_key:
+                print("adding newkey:", new_key)
+                item.SetValue(0, new_key)
+                self.parent.add_empty_row()
+            elif not new_key and old_key:
+                form = TextForm("Are you sure you want to delete this key?")
+                if form.show():
+                    self.parent.remove_row(item)
+            else:
+                item.SetValue(0, new_key)
+
+        control.LostFocus += on_text_changed
+        control.Size = Eto.Drawing.Size(100, 25)
+        return control
+
+
+class ValueCell(CustomCell):
 
     def OnCreateCell(self, args):
         item = args.Item
@@ -80,12 +115,13 @@ class CustomCell(Eto.Forms.CustomCell):
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, settings, title="Settings", width=500, height=500, use_tab=False):
+    def __init__(self, settings, title="Settings", width=500, height=500, use_tab=False, allow_edit_key=False):
         self._settings = None
         self._names = None
         self._values = None
         self.settings = settings
         self.use_tab = use_tab
+        self.allow_edit_key = allow_edit_key
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
@@ -131,19 +167,29 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         table = Eto.Forms.TreeGridView()
         treecollection = Eto.Forms.TreeGridItemCollection()
         table.ShowHeader = True
-        column = Eto.Forms.GridColumn()
-        column.HeaderText = "Key"
-        column.Editable = False
-        column.Sortable = True
-        column.Expand = True
-        column.DataCell = Eto.Forms.TextBoxCell(table.Columns.Count)
-        table.Columns.Add(column)
+
+        if self.allow_edit_key:
+            column = Eto.Forms.GridColumn()
+            column.HeaderText = "Key"
+            column.Editable = False
+            column.Sortable = True
+            column.Expand = True
+            column.DataCell = KeyCell(self)
+            table.Columns.Add(column)
+        else:
+            column = Eto.Forms.GridColumn()
+            column.HeaderText = "Key"
+            column.Editable = False
+            column.Sortable = True
+            column.Expand = True
+            column.DataCell = Eto.Forms.TextBoxCell(table.Columns.Count)
+            table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Value"
         column.Editable = True
         column.Sortable = False
-        column.DataCell = CustomCell()
+        column.DataCell = ValueCell(self)
 
         table.Columns.Add(column)
 
@@ -158,8 +204,21 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                 parent.Add(item)
 
         add_items(treecollection, settings)
+        if self.allow_edit_key:
+            treecollection.Add(Eto.Forms.TreeGridItem(Values=("", "")))
+
         table.DataStore = treecollection
         return table
+
+    def add_empty_row(self, table=None):
+        table = table or self.table
+        table.DataStore.Add(Eto.Forms.TreeGridItem(Values=("", "")))
+        table.ReloadData()
+
+    def remove_row(self, item, table=None):
+        table = table or self.table
+        table.DataStore.Remove(item)
+        table.ReloadData()
 
     @property
     def ok(self):
@@ -191,14 +250,21 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     def on_ok(self, sender, event):
         try:
+            self.settings = {}
+
             def set_value(items, setting):
                 for item in items:
                     key = item.GetValue(0)
+                    if not key:
+                        continue
                     value = item.GetValue(1)
                     if isinstance(value, dict):
                         set_value(item.Children, setting[key])
                     else:
-                        setting[key] = value
+                        try:
+                            setting[key] = literal_eval(value)
+                        except Exception:
+                            setting[key] = value
             if not self.use_tab:
                 set_value(self.table.DataStore, self.settings)
             else:

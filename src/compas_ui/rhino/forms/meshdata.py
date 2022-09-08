@@ -8,6 +8,7 @@ import Rhino
 import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
+from .settings import SettingsForm
 
 
 class MeshDataForm(Eto.Forms.Dialog[bool]):
@@ -163,11 +164,30 @@ class Page(object):
         self.table = Table(self.cols, self.rows)
         self.widget = Eto.Forms.TabPage()
         self.widget.Text = title
+        self.layout = Eto.Forms.DynamicLayout()
         if self.names:
             # replace this by a dynamic layout
             # with the first row an overview of the default attribute values
             # and second row the data table
-            self.widget.Content = self.table.widget
+            self.layout.BeginVertical(
+                Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
+            )
+            self.layout.AddRow(self.table.widget)
+            self.layout.EndVertical()
+            self.layout.BeginVertical(
+                Eto.Drawing.Padding(0, 6, 0, 6), Eto.Drawing.Size(6, 0), False, False
+            )
+            button = Eto.Forms.Button(Text="Edit Default Attributes")
+            button.Click += self.edit_default_attributes
+            self.layout.AddRow(button, None)
+            self.layout.EndVertical()
+            self.widget.Content = self.layout
+
+    def edit_default_attributes(self, sender, event):
+        form = SettingsForm(self.defaults, "Default Attributes", allow_edit_key=True)
+        if form.show():
+            self.defaults.clear()
+            self.defaults.update(form.settings)
 
     @property
     def names(self):
