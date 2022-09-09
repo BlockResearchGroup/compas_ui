@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added default controller for all non-system commands.
 * Added `active_object` to `scene`.
 * Added `use_tab` option to `compas_ui.rhino.forms.SettingsForm`.
+* Added `export` and `remove` buttons to `compas_ui.rhino.forms.SceneForm`.
 
 ### Changed
 
