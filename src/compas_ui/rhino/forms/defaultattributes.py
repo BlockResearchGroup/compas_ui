@@ -8,48 +8,58 @@ import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
 
-class BaseCell(Eto.Forms.CustomCell):
-
-    def __init__(self, parent):
-        self.parent = parent
-
-    def OnGetIdentifier(self, args):
-        return str(args.Row)
-
-
-class DeleteCell(BaseCell):
-
-    def OnCreateCell(self, args):
-        key = args.Item.GetValue(0)
-        control = Eto.Forms.Button(Text="X")
-        control.Width = 5
-
-        def on_click(sender, e):
-            print("delete", key)
-
-        control.Click += on_click
-
-        return control
-
 
 class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, attributes, title="Attributes", width=500, height=500):
-
-        self.attributes = attributes.copy()
+    def __init__(self,
+                 item,
+                 title="Edit Default Attributes",
+                 default_attributes_names=["default_vertex_attributes", "default_edge_attributes", "default_face_attributes"],
+                 width=500,
+                 height=500):
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
         self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
         self.ClientSize = Eto.Drawing.Size(width, height)
+        self.item = item
+        self.default_attributes_names = default_attributes_names
 
-        self.table = table = Eto.Forms.TreeGridView()
+        layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(
+            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
+        )
+
+        self.tab_control = Eto.Forms.TabControl()
+        self.tab_control.TabPosition = Eto.Forms.DockPosition.Top
+
+        self.tables = {}
+        for attribute_name in self.default_attributes_names:
+            if not hasattr(item, attribute_name):
+                continue
+            attributes = getattr(item, attribute_name)
+            tab = Eto.Forms.TabPage(Text=attribute_name)
+            self.tab_control.Pages.Add(tab)
+            table = self.map_tree(attributes)
+            tab.Content = table
+
+        layout.AddRow(self.tab_control)
+        layout.EndVertical()
+        layout.BeginVertical(
+            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
+        )
+        layout.AddRow(self.add, self.delete, None, self.ok, self.cancel)
+        layout.EndVertical()
+
+        self.Content = layout
+
+    def map_tree(self, attributes):
+        table = Eto.Forms.TreeGridView()
         collection = Eto.Forms.TreeGridItemCollection()
-        for k, v in self.attributes.items():
-            collection.Add(Eto.Forms.TreeGridItem(Values=(k, str(v))))
+        for k in sorted(attributes.keys()):
+            collection.Add(Eto.Forms.TreeGridItem(Values=(k, str(attributes[k]))))
         table.DataStore = collection
         table.ShowHeader = True
-
 
         column = Eto.Forms.GridColumn()
         column.HeaderText = "Name"
@@ -62,30 +72,11 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         column.Editable = True
         column.DataCell = Eto.Forms.TextBoxCell(1)
         table.Columns.Add(column)
+        return table
 
-        try:
-            column = Eto.Forms.GridColumn()
-            column.HeaderText = "Delete"
-            column.Editable = True
-            column.DataCell = DeleteCell(self)
-            table.Columns.Add(column)
-        except Exception as e:
-            print(e)
-
-
-        layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
-        layout.AddRow(table)
-        layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
-        layout.AddRow(None, self.ok, self.cancel)
-        layout.EndVertical()
-
-        self.Content = layout
+    @property
+    def table(self):
+        return self.tab_control.SelectedPage.Content
 
     @property
     def ok(self):
@@ -99,17 +90,34 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         self.AbortButton.Click += self.on_cancel
         return self.AbortButton
 
+    @property
+    def add(self):
+        self.DefaultButton = Eto.Forms.Button(Text="Add")
+        self.DefaultButton.Click += self.on_add
+        return self.DefaultButton
+
+    @property
+    def delete(self):
+        self.AbortButton = Eto.Forms.Button(Text="Delete")
+        self.AbortButton.Click += self.on_delete
+        return self.AbortButton
+
     def on_ok(self, sender, event):
-        self.attributes.clear()
         try:
-            for row in self.table.DataStore:
-                name = row[0]
-                value = row[1]
-                try:
-                    value = ast.literal_eval(value)
-                except Exception as e:
-                    print(e)
-                self.attributes[name] = value
+            for tab in self.tab_control.Pages:
+                table = tab.Content
+                new_attributes = {}
+                for item in table.DataStore:
+                    name = item.GetValue(0)
+                    value = item.GetValue(1)
+                    try:
+                        value = ast.literal_eval(value)
+                    except Exception as e:
+                        print(e)
+                    new_attributes[name] = value
+                setattr(self.item, tab.Text, new_attributes)
+                print("Updated {} to:".format(tab.Text))
+                print(new_attributes)
         except Exception as e:
             print(e)
             self.Close(False)
@@ -118,20 +126,35 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
     def on_cancel(self, sender, event):
         self.Close(False)
 
+    def on_add(self, sender, event):
+        item = Eto.Forms.TreeGridItem(Values=("new_key", "new_value"))
+        self.table.DataStore.Add(item)
+        self.table.ReloadData()
+        self.table.SelectedItem = item
+
+    def on_delete(self, sender, event):
+        item = self.table.SelectedItem
+        if not item:
+            Eto.Forms.MessageBox.Show("No item selectged.")
+        else:
+            key = item.GetValue(0)
+            if Eto.Forms.MessageBox.Show("Confirm to delete the attribute: '{}'?".format(key), Eto.Forms.MessageBoxButtons.YesNo) == Eto.Forms.DialogResult.Yes:
+                self.table.DataStore.Remove(item)
+                self.table.ReloadData()
+
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
 
+
 if __name__ == "__main__":
 
-    attributes = {
-        "a": 10,
-        "b": True,
-        "c": "hello",
-        "d": (0, 0, 0),
-    }
+    from compas.datastructures import Mesh
+    import compas
 
+    mesh = Mesh.from_obj(compas.get('faces.obj'))
 
-    form = DefaultAttributesForm(attributes)
+    form = DefaultAttributesForm(mesh)
     form.show()
 
-    print(form.attributes)
+    form = DefaultAttributesForm(mesh)
+    form.show()
