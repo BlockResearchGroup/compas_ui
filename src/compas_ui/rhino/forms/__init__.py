@@ -50,6 +50,7 @@ from .searchpaths import SearchPathsForm
 from .settings import SettingsForm
 from .scene import SceneObjectsForm
 from .splash import SplashForm
+from .toolbar import ToolbarForm
 
 
 __all__ = [
@@ -66,4 +67,5 @@ __all__ = [
     "SettingsForm",
     "SceneObjectsForm",
     "SplashForm",
+    "ToolbarForm"
 ]

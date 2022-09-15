@@ -20,7 +20,14 @@ class Controller(object):
     # ========================================================================
 
     def mesh_create(self):
-        """Create a COMPAS mesh."""
+        """
+        Create a COMPAS mesh.
+
+        Returns
+        -------
+        None
+
+        """
         from compas.datastructures import Mesh
         from compas_rhino.conversions import RhinoMesh
         from compas_rhino.conversions import RhinoSurface
@@ -110,6 +117,7 @@ class Controller(object):
             )
             if not dx:
                 return
+
             nx = self.ui.get_integer(
                 "Number of faces in the X direction?",
                 minval=1,
@@ -118,6 +126,7 @@ class Controller(object):
             )
             if not nx:
                 return
+
             dy = self.ui.get_real(
                 "Span in the Y direction?",
                 minval=1,
@@ -126,6 +135,7 @@ class Controller(object):
             )
             if not dy:
                 return
+
             ny = self.ui.get_integer(
                 "Number of faces in the Y direction?",
                 minval=1,
@@ -152,10 +162,17 @@ class Controller(object):
 
         self.ui.scene.add(mesh, name=name)
         self.ui.scene.update()
-        # self.ui.record()
+        self.ui.record()
 
     def mesh_modify(self):
-        """Create a COMPAS mesh."""
+        """
+        Create a COMPAS mesh.
+
+        Returns
+        -------
+        None
+
+        """
 
     def mesh_delete(self):
         """Delete a COMPAS mesh."""
@@ -164,7 +181,8 @@ class Controller(object):
         """Export a COMPAS mesh."""
 
     def mesh_select_vertices(self, meshobj):
-        """Select vertices of a mesh object through the UI.
+        """
+        Select vertices of a mesh object through the UI.
 
         Parameters
         ----------
@@ -214,7 +232,8 @@ class Controller(object):
         return vertices
 
     def mesh_select_edges(self, meshobj):
-        """Select edges of a mesh object through the UI.
+        """
+        Select edges of a mesh object through the UI.
 
         Parameters
         ----------

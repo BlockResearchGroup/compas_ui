@@ -1,7 +1,5 @@
 from compas_ui.ui import UI
 
-# TODO: deactivate for now
-
 
 __commandname__ = "COMPAS_redo"
 

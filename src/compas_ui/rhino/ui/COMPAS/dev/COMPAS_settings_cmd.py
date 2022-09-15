@@ -1,10 +1,5 @@
 from compas_ui.ui import UI
-
-# TODO: remove recoring for now
-# TODO: develop settings object
-# TODO: differentiate between clean and dirty settings
-# TODO: only redraw if display settings are changed
-# TODO: only do something if any of the settings is dirty
+from compas_ui.rhino.forms import SettingsForm
 
 
 __commandname__ = "COMPAS_settings"
@@ -14,8 +9,10 @@ __commandname__ = "COMPAS_settings"
 def RunCommand(is_interactive):
 
     ui = UI()
-    ui.update_settings()
-    # ui.record()
+
+    form = SettingsForm(ui.registry, use_tab=True)
+    if form.show():
+        ui.registry.update(form.settings)
 
 
 if __name__ == "__main__":

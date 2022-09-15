@@ -16,7 +16,7 @@ class SplashForm(Eto.Forms.Dialog[bool]):
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = False
         self.ClientSize = Eto.Drawing.Size(width, height)
-        self.WindowStyle = Eto.Forms.WindowStyle.None  # noqa: E999
+        self.WindowStyle = getattr(Eto.Forms.WindowStyle, 'None')
 
         webview = Eto.Forms.WebView()
         webview.Size = Eto.Drawing.Size(width, height)

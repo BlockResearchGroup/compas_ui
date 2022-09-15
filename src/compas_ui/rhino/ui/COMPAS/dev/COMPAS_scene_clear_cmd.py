@@ -1,7 +1,5 @@
 from compas_ui.ui import UI
 
-# TODO: turn off recording for now
-
 
 __commandname__ = "COMPAS_scene_clear"
 
@@ -11,7 +9,6 @@ def RunCommand(is_interactive):
 
     ui = UI()
     ui.scene_clear()
-    # ui.record()
 
 
 if __name__ == "__main__":

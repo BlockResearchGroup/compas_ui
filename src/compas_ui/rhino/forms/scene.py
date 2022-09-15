@@ -11,13 +11,20 @@ import Eto.Forms
 from .meshdata import MeshDataForm
 from .settings import SettingsForm
 
+from compas.data import Data
 from compas.datastructures import Mesh
+from compas_rhino.forms import TextForm
+from compas_ui.rhino.forms import FileForm
+from compas import json_dump
 
 
 class ObjCell(Eto.Forms.CustomCell):
 
     def __init__(self, parent):
         self.parent = parent
+
+    def OnGetIdentifier(self, args):
+        return str(args.Row)
 
 
 class ObjNameCell(ObjCell):
@@ -87,11 +94,45 @@ class ItemCell(ObjCell):
                 if form.ShowModal(self.parent):
                     self.parent.scene.update()
 
-            text = "{} Data".format(obj.item.__class__.__name__)
-            control = Eto.Forms.Button(Text=text)
+            control = Eto.Forms.Button(Text="Data")
             control.Click += on_click
 
             return control
+
+
+class ExportCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        obj = args.Item.GetValue(0)
+        if isinstance(obj.item, Data):
+            def on_click(sender, e):
+                path = FileForm.save(basename=obj.name + ".json")
+                if not path:
+                    return
+                json_dump(obj.item, path)
+
+            control = Eto.Forms.Button(Text="Export")
+            control.Click += on_click
+
+            return control
+
+
+class RemoveCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        obj = args.Item.GetValue(0)
+
+        def on_click(sender, e):
+            form = TextForm("Are you sure you want to remove this object?")
+            if form.show():
+                self.parent.scene.remove(obj)
+                self.parent.scene.update()
+                self.parent.map_objects()
+
+        control = Eto.Forms.Button(Text="Remove")
+        control.Click += on_click
+
+        return control
 
 
 class ActiveCell(ObjCell):
@@ -162,6 +203,31 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         column.DataCell = ItemCell(self)
         self.table.Columns.Add(column)
 
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = ""
+        column.Editable = False
+        column.DataCell = ExportCell(self)
+        self.table.Columns.Add(column)
+
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = ""
+        column.Editable = False
+        column.DataCell = RemoveCell(self)
+        self.table.Columns.Add(column)
+
+        self.map_objects()
+
+        layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(
+            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
+        )
+        layout.AddRow(self.table)
+        layout.EndVertical()
+
+        self.Content = layout
+        self.active_controls = []
+
+    def map_objects(self):
         collection = Eto.Forms.TreeGridItemCollection()
 
         def add_items(parent, objects):
@@ -175,16 +241,6 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         add_items(collection, root_objects)
 
         self.table.DataStore = collection
-
-        layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
-        layout.AddRow(self.table)
-        layout.EndVertical()
-
-        self.Content = layout
-        self.active_controls = []
 
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)

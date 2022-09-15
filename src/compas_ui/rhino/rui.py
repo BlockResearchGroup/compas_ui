@@ -206,7 +206,7 @@ class Rui(object):
             fh.write(xml)
 
     @classmethod
-    def from_json(cls, configpath, ruipath):
+    def from_json(cls, uipath, ruipath):
         """Construct a RUI object from a JSON config file.
 
         Parameters
@@ -219,22 +219,22 @@ class Rui(object):
         :class:`Rui`
 
         """
-        root = os.path.dirname(configpath)
+        root = os.path.dirname(uipath)
 
-        with open(configpath, "r") as f:
-            config = json.load(f)
+        with open(uipath, "r") as f:
+            ui = json.load(f)
 
         self = cls(ruipath)
         self.init()
-        if config["ui"]["icons"]["bitmap"]:
-            bitmap = os.path.join(root, config["ui"]["icons"]["bitmap"])
+        if ui["icons"]["bitmap"]:
+            bitmap = os.path.join(root, ui["icons"]["bitmap"])
             if os.path.exists(bitmap):
                 self.add_bitmap(bitmap)
-                self.add_bitmap_items(config["ui"]["icons"]["images"])
-        self.add_macros(config["ui"]["commands"])
-        self.add_menus(config["ui"]["menus"])
-        self.add_toolbars(config["ui"]["toolbars"])
-        self.add_toolbargroups(config["ui"]["toolbargroups"])
+                self.add_bitmap_items(ui["icons"]["images"])
+        self.add_macros(ui["commands"])
+        self.add_menus(ui["menus"])
+        self.add_toolbars(ui["toolbars"])
+        self.add_toolbargroups(ui["toolbargroups"])
 
         return self
 
