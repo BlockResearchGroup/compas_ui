@@ -41,6 +41,10 @@ class LineObject(Object):
     def line(self, line):
         self.item = line
 
+    @property
+    def view_line(self):
+        return self.view_item
+
     def move(self):
         raise NotImplementedError
 

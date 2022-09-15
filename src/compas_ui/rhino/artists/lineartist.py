@@ -10,8 +10,8 @@ from compas_rhino.artists import LineArtist
 
 class LineArtist(LineArtist, PrimitiveArtist):
     def draw(self, color=None, show_points=False):
-        start = list(self.line_transformed.start)
-        end = list(self.line_transformed.end)
+        start = list(self.line.start)
+        end = list(self.line.end)
         color = Color.coerce(color) or self.color
         color = color.rgb255
         guids = []

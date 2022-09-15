@@ -143,7 +143,7 @@ class Object(object):
             "settings": self.settings,
             "artist": self.artist.state,
             "visible": self.visible,
-            "frame": self.frame.data,
+            "frame": self.frame,
         }
 
     @state.setter
@@ -153,7 +153,7 @@ class Object(object):
         self.settings.update(state["settings"])
         self.artist.state = state["artists"]
         self.visible = state["visible"]
-        self.frame = Frame.from_data(state["frame"])
+        self.frame = state["frame"]
         # parent?
         # item?
 
@@ -199,6 +199,10 @@ class Object(object):
     @property
     def item(self):
         return self._item
+
+    @property
+    def view_item(self):
+        return self.item.transformed(self.world_frame_transormation)
 
     @item.setter
     def item(self, item):
