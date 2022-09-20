@@ -50,6 +50,18 @@ except ImportError:
 
 @pluggable(category="ui")
 def register(ui):
+    """
+    Pluggable for registering settings, callbacks, toolbars, ...
+
+    Parameters
+    ----------
+    ui : :class:`UI`
+
+    Returns
+    -------
+    None
+
+    """
     pass
 
 
@@ -104,8 +116,9 @@ class UI(Singleton):
         self.controller = self._controller_class(self)
         self.proxy = None
 
-        register(self)
         self.cloud_start()
+
+        register(self)
 
     @property
     def state(self):
@@ -306,7 +319,7 @@ class UI(Singleton):
 
         h = len(self._history)
         if h > self._depth:
-            self._history[:] = self._history[h - self._depth:]
+            self._history[:] = self._history[h - self._depth :]
         self._current = len(self._history) - 1
 
     def undo(self):

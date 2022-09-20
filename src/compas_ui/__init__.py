@@ -42,8 +42,13 @@ TEMP = os.path.abspath(os.path.join(HOME, "temp"))
 __all__ = ["HOME", "DATA", "DOCS", "TEMP"]
 
 __all_plugins__ = [
-    'compas_ui.rhino.objects',
-    'compas_ui.rhino.artists',
-    'compas_ui.rhino.scene',
-    'compas_ui.rhino.install',
+    "compas_ui.rhino.objects",
+    "compas_ui.rhino.artists",
+    "compas_ui.rhino.scene",
+    "compas_ui.rhino.install",
+
+    "compas_ui.blender.objects",
+    "compas_ui.blender.artists",
+    "compas_ui.blender.register",
+    "compas_ui.blender.scene",
 ]
