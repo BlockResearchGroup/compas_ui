@@ -11,7 +11,6 @@ import sys
 
 
 class ToolbarForm(forms.Form):
-
     def setup(self, toolbar, UI_folder, title="Toolbar"):
         sys.path.append(UI_folder)
         self.Owner = Rhino.UI.RhinoEtoApp.MainWindow
@@ -44,6 +43,7 @@ class ToolbarForm(forms.Form):
                 def on_click(package):
                     def _on_click(sender, e):
                         package.RunCommand(True)
+
                     return _on_click
 
                 button.Click += on_click(package)
