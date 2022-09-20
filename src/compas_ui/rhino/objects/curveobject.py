@@ -25,6 +25,7 @@ class RhinoCurveObject(RhinoObject, CurveObject):
 
     def draw(self):
         self.clear()
+        self.artist.curve = self.view_curve
         if not self.visible:
             return
         self._guids = self.artist.draw()
@@ -59,8 +60,9 @@ class RhinoCurveObject(RhinoObject, CurveObject):
                 curveobj.draw()
 
         """
-        start = point_to_rhino(self.curve.start)
-        end = point_to_rhino(self.curve.end)
+        view_curve = self.view_curve
+        start = point_to_rhino(view_curve.start)
+        end = point_to_rhino(view_curve.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
@@ -76,7 +78,7 @@ class RhinoCurveObject(RhinoObject, CurveObject):
             return False
 
         start = point_to_compas(gp.Point())
-        self.curve.start = start
+        self.curve.start = start.transformed(self.world_frame_transormation.inverted())
         return True
 
     def move_end(self):
@@ -109,8 +111,9 @@ class RhinoCurveObject(RhinoObject, CurveObject):
                 curveobj.draw()
 
         """
-        start = point_to_rhino(self.curve.start)
-        end = point_to_rhino(self.curve.end)
+        view_curve = self.view_curve
+        start = point_to_rhino(view_curve.start)
+        end = point_to_rhino(view_curve.end)
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         gp = Rhino.Input.Custom.GetPoint()
 
@@ -126,5 +129,5 @@ class RhinoCurveObject(RhinoObject, CurveObject):
             return False
 
         end = point_to_compas(gp.Point())
-        self.curve.end = end
+        self.curve.end = end.transformed(self.world_frame_transormation.inverted())
         return True

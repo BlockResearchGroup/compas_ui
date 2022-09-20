@@ -41,6 +41,10 @@ class CurveObject(Object):
     def curve(self, curve):
         self.item = curve
 
+    @property
+    def view_curve(self):
+        return self.view_item
+
     def move(self):
         raise NotImplementedError
 

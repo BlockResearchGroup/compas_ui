@@ -103,6 +103,10 @@ class MeshObject(Object):
         self.item = mesh
 
     @property
+    def view_mesh(self):
+        return self.view_item
+
+    @property
     def anchor(self):
         return self._anchor
 
@@ -144,8 +148,9 @@ class MeshObject(Object):
     @property
     def vertex_xyz(self):
         origin = Point(0, 0, 0)
-        vertices = list(self.mesh.vertices())
-        xyz = self.mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        view_mesh = self.view_mesh
+        vertices = list(view_mesh.vertices())
+        xyz = view_mesh.vertices_attributes(["x", "y", "z"], keys=vertices)
 
         stack = []
         if self.scale != 1:
@@ -156,7 +161,7 @@ class MeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.mesh.vertex_attributes(self.anchor, "xyz")
+                xyz = view_mesh.vertex_attributes(self.anchor, "xyz")
                 point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)

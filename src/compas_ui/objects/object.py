@@ -9,6 +9,8 @@ from abc import abstractmethod
 from collections import defaultdict
 
 import compas
+from compas.geometry import Frame
+from compas.geometry import Transformation
 from compas.artists import Artist
 from compas.plugins import pluggable
 from compas.plugins import PluginValidator
@@ -111,7 +113,7 @@ class Object(object):
         PluginValidator.ensure_implementations(cls)
         return super(Object, cls).__new__(cls)
 
-    def __init__(self, item, scene=None, name=None, visible=True, settings=None):
+    def __init__(self, item, scene=None, name=None, visible=True, settings=None, frame=None):
         super(Object, self).__init__()
         self._guid = None
         self._item = None
@@ -123,6 +125,7 @@ class Object(object):
         self.settings = self.SETTINGS.copy()
         self.settings.update(settings or {})
         self.parent = None
+        self.frame = frame or Frame.worldXY()
 
     def __getstate__(self):
         return self.state
@@ -140,6 +143,7 @@ class Object(object):
             "settings": self.settings,
             "artist": self.artist.state,
             "visible": self.visible,
+            "frame": self.frame,
         }
 
     @state.setter
@@ -149,8 +153,20 @@ class Object(object):
         self.settings.update(state["settings"])
         self.artist.state = state["artists"]
         self.visible = state["visible"]
+        self.frame = state["frame"]
         # parent?
         # item?
+
+    @property
+    def local_frame_transormation(self):
+        return Transformation.from_frame(self.frame)
+
+    @property
+    def world_frame_transormation(self):
+        if self.parent:
+            return self.parent.world_frame_transormation * self.local_frame_transormation
+        else:
+            return self.local_frame_transormation
 
     @property
     def children(self):
@@ -183,6 +199,10 @@ class Object(object):
     @property
     def item(self):
         return self._item
+
+    @property
+    def view_item(self):
+        return self.item.transformed(self.world_frame_transormation)
 
     @item.setter
     def item(self, item):

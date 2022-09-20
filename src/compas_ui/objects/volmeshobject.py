@@ -66,6 +66,10 @@ class VolMeshObject(Object):
         self.item = volmesh
 
     @property
+    def view_volmesh(self):
+        return self.view_item
+
+    @property
     def anchor(self):
         return self._anchor
 
@@ -107,8 +111,10 @@ class VolMeshObject(Object):
     @property
     def vertex_xyz(self):
         origin = Point(0, 0, 0)
-        vertices = list(self.volmesh.vertices())
-        xyz = self.volmesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        view_volmesh = self.view_volmesh
+        vertices = list(view_volmesh.vertices())
+        xyz = view_volmesh.vertices_attributes(["x", "y", "z"], keys=vertices)
+        xyz = transform_points(xyz, self.world_frame_transormation)
 
         stack = []
         if self.scale != 1:
@@ -119,7 +125,7 @@ class VolMeshObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.volmesh.vertex_attributes(self.anchor, "xyz")
+                xyz = view_volmesh.vertex_attributes(self.anchor, "xyz")
                 point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
