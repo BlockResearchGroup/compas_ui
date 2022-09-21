@@ -24,7 +24,7 @@
   
 
   
-  <link rel="prev" title="rhino.objects" href="../compas_ui.rhino.objects.html" />
+  <link rel="prev" title="RhinoLineObject.select" href="compas_ui.rhino.objects.RhinoLineObject.select.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -50,7 +50,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ui/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ui/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            0.4.1
+            0.5.0
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -101,7 +101,7 @@
 <h1>RhinoMeshObject</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_ui.rhino.objects.RhinoMeshObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.rhino.objects.</span></span><span class="sig-name descname"><span class="pre">RhinoMeshObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/rhino/objects/meshobject.py#L24"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.rhino.objects.</span></span><span class="sig-name descname"><span class="pre">RhinoMeshObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/rhino/objects/meshobject.py#L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RhinoObject</span></code>, <a class="reference internal" href="compas_ui.objects.MeshObject.html#compas_ui.objects.MeshObject" title="compas_ui.objects.meshobject.MeshObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeshObject</span></code></a></p>
 <p>Class for representing COMPAS meshes in Rhino.</p>
 <dl class="field-list simple">
@@ -114,7 +114,7 @@
 </dd>
 </dl>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -138,52 +138,55 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.modify_vertices.html#compas_ui.rhino.objects.RhinoMeshObject.modify_vertices" title="compas_ui.rhino.objects.RhinoMeshObject.modify_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_vertices</span></code></a></p></td>
 <td><p>Update the attributes of selected vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_face.html#compas_ui.rhino.objects.RhinoMeshObject.move_face" title="compas_ui.rhino.objects.RhinoMeshObject.move_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_face</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move.html#compas_ui.rhino.objects.RhinoMeshObject.move" title="compas_ui.rhino.objects.RhinoMeshObject.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a></p></td>
+<td><p>Move the entire mesh to a different location.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_face.html#compas_ui.rhino.objects.RhinoMeshObject.move_face" title="compas_ui.rhino.objects.RhinoMeshObject.move_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_face</span></code></a></p></td>
 <td><p>Move a single face of the mesh object and update the data structure accordingly.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertex.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertex" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertex</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertex.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertex" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertex</span></code></a></p></td>
 <td><p>Move a single vertex of the mesh object and update the data structure accordingly.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertices" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertices" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices</span></code></a></p></td>
 <td><p>Move a multiple vertices of the mesh object and update the data structure accordingly.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices_direction</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction.html#compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction" title="compas_ui.rhino.objects.RhinoMeshObject.move_vertices_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices_direction</span></code></a></p></td>
 <td><p>Move selected vertices along specified direction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_edges.html#compas_ui.rhino.objects.RhinoMeshObject.select_edges" title="compas_ui.rhino.objects.RhinoMeshObject.select_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edges</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_edges.html#compas_ui.rhino.objects.RhinoMeshObject.select_edges" title="compas_ui.rhino.objects.RhinoMeshObject.select_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edges</span></code></a></p></td>
 <td><p>Select edges of the mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_faces.html#compas_ui.rhino.objects.RhinoMeshObject.select_faces" title="compas_ui.rhino.objects.RhinoMeshObject.select_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_faces</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_faces.html#compas_ui.rhino.objects.RhinoMeshObject.select_faces" title="compas_ui.rhino.objects.RhinoMeshObject.select_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_faces</span></code></a></p></td>
 <td><p>Select faces of the mesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_vertex.html#compas_ui.rhino.objects.RhinoMeshObject.select_vertex" title="compas_ui.rhino.objects.RhinoMeshObject.select_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertex</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_vertex.html#compas_ui.rhino.objects.RhinoMeshObject.select_vertex" title="compas_ui.rhino.objects.RhinoMeshObject.select_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertex</span></code></a></p></td>
 <td><p>Select one vertex of the mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_vertices.html#compas_ui.rhino.objects.RhinoMeshObject.select_vertices" title="compas_ui.rhino.objects.RhinoMeshObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select_vertices.html#compas_ui.rhino.objects.RhinoMeshObject.select_vertices" title="compas_ui.rhino.objects.RhinoMeshObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a></p></td>
 <td><p>Select vertices of the mesh.</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Inherited Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.clear_layer.html#compas_ui.rhino.objects.RhinoMeshObject.clear_layer" title="compas_ui.rhino.objects.RhinoMeshObject.clear_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_layer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.add.html#compas_ui.rhino.objects.RhinoMeshObject.add" title="compas_ui.rhino.objects.RhinoMeshObject.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move.html#compas_ui.rhino.objects.RhinoMeshObject.move" title="compas_ui.rhino.objects.RhinoMeshObject.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_edge.html#compas_ui.rhino.objects.RhinoMeshObject.move_edge" title="compas_ui.rhino.objects.RhinoMeshObject.move_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_edge</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.move_edge.html#compas_ui.rhino.objects.RhinoMeshObject.move_edge" title="compas_ui.rhino.objects.RhinoMeshObject.move_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_edge</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.redraw.html#compas_ui.rhino.objects.RhinoMeshObject.redraw" title="compas_ui.rhino.objects.RhinoMeshObject.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.redraw.html#compas_ui.rhino.objects.RhinoMeshObject.redraw" title="compas_ui.rhino.objects.RhinoMeshObject.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.register.html#compas_ui.rhino.objects.RhinoMeshObject.register" title="compas_ui.rhino.objects.RhinoMeshObject.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.register.html#compas_ui.rhino.objects.RhinoMeshObject.register" title="compas_ui.rhino.objects.RhinoMeshObject.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.remove.html#compas_ui.rhino.objects.RhinoMeshObject.remove" title="compas_ui.rhino.objects.RhinoMeshObject.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ui.rhino.objects.RhinoMeshObject.select.html#compas_ui.rhino.objects.RhinoMeshObject.select" title="compas_ui.rhino.objects.RhinoMeshObject.select"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select</span></code></a></p></td>
@@ -226,7 +229,6 @@
 </li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_ui.html">compas_ui</a><ul class="nav flex-column collapse show active">
-<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.app.html">app</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.objects.html">objects</a></li>
 <li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.scene.html">scene</a></li>
@@ -261,11 +263,11 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="../compas_ui.rhino.objects.html" title="rhino.objects" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ui.rhino.objects.RhinoLineObject.select.html" title="RhinoLineObject.select" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          rhino.objects
+          RhinoLineObject.select
         </div>
       </a>
       

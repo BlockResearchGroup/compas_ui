@@ -20,7 +20,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="Object.clear" href="compas_ui.objects.Object.clear.html" />
+  <link rel="next" title="Object.add" href="compas_ui.objects.Object.add.html" />
   
 
   
@@ -50,7 +50,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ui/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ui/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            0.4.1
+            0.5.0
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -99,13 +99,13 @@
 <h1>Object</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_ui.objects.Object">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.objects.</span></span><span class="sig-name descname"><span class="pre">Object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/objects/object.py#L118"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ui.objects.</span></span><span class="sig-name descname"><span class="pre">Object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/blockresearchgroup/compas_ui/blob/master/src/compas_ui/objects/object.py#L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for all objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – A COMPAS data object.</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – A COMPAS data object.</p></li>
 <li><p><strong>scene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.scenes.Scene</span></code>, optional) – A scene object.</p></li>
 <li><p><strong>name</strong> (<em>str, optional</em>) – The name of the object.</p></li>
 <li><p><strong>visible</strong> (<em>bool, optional</em>) – Toggle for the visibility of the object.</p></li>
@@ -114,9 +114,9 @@
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – The COMPAS data object assignd to this scene object.</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>) – The COMPAS data object assignd to this scene object.</p></li>
 <li><p><strong>scene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.scenes.Scene</span></code>) – The scene.</p></li>
-<li><p><strong>artist</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.artists.Artist.html#compas.artists.Artist" title="(in COMPAS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.artists.Artist</span></code></a>) – The artist matching the type of <cite>item</cite>.</p></li>
+<li><p><strong>artist</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.artists.Artist.html#compas.artists.Artist" title="(in COMPAS v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.artists.Artist</span></code></a>) – The artist matching the type of <cite>item</cite>.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – The name of the object.
 This is an alias for the name of <cite>item</cite>.</p></li>
 <li><p><strong>visible</strong> (<em>bool</em>) – Toggle for the visibility of the object in the scene.</p></li>
@@ -126,28 +126,34 @@ This dict starts from the settings of the <cite>artist</cite>.</p></li>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.clear.html#compas_ui.objects.Object.clear" title="compas_ui.objects.Object.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.add.html#compas_ui.objects.Object.add" title="compas_ui.objects.Object.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.draw.html#compas_ui.objects.Object.draw" title="compas_ui.objects.Object.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.clear.html#compas_ui.objects.Object.clear" title="compas_ui.objects.Object.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.modify.html#compas_ui.objects.Object.modify" title="compas_ui.objects.Object.modify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.draw.html#compas_ui.objects.Object.draw" title="compas_ui.objects.Object.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.move.html#compas_ui.objects.Object.move" title="compas_ui.objects.Object.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.modify.html#compas_ui.objects.Object.modify" title="compas_ui.objects.Object.modify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.redraw.html#compas_ui.objects.Object.redraw" title="compas_ui.objects.Object.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.move.html#compas_ui.objects.Object.move" title="compas_ui.objects.Object.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.register.html#compas_ui.objects.Object.register" title="compas_ui.objects.Object.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.redraw.html#compas_ui.objects.Object.redraw" title="compas_ui.objects.Object.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.register.html#compas_ui.objects.Object.register" title="compas_ui.objects.Object.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ui.objects.Object.remove.html#compas_ui.objects.Object.remove" title="compas_ui.objects.Object.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ui.objects.Object.select.html#compas_ui.objects.Object.select" title="compas_ui.objects.Object.select"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select</span></code></a></p></td>
@@ -184,7 +190,6 @@ This dict starts from the settings of the <cite>artist</cite>.</p></li>
 </li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_ui.html">compas_ui</a><ul class="nav flex-column collapse show active">
-<li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.app.html">app</a></li>
 <li class="toctree-l3 nav-item active"><a class="nav-link reference internal" href="../compas_ui.objects.html">objects</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.rhino.html">rhino</a></li>
 <li class="toctree-l3 nav-item"><a class="nav-link reference internal" href="../compas_ui.scene.html">scene</a></li>
@@ -227,10 +232,10 @@ This dict starts from the settings of the <cite>artist</cite>.</p></li>
       
 
       
-      <a href="compas_ui.objects.Object.clear.html" title="Object.clear" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_ui.objects.Object.add.html" title="Object.add" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          Object.clear
+          Object.add
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>
