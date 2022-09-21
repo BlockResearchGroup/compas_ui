@@ -198,6 +198,48 @@ class UI(Singleton):
             self.proxy.shutdown()
 
     # ========================================================================
+    # Undo/Redo
+    # ========================================================================
+
+    @staticmethod
+    def rhino_undo(*args, **kwargs):
+        """Decorator to bind Rhino undo redo shortkeys.
+
+        Parameters
+        ----------
+        *args : list
+            ???
+        **kwargs : dict
+            ???
+
+        Returns
+        -------
+        callable
+
+        """
+        from .rhino.undo import rhino_undo
+        return rhino_undo(*args, **kwargs)
+
+    @staticmethod
+    def skip_rhino_undo(*args, **kwargs):
+        """Decorator to skip Rhino undo redo recording.
+
+        Parameters
+        ----------
+        *args : list
+            ???
+        **kwargs : dict
+            ???
+
+        Returns
+        -------
+        callable
+
+        """
+        from .rhino.undo import skip_rhino_undo
+        return skip_rhino_undo(*args, **kwargs)
+
+    # ========================================================================
     # Environments
     # ========================================================================
 
