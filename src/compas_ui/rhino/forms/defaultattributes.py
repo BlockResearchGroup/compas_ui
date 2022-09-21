@@ -195,6 +195,10 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         form = AddDefaultAttributeForm()
         if form.ShowModal(self):
             key, value = form.key_value_pair
+            for item in self.table.DataStore:
+                if item.GetValue(0) == key:
+                    Eto.Forms.MessageBox.Show("Key already exists.", "ERROR")
+                    return
             item = Eto.Forms.TreeGridItem(Values=(key, str(value)))
             self.table.DataStore.Add(item)
             self.table.ReloadData()
