@@ -9,6 +9,67 @@ import Eto.Drawing
 import Eto.Forms
 
 
+class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
+    def __init__(self,
+                 width=300,
+                 height=140):
+
+        self.Title = "Add Default Attribute"
+        self.Padding = Eto.Drawing.Padding(0)
+        self.Resizable = True
+        self.MinimumSize = Eto.Drawing.Size(0.5 * width, 0.5 * height)
+        self.ClientSize = Eto.Drawing.Size(width, height)
+
+        layout = Eto.Forms.DynamicLayout()
+        layout.BeginVertical(
+            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(10, 0), True, True
+        )
+
+        key_label = Eto.Forms.Label(Text="Key:")
+        self.key = Eto.Forms.TextBox()
+
+        value_label = Eto.Forms.Label(Text="Value:")
+        self.value = Eto.Forms.TextBox()
+
+        layout.AddRow(key_label, self.key, value_label, self.value)
+        layout.EndVertical()
+
+        layout.BeginVertical(
+            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
+        )
+        layout.AddRow(None, self.ok, self.cancel)
+        layout.EndVertical()
+        self.key_value_pair = None
+        self.Content = layout
+
+    @property
+    def ok(self):
+        self.DefaultButton = Eto.Forms.Button(Text="OK")
+        self.DefaultButton.Click += self.on_ok
+        return self.DefaultButton
+
+    @property
+    def cancel(self):
+        self.AbortButton = Eto.Forms.Button(Text="Cancel")
+        self.AbortButton.Click += self.on_cancel
+        return self.AbortButton
+
+    def on_ok(self, sender, event):
+        key = self.key.Text
+        value = self.value.Text
+        try:
+            value = ast.literal_eval(value)
+        except Exception as e:
+            print(e)
+        if isinstance(value, (list, dict, tuple)):
+            Eto.Forms.MessageBox.Show(str(type(value)) + "is mutable, use with caution.", "WARNING")
+        self.key_value_pair = (key, value)
+        self.Close(True)
+
+    def on_cancel(self, sender, event):
+        self.Close(False)
+
+
 class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
     def __init__(self,
                  item,
@@ -127,10 +188,13 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         self.Close(False)
 
     def on_add(self, sender, event):
-        item = Eto.Forms.TreeGridItem(Values=("new_key", "new_value"))
-        self.table.DataStore.Add(item)
-        self.table.ReloadData()
-        self.table.SelectedItem = item
+        form = AddDefaultAttributeForm()
+        if form.ShowModal(self):
+            key, value = form.key_value_pair
+            item = Eto.Forms.TreeGridItem(Values=(key, str(value)))
+            self.table.DataStore.Add(item)
+            self.table.ReloadData()
+            self.table.SelectedItem = item
 
     def on_delete(self, sender, event):
         item = self.table.SelectedItem
