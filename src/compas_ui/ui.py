@@ -113,6 +113,7 @@ class UI(Singleton):
         state["session"] = self.session.data
         state["scene"] = self.scene.state
         state["settings"] = self.settings
+        state["registry"] = self.registry
         return state
 
     @state.setter
@@ -120,6 +121,7 @@ class UI(Singleton):
         self.session.data = state["session"]
         self.scene.state = state["scene"]
         self.settings = state["settings"]
+        self.registry = state["registry"]
 
     # ========================================================================
     # Init
@@ -320,9 +322,9 @@ class UI(Singleton):
 
         """
         form = SceneObjectsForm(self.scene)
-        if form.show():
-            self.scene.update()
-            self.record()
+        form.show()
+        self.scene.update()
+        self.record()
 
     # ========================================================================
     # State

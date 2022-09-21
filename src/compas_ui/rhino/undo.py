@@ -26,8 +26,6 @@ def rhino_undo(command_name):
             if undoRecord == 0:
                 print("undo record did not start")
 
-            print("undo record", undoRecord)
-
             func(*args, **kwargs)
 
             sc.doc.AddCustomUndoEvent(command_name, undo_redo_handler, "undo")

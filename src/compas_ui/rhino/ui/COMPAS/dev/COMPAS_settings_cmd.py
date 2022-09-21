@@ -6,6 +6,7 @@ __commandname__ = "COMPAS_settings"
 
 
 @UI.error()
+@UI.rhino_undo(__commandname__)
 def RunCommand(is_interactive):
 
     ui = UI()
@@ -13,6 +14,8 @@ def RunCommand(is_interactive):
     form = SettingsForm(ui.registry, use_tab=True)
     if form.show():
         ui.registry.update(form.settings)
+
+    ui.record()
 
 
 if __name__ == "__main__":
