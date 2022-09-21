@@ -4,8 +4,6 @@
 #
 # needs_sphinx = "1.0"
 
-import sys
-import os
 import inspect
 import importlib
 
@@ -50,7 +48,7 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.graphviz",
     "matplotlib.sphinxext.plot_directive",
-    "tabs"
+    "tabs",
 ]
 
 # autodoc options
@@ -72,7 +70,7 @@ autodoc_mock_imports = [
     "rhinoscriptsyntax",
     "bpy",
     "bmesh",
-    "mathutils"
+    "mathutils",
 ]
 
 autodoc_default_options = {
@@ -86,7 +84,7 @@ autoclass_content = "class"
 
 
 def skip(app, what, name, obj, would_skip, options):
-    if name.startswith('_'):
+    if name.startswith("_"):
         return True
     return would_skip
 
@@ -108,7 +106,7 @@ autosummary_mock_imports = [
     "rhinoscriptsyntax",
     "bpy",
     "bmesh",
-    "mathutils"
+    "mathutils",
 ]
 
 # graph options
@@ -129,6 +127,7 @@ napoleon_use_admonition_for_references = False
 napoleon_use_ivar = False
 napoleon_use_param = False
 napoleon_use_rtype = False
+
 
 # first, we define new methods for any new sections and add them to the class
 def parse_keys_section(self, section):
@@ -178,7 +177,7 @@ NumpyDocstring._parse = patched_parse
 plot_include_source = False
 plot_html_show_source_link = False
 plot_html_show_formats = False
-plot_formats = ['png']
+plot_formats = ["png"]
 # plot_pre_code
 # plot_basedir
 # plot_rcparams
@@ -247,7 +246,7 @@ def linkcode_resolve(domain, info):
 
 extlinks = {
     "rhino": ("https://developer.rhino3d.com/api/RhinoCommon/html/T_%s.htm", "%s"),
-    "blender": ("https://docs.blender.org/api/2.93/%s.html", "%s")
+    "blender": ("https://docs.blender.org/api/2.93/%s.html", "%s"),
 }
 
 # -- Options for HTML output ----------------------------------------------
