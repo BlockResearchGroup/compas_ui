@@ -63,8 +63,12 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
             print(e)
         if isinstance(value, (list, dict, tuple)):
             Eto.Forms.MessageBox.Show(str(type(value)) + "is mutable, use with caution.", "WARNING")
-        self.key_value_pair = (key, value)
-        self.Close(True)
+        if key == "":
+            Eto.Forms.MessageBox.Show("Key cannot be empty.", "ERROR")
+            self.Close(False)
+        else:
+            self.key_value_pair = (key, value)
+            self.Close(True)
 
     def on_cancel(self, sender, event):
         self.Close(False)
