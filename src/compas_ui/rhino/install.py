@@ -73,20 +73,19 @@ def check_folders(plugin_name, version="7.0"):
         print("User has write access to the Rhino PythonPlugins folder")
         print("PASSED.\n")
 
+        print("\n All checks passed.")
+        return True
+
     except Exception as e:
         print("FAILED:")
         print(e)
         return False
 
-    finally:
-        print("\n All checks passed.")
-        return True
 
-
-def check_dependencies():
+def check_dependencies(requirements_path=None):
     try:
         dependencies = []
-        with open(os.path.join(HERE, "..", "..", "..", "requirements.txt"), "r") as f:
+        with open(requirements_path or os.path.join(HERE, "..", "..", "..", "requirements.txt"), "r") as f:
             for line in f.readlines():
                 if line.startswith("#"):
                     continue
@@ -96,13 +95,13 @@ def check_dependencies():
         print(dependencies)
 
         pkg_resources.require(dependencies)
+
+        print("\n All checks passed.")
+        return True
     except (DistributionNotFound, VersionConflict) as e:
         print("FAILED:")
         print(e)
         return False
-    finally:
-        print("\n All checks passed.")
-        return True
 
 
 def install(version="7.0"):
