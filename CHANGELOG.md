@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Removed
+
+
+## [0.5.0] 2022-09-21
+
+### Added
+
 * Added `compas_ui.rhino.forms.AboutForm`.
 * Added `compas_ui.rhino.forms.CondaEnvsForm`.
 * Added `compas_ui.rhino.forms.FileForm`.
