@@ -13,7 +13,6 @@ from .settings import SettingsForm
 
 from compas.data import Data
 from compas.datastructures import Mesh
-from compas_rhino.forms import TextForm
 from compas_ui.rhino.forms import FileForm
 from compas import json_dump
 
