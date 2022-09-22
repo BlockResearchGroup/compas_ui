@@ -235,7 +235,7 @@ class Page(object):
                 precision = col["precision"]
                 value = self.valuefunc(key, name)
                 if precision:
-                    value = "{0:.{1}}".format(value, precision)
+                    value = "{0:.{1}}".format(float(value), precision)
                 elif not checkbox:
                     value = str(value)
                 row.append(str(value))
@@ -249,6 +249,7 @@ class Page(object):
             for index, col in enumerate(self.table.cols):
                 name = col["name"]
                 editable = col["is_editable"]
+                precision = col["precision"]
                 if not editable:
                     continue
                 value = row[index]
@@ -258,8 +259,12 @@ class Page(object):
                     except Exception as e:
                         print(key, name, value, e)
                     else:
+                        if precision:
+                            value = float(value)
                         self.valuefunc(key, name, value)
                 else:
+                    if precision:
+                        value = float(value)
                     self.valuefunc(key, name, value)
 
 
