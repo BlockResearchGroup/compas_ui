@@ -28,7 +28,7 @@ optional_requirements = {}
 
 setup(
     name="compas_ui",
-    version="0.5.0",
+    version="0.5.1",
     description="COMPAS UI provides basic functionality to build a user interface for a COMPAS app.",
     long_description=long_description,
     long_description_content_type="text/markdown",
