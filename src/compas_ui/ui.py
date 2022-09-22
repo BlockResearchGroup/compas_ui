@@ -79,10 +79,11 @@ class UI(Singleton):
     """
 
     def __init__(self, config=None, controller_class=None):
-        if config is None:
-            raise RuntimeError(
-                "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
-            )
+        # if config is None:
+        #     raise RuntimeError(
+        #         "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
+        #     )
+        config = config or {"settings": {"cloud": {"background": True}}}
 
         self._current = -1
         self._depth = 53
@@ -94,13 +95,13 @@ class UI(Singleton):
         self.config = config
         self.settings = self.config["settings"] or {}
 
-        self.name = self.config["plugin"]["title"]
+        self.name = "COMPAS"
         self.condadir = None
         self.dirname = None
         self.basename = "{}.ui".format(self.name)
 
         self.session = Session(name=self.name)
-        self.scene = Scene(settings=self.settings.get("scene"))
+        self.scene = Scene()
         self.controller = self._controller_class(self)
         self.proxy = None
 
@@ -306,7 +307,7 @@ class UI(Singleton):
 
         h = len(self._history)
         if h > self._depth:
-            self._history[:] = self._history[h - self._depth:]
+            self._history[:] = self._history[h - self._depth :]
         self._current = len(self._history) - 1
 
     def undo(self):
