@@ -123,8 +123,7 @@ class RemoveCell(ObjCell):
         obj = args.Item.GetValue(0)
 
         def on_click(sender, e):
-            form = TextForm("Are you sure you want to remove this object?")
-            if form.show():
+            if Eto.Forms.MessageBox.Show("Are you sure you want to remove this object?", "Confirm", Eto.Forms.MessageBoxButtons.YesNo) == Eto.Forms.DialogResult.Yes:
                 self.parent.scene.remove(obj)
                 self.parent.scene.update()
                 self.parent.map_objects()
