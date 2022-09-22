@@ -56,13 +56,6 @@ def register(ui):
 class UI(Singleton):
     """UI singleton.
 
-    Parameters
-    ----------
-    name : str
-        The name of the app.
-    settings : settings for scene and proxy object, optional
-        The compas rpc or compas_cloud Proxy object.
-
     Attributes
     ----------
     name : str
@@ -78,18 +71,14 @@ class UI(Singleton):
 
     """
 
-    def __init__(self, config=None, controller_class=None):
-        # if config is None:
-        #     raise RuntimeError(
-        #         "Initialized the UI with a configuration dict first, for example: ui = UI(config={...})"
-        #     )
-        config = config or {"settings": {"cloud": {"background": True}}}
+    def __init__(self):
+        config = {"settings": {"cloud": {"background": True}}}
 
         self._current = -1
         self._depth = 53
         self._history = []
         self._tempdir = tempfile.gettempdir()
-        self._controller_class = controller_class or Controller
+        self._controller_class = Controller
 
         self.registry = {}
         self.config = config
