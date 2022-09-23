@@ -3,23 +3,17 @@
         "bitmap": "assets/COMPAS_ui.png",
         "images": [
             "0_compas_init",
-
             "1_compas_load",
             "2_compas_save",
-
             "3_compas_undo",
             "4_compas_redo",
-
             "5_compas_scene_update",
             "6_compas_scene_clear",
             "7_compas_scene_settings",
-
             "8_compas_cloud_start",
             "9_compas_cloud_restart",
             "10_compas_cloud_shutdown",
-
             "11_compas_conda_envs",
-
             "12_compas_scene_objects"
         ]
     },
@@ -43,11 +37,6 @@
             "name": "COMPAS_conda_envs",
             "icon": 11,
             "menu_text": "Conda environments"
-        },
-        {
-            "name": "COMPAS_init",
-            "icon": 0,
-            "menu_text": "Init"
         },
         {
             "name": "COMPAS_load",
@@ -107,12 +96,6 @@
             "name": "COMPAS",
             "items": [
                 {
-                    "command": "COMPAS_init"
-                },
-                {
-                    "type": "separator"
-                },
-                {
                     "command": "COMPAS_save"
                 },
                 {
@@ -135,9 +118,6 @@
                         },
                         {
                             "command": "COMPAS_scene_objects"
-                        },
-                        {
-                            "command": "COMPAS_settings"
                         }
                     ]
                 },
@@ -197,12 +177,6 @@
             "name": "COMPAS",
             "items": [
                 {
-                    "left": "COMPAS_init"
-                },
-                {
-                    "type": "separator"
-                },
-                {
                     "left": "COMPAS_load"
                 },
                 {
@@ -224,12 +198,6 @@
                     "type": "separator"
                 },
                 {
-                    "left": "COMPAS_settings"
-                },
-                {
-                    "type": "separator"
-                },
-                {
                     "left": "COMPAS_cloud_start"
                 },
                 {
@@ -237,14 +205,7 @@
                 },
                 {
                     "left": "COMPAS_cloud_shutdown"
-                },
-                {
-                    "type": "separator"
-                },
-                {
-                    "left": "COMPAS_conda_envs"
                 }
-
             ]
         }
     ],
