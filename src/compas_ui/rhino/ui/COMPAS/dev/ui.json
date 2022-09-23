@@ -186,6 +186,15 @@
                     "type": "separator"
                 },
                 {
+                    "left": "COMPAS_undo"
+                },
+                {
+                    "left": "COMPAS_redo"
+                },
+                {
+                    "type": "separator"
+                },
+                {
                     "left": "COMPAS_scene_objects"
                 },
                 {

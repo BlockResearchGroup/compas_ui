@@ -18,26 +18,14 @@ def RunCommand(is_interactive):
 
     config = [
         {
-            "command": "COMPAS_cloud_start",
-            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-start.png"),
-        },
-        {
-            "command": "COMPAS_cloud_shutdown",
-            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-shutdown.png"),
-        },
-        {
-            "command": "COMPAS_cloud_restart",
-            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-restart.png"),
-        },
-        {"type": "separator"},
-        {
             "command": "COMPAS_load",
             "icon": os.path.join(HERE, "assets", "COMPAS_load.png"),
         },
         {
-            "command": "COMPAS_save",
+            "command": "COMPAS_saveas",
             "icon": os.path.join(HERE, "assets", "COMPAS_save.png"),
         },
+        {"type": "separator"},
         {
             "command": "COMPAS_undo",
             "icon": os.path.join(HERE, "assets", "COMPAS_undo.png"),
@@ -58,6 +46,19 @@ def RunCommand(is_interactive):
         {
             "command": "COMPAS_scene_clear",
             "icon": os.path.join(HERE, "assets", "COMPAS_scene-clear.png"),
+        },
+        {"type": "separator"},
+        {
+            "command": "COMPAS_cloud_start",
+            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-start.png"),
+        },
+        {
+            "command": "COMPAS_cloud_restart",
+            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-restart.png"),
+        },
+        {
+            "command": "COMPAS_cloud_shutdown",
+            "icon": os.path.join(HERE, "assets", "COMPAS_cloud-shutdown.png"),
         },
     ]
 
