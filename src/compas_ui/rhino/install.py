@@ -145,9 +145,9 @@ def main(plugin_name, version):
     if not check_folders(plugin_name, version):
         return
 
-    print("="*20, "Checking Dependencies", "="*20)
-    if not check_dependencies():
-        return
+    # print("="*20, "Checking Dependencies", "="*20)
+    # if not check_dependencies():
+    #     return
 
     print("="*20, "Running Installation", "="*20)
     install(version)
