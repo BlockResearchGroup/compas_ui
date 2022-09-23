@@ -16,6 +16,8 @@ HERE = os.path.dirname(__file__)
 @UI.error()
 def RunCommand(is_interactive):
 
+    ui = UI()
+
     config = [
         {
             "command": "COMPAS_load",
