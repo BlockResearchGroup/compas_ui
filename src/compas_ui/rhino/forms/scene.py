@@ -10,6 +10,7 @@ import Eto.Forms
 
 from .meshdata import MeshDataForm
 from .settings import SettingsForm
+from .defaultattributes import DefaultAttributesForm
 
 from compas.data import Data
 from compas.datastructures import Mesh
@@ -94,6 +95,22 @@ class ItemCell(ObjCell):
                     self.parent.scene.update()
 
             control = Eto.Forms.Button(Text="Data")
+            control.Click += on_click
+
+            return control
+
+
+class DefaultAttributesCell(ObjCell):
+
+    def OnCreateCell(self, args):
+        obj = args.Item.GetValue(0)
+        if isinstance(obj.item, Mesh):
+            def on_click(sender, e):
+                form = DefaultAttributesForm(obj.item)
+                if form.ShowModal(self.parent):
+                    self.parent.scene.update()
+
+            control = Eto.Forms.Button(Text="Default Attributes")
             control.Click += on_click
 
             return control
@@ -193,6 +210,12 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         column.HeaderText = ""
         column.Editable = False
         column.DataCell = SettingsCell(self)
+        self.table.Columns.Add(column)
+
+        column = Eto.Forms.GridColumn()
+        column.HeaderText = ""
+        column.Editable = False
+        column.DataCell = DefaultAttributesCell(self)
         self.table.Columns.Add(column)
 
         column = Eto.Forms.GridColumn()
