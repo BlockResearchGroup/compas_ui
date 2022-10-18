@@ -4,18 +4,12 @@ from __future__ import print_function
 import contextlib
 import glob
 import os
+import shutil
 import sys
 import tempfile
-from shutil import rmtree
 
 from invoke import Exit
 from invoke import task
-
-try:
-    input = raw_input
-except NameError:
-    pass
-
 
 BASE_FOLDER = os.path.dirname(__file__)
 
@@ -102,7 +96,7 @@ def clean(ctx, docs=True, bytecode=True, builds=True):
             folders.append("src/compas_ui.egg-info/")
 
         for folder in folders:
-            rmtree(os.path.join(BASE_FOLDER, folder), ignore_errors=True)
+            shutil.rmtree(os.path.join(BASE_FOLDER, folder), ignore_errors=True)
 
 
 @task(
@@ -120,7 +114,7 @@ def docs(ctx, doctest=False, rebuild=False, check_links=False):
 
     with chdir(BASE_FOLDER):
         if doctest:
-            testdocs(ctx)
+            testdocs(ctx, rebuild=rebuild)
 
         opts = "-E" if rebuild else ""
         ctx.run("sphinx-build {} -b html docs dist/docs".format(opts))
@@ -144,7 +138,7 @@ def format(ctx):
 
 
 @task()
-def testdocs(ctx):
+def testdocs(ctx, rebuild=False):
     """Test the examples in the docstrings."""
     log.write("Running doctest...")
     ctx.run("pytest --doctest-modules")
@@ -172,7 +166,12 @@ def check(ctx):
         ctx.run("python setup.py check --strict --metadata")
 
 
-@task(help={"checks": "True to run all checks before testing, otherwise False."})
+@task(
+    help={
+        "checks": "True to run all checks before testing, otherwise False.",
+        "doctest": "True to run doctest on all modules, otherwise False.",
+    }
+)
 def test(ctx, checks=False, doctest=False):
     """Run all tests."""
     if checks:
@@ -203,45 +202,6 @@ def prepare_changelog(ctx):
         ctx.run(
             'git add CHANGELOG.md && git commit -m "Prepare changelog for next release"'
         )
-
-
-@task(
-    help={
-        "gh_io_folder": "Folder where GH_IO.dll is located. Defaults to the Rhino 6.0 installation folder (platform-specific).",
-        "ironpython": "Command for running the IronPython executable. Defaults to `ipy`.",
-    }
-)
-def build_ghuser_components(ctx, gh_io_folder=None, ironpython=None):
-    """Build Grasshopper user objects from source"""
-    with chdir(BASE_FOLDER):
-        with tempfile.TemporaryDirectory("actions.ghcomponentizer") as action_dir:
-            target_dir = source_dir = os.path.abspath("src/compas_ghpython/components")
-            ctx.run(
-                "git clone https://github.com/compas-dev/compas-actions.ghpython_components.git {}".format(
-                    action_dir
-                )
-            )
-
-            if not gh_io_folder:
-                import compas_ghpython
-
-                gh_io_folder = compas_ghpython.get_grasshopper_plugin_path("6.0")
-
-            if not ironpython:
-                ironpython = "ipy"
-
-            gh_io_folder = os.path.abspath(gh_io_folder)
-            componentizer_script = os.path.join(action_dir, "componentize.py")
-
-            ctx.run(
-                '{} {} {} {} --ghio "{}"'.format(
-                    ironpython,
-                    componentizer_script,
-                    source_dir,
-                    target_dir,
-                    gh_io_folder,
-                )
-            )
 
 
 @task(
