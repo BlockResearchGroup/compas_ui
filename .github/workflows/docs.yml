@@ -15,7 +15,7 @@ jobs:
     name: build and deploy docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: compas-dev/compas-actions.docs@main
         id: docs
@@ -43,7 +43,7 @@ jobs:
     name: update doc versions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: gh-pages
 
