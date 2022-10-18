@@ -1,5 +1,5 @@
 from .meta import SingletonMetaClass
 
 
-class Singleton():
+class Singleton:
     __metaclass__ = SingletonMetaClass

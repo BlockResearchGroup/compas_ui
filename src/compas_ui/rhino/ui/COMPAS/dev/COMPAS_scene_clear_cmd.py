@@ -9,7 +9,14 @@ __commandname__ = "COMPAS_scene_clear"
 def RunCommand(is_interactive):
 
     ui = UI()
-    if Eto.Forms.MessageBox.Show("Are you sure you want to clear the scene?", "Confirm", Eto.Forms.MessageBoxButtons.YesNo) == Eto.Forms.DialogResult.Yes:
+    if (
+        Eto.Forms.MessageBox.Show(
+            "Are you sure you want to clear the scene?",
+            "Confirm",
+            Eto.Forms.MessageBoxButtons.YesNo,
+        )
+        == Eto.Forms.DialogResult.Yes
+    ):
         ui.scene_clear()
 
 

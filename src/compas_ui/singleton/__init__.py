@@ -24,4 +24,4 @@ if compas.IPY:
 else:
     from .singleton_py3 import Singleton
 
-__all__ = ['Singleton']
+__all__ = ["Singleton"]

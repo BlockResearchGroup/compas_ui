@@ -11,7 +11,6 @@ from compas.colors import Color
 
 
 class CustomCell(Eto.Forms.CustomCell):
-
     def OnGetIdentifier(self, args):
         return str(args.Item.GetValue(0))
 
@@ -80,7 +79,9 @@ class CustomCell(Eto.Forms.CustomCell):
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-    def __init__(self, settings, title="Settings", width=500, height=500, use_tab=False):
+    def __init__(
+        self, settings, title="Settings", width=500, height=500, use_tab=False
+    ):
         self._settings = None
         self._names = None
         self._values = None
@@ -106,7 +107,9 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             self.tables = {}
             for key, settings in self.settings.items():
                 if not isinstance(settings, dict):
-                    raise TypeError("When use_tab is True the firt level of the settings value must be all dicts.")
+                    raise TypeError(
+                        "When use_tab is True the firt level of the settings value must be all dicts."
+                    )
                 tab = Eto.Forms.TabPage(Text=key)
                 control.Pages.Add(tab)
                 table = self.map_tree(settings)
@@ -191,6 +194,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     def on_ok(self, sender, event):
         try:
+
             def set_value(items, setting):
                 for item in items:
                     key = item.GetValue(0)
@@ -199,6 +203,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                         set_value(item.Children, setting[key])
                     else:
                         setting[key] = value
+
             if not self.use_tab:
                 set_value(self.table.DataStore, self.settings)
             else:
