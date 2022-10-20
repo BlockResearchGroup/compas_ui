@@ -15,3 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: compas-dev/compas-actions.docs@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
