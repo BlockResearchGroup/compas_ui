@@ -126,8 +126,8 @@ def docs(ctx, doctest=False, rebuild=False, check_links=False):
 @task()
 def lint(ctx):
     """Check the consistency of coding style."""
-    log.write("Running black python linter...")
-    ctx.run("black --check --diff --color .")
+    log.write("Running black flake8 linter...")
+    ctx.run("flake8 src")
 
 
 @task()
