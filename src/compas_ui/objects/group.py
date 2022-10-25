@@ -14,8 +14,8 @@ class Group(Data):
 
     @property
     def data(self):
-        return {'items': list(self.items)}
+        return {"items": list(self.items)}
 
     @data.setter
     def data(self, data):
-        self.items = set(data['items'])
+        self.items = set(data["items"])

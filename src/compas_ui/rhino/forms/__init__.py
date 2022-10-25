@@ -67,5 +67,5 @@ __all__ = [
     "SettingsForm",
     "SceneObjectsForm",
     "SplashForm",
-    "ToolbarForm"
+    "ToolbarForm",
 ]

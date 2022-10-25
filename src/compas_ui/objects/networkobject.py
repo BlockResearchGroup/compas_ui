@@ -36,12 +36,12 @@ class NetworkObject(Object):
     """
 
     SETTINGS = {
-        'color.nodes': (255, 255, 255),
-        'color.edges': (0, 0, 0),
-        'show.nodes': True,
-        'show.edges': True,
-        'show.nodelabels': False,
-        'show.edgelabels': False,
+        "color.nodes": (255, 255, 255),
+        "color.edges": (0, 0, 0),
+        "show.nodes": True,
+        "show.edges": True,
+        "show.nodelabels": False,
+        "show.edgelabels": False,
     }
 
     def __init__(self, *args, **kwargs):
@@ -102,7 +102,7 @@ class NetworkObject(Object):
     def node_xyz(self):
         origin = Point(0, 0, 0)
         nodes = list(self.network.nodes())
-        xyz = self.network.nodes_attributes(['x', 'y', 'z'], keys=nodes)
+        xyz = self.network.nodes_attributes(["x", "y", "z"], keys=nodes)
 
         stack = []
         if self.scale != 1.0:
@@ -113,8 +113,8 @@ class NetworkObject(Object):
             stack.append(R)
         if self.location != origin:
             if self.anchor is not None:
-                xyz = self.network.node_attributes(self.anchor, 'xyz')
-                point = Point(* xyz)
+                xyz = self.network.node_attributes(self.anchor, "xyz")
+                point = Point(*xyz)
                 T1 = Translation.from_vector(origin - point)
                 stack.insert(0, T1)
             T2 = Translation.from_vector(self.location)

@@ -8,11 +8,11 @@ from compas_ui.app import App
 
 compas_rhino.clear()
 
-app = App(name='UITest')
+app = App(name="UITest")
 app.scene.clear()
 
-mesh = Mesh.from_obj(compas.get('tubemesh.obj'))
-mesh.name = 'TubeMesh'
+mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
+mesh.name = "TubeMesh"
 
 obj = app.scene.add(mesh)
 app.scene.update()

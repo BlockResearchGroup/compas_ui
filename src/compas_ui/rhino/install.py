@@ -50,26 +50,40 @@ def check_folders(plugin_name, version="7.0"):
         print("Checking that the Rhino scripts folder exists")
         rhino_scripts_path = compas_rhino._get_rhino_scripts_path(version)
         if not os.path.isdir(rhino_scripts_path):
-            raise Exception("Cannot find the Rhino scripts folder at: {}".format(rhino_scripts_path))
+            raise Exception(
+                "Cannot find the Rhino scripts folder at: {}".format(rhino_scripts_path)
+            )
         print(rhino_scripts_path, "Exists")
         print("PASSED.\n")
 
         print("Checking that user has write access to the Rhino scripts folder")
         if not os.access(rhino_scripts_path, os.W_OK):
-            raise Exception("User does not have write access to the Rhino scripts folder at: {}".format(rhino_scripts_path))
+            raise Exception(
+                "User does not have write access to the Rhino scripts folder at: {}".format(
+                    rhino_scripts_path
+                )
+            )
         print("User has write access to the Rhino scripts folder")
         print("PASSED.\n")
 
         print("Checking that the Rhino PythonPlugins folder exists")
         python_plugins_path = compas_rhino._get_rhino_pythonplugins_path(version)
         if not os.path.isdir(python_plugins_path):
-            raise Exception("Cannot find the PythonPlugins folder at: {}".format(python_plugins_path))
+            raise Exception(
+                "Cannot find the PythonPlugins folder at: {}".format(
+                    python_plugins_path
+                )
+            )
         print(python_plugins_path, "Exists")
         print("PASSED.\n")
 
         print("Checking that user has write access to the Rhino PythonPlugins folder")
         if not os.access(python_plugins_path, os.W_OK):
-            raise Exception("User does not have write access to the Rhino PythonPlugins folder at: {}".format(python_plugins_path))
+            raise Exception(
+                "User does not have write access to the Rhino PythonPlugins folder at: {}".format(
+                    python_plugins_path
+                )
+            )
         print("User has write access to the Rhino PythonPlugins folder")
         print("PASSED.\n")
 
@@ -85,7 +99,11 @@ def check_folders(plugin_name, version="7.0"):
 def check_dependencies(requirements_path=None):
     try:
         dependencies = []
-        with open(requirements_path or os.path.join(HERE, "..", "..", "..", "requirements.txt"), "r") as f:
+        with open(
+            requirements_path
+            or os.path.join(HERE, "..", "..", "..", "requirements.txt"),
+            "r",
+        ) as f:
             for line in f.readlines():
                 if line.startswith("#"):
                     continue
@@ -141,7 +159,7 @@ def install(version="7.0"):
 
 
 def main(plugin_name, version):
-    print("="*20, "Checking Folders", "="*20)
+    print("=" * 20, "Checking Folders", "=" * 20)
     if not check_folders(plugin_name, version):
         return
 
@@ -149,10 +167,10 @@ def main(plugin_name, version):
     # if not check_dependencies():
     #     return
 
-    print("="*20, "Running Installation", "="*20)
+    print("=" * 20, "Running Installation", "=" * 20)
     install(version)
 
-    print("="*20, "Installation Completed", "="*20)
+    print("=" * 20, "Installation Completed", "=" * 20)
 
 
 if __name__ == "__main__":

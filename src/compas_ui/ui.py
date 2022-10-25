@@ -296,7 +296,7 @@ class UI(Singleton):
 
         h = len(self._history)
         if h > self._depth:
-            self._history[:] = self._history[h - self._depth:]
+            self._history[:] = self._history[h - self._depth :]
         self._current = len(self._history) - 1
 
     def undo(self):

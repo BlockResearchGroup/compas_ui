@@ -10,9 +10,7 @@ import Eto.Forms
 
 
 class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
-    def __init__(self,
-                 width=300,
-                 height=140):
+    def __init__(self, width=300, height=140):
 
         self.Title = "Add Default Attribute"
         self.Padding = Eto.Drawing.Padding(0)
@@ -62,7 +60,9 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
         except Exception as e:
             print(e)
         if isinstance(value, (list, dict, tuple)):
-            Eto.Forms.MessageBox.Show(str(type(value)) + "is mutable, use with caution.", "WARNING")
+            Eto.Forms.MessageBox.Show(
+                str(type(value)) + "is mutable, use with caution.", "WARNING"
+            )
         if key == "":
             Eto.Forms.MessageBox.Show("Key cannot be empty.", "ERROR")
             self.Close(False)
@@ -75,12 +75,18 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
 
 
 class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
-    def __init__(self,
-                 item,
-                 title="Edit Default Attributes",
-                 default_attributes_names=["default_vertex_attributes", "default_edge_attributes", "default_face_attributes"],
-                 width=500,
-                 height=500):
+    def __init__(
+        self,
+        item,
+        title="Edit Default Attributes",
+        default_attributes_names=[
+            "default_vertex_attributes",
+            "default_edge_attributes",
+            "default_face_attributes",
+        ],
+        width=500,
+        height=500,
+    ):
 
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
@@ -210,7 +216,13 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
             Eto.Forms.MessageBox.Show("No item selectged.")
         else:
             key = item.GetValue(0)
-            if Eto.Forms.MessageBox.Show("Confirm to delete the attribute: '{}'?".format(key), Eto.Forms.MessageBoxButtons.YesNo) == Eto.Forms.DialogResult.Yes:
+            if (
+                Eto.Forms.MessageBox.Show(
+                    "Confirm to delete the attribute: '{}'?".format(key),
+                    Eto.Forms.MessageBoxButtons.YesNo,
+                )
+                == Eto.Forms.DialogResult.Yes
+            ):
                 self.table.DataStore.Remove(item)
                 self.table.ReloadData()
 
@@ -223,7 +235,7 @@ if __name__ == "__main__":
     from compas.datastructures import Mesh
     import compas
 
-    mesh = Mesh.from_obj(compas.get('faces.obj'))
+    mesh = Mesh.from_obj(compas.get("faces.obj"))
 
     form = DefaultAttributesForm(mesh)
     form.show()

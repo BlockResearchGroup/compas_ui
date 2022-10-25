@@ -19,7 +19,6 @@ from compas import json_dump
 
 
 class ObjCell(Eto.Forms.CustomCell):
-
     def __init__(self, parent):
         self.parent = parent
 
@@ -28,7 +27,6 @@ class ObjCell(Eto.Forms.CustomCell):
 
 
 class ObjNameCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         control = Eto.Forms.TextBox()
@@ -44,7 +42,6 @@ class ObjNameCell(ObjCell):
 
 
 class ObjTypeCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         control = Eto.Forms.Label(Text=obj.item.__class__.__name__)
@@ -52,7 +49,6 @@ class ObjTypeCell(ObjCell):
 
 
 class VisibleCell(ObjCell):
-
     def OnCreateCell(self, args):
         def on_click(sender, e):
             obj.visible = sender.Checked
@@ -67,10 +63,10 @@ class VisibleCell(ObjCell):
 
 
 class SettingsCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         if isinstance(obj.item, Mesh):
+
             def on_click(sender, e):
                 form = SettingsForm(obj.settings)
                 if form.ShowModal(self.parent):
@@ -84,10 +80,10 @@ class SettingsCell(ObjCell):
 
 
 class ItemCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         if isinstance(obj.item, Mesh):
+
             def on_click(sender, e):
                 # switch between data types
                 form = MeshDataForm(obj.item)
@@ -101,10 +97,10 @@ class ItemCell(ObjCell):
 
 
 class DefaultAttributesCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         if isinstance(obj.item, Mesh):
+
             def on_click(sender, e):
                 form = DefaultAttributesForm(obj.item)
                 if form.ShowModal(self.parent):
@@ -117,10 +113,10 @@ class DefaultAttributesCell(ObjCell):
 
 
 class ExportCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
         if isinstance(obj.item, Data):
+
             def on_click(sender, e):
                 path = FileForm.save(basename=obj.name + ".json")
                 if not path:
@@ -134,12 +130,18 @@ class ExportCell(ObjCell):
 
 
 class RemoveCell(ObjCell):
-
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
 
         def on_click(sender, e):
-            if Eto.Forms.MessageBox.Show("Are you sure you want to remove this object?", "Confirm", Eto.Forms.MessageBoxButtons.YesNo) == Eto.Forms.DialogResult.Yes:
+            if (
+                Eto.Forms.MessageBox.Show(
+                    "Are you sure you want to remove this object?",
+                    "Confirm",
+                    Eto.Forms.MessageBoxButtons.YesNo,
+                )
+                == Eto.Forms.DialogResult.Yes
+            ):
                 self.parent.scene.remove(obj)
                 self.parent.scene.update()
                 self.parent.map_objects()
@@ -151,7 +153,6 @@ class RemoveCell(ObjCell):
 
 
 class ActiveCell(ObjCell):
-
     def OnCreateCell(self, args):
         def on_click(sender, e):
             self.parent.scene.active_object = obj
