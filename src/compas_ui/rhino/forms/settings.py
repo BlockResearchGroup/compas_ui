@@ -8,6 +8,8 @@ import Eto.Drawing
 import Eto.Forms
 import decimal
 from compas.colors import Color
+from compas_ui.values import Settings
+from compas_ui.values import Value
 
 
 class CustomCell(Eto.Forms.CustomCell):
@@ -17,58 +19,62 @@ class CustomCell(Eto.Forms.CustomCell):
     def OnCreateCell(self, args):
         item = args.Item
         value = item.GetValue(1)
+        valueobj = item.GetValue(2)
 
-        if isinstance(value, bool):
-            control = Eto.Forms.CheckBox()
-            control.Checked = value
+        if isinstance(valueobj, Value):
 
-            def on_checked(sender, e):
-                item.SetValue(1, control.Checked)
+            if valueobj.value_type == bool:
+                control = Eto.Forms.CheckBox()
+                control.Checked = value
 
-            control.CheckedChanged += on_checked
+                def on_checked(sender, e):
+                    item.SetValue(1, control.Checked)
 
-        elif isinstance(value, int):
-            control = Eto.Forms.NumericUpDown()
-            control.Value = value
+                control.CheckedChanged += on_checked
 
-            def on_value_changed(sender, e):
-                item.SetValue(1, int(control.Value))
+            elif valueobj.value_type == int:
+                control = Eto.Forms.NumericUpDown()
+                control.Value = value
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    item.SetValue(1, int(control.Value))
 
-        elif isinstance(value, float):
-            control = Eto.Forms.NumericUpDown()
-            control.Value = value
-            precision = str(value)
-            d = decimal.Decimal(precision).as_tuple()
-            control.DecimalPlaces = -d.exponent
-            control.Increment = 10**d.exponent
+                control.ValueChanged += on_value_changed
 
-            def on_value_changed(sender, e):
-                item.SetValue(1, float(control.Value))
+            elif valueobj.value_type == float:
+                control = Eto.Forms.NumericUpDown()
+                control.Value = value
+                precision = str(value)
+                d = decimal.Decimal(precision).as_tuple()
+                control.DecimalPlaces = -d.exponent
+                control.Increment = 10**d.exponent
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    item.SetValue(1, float(control.Value))
 
-        elif isinstance(value, str):
-            control = Eto.Forms.TextBox()
-            control.Text = str(value)
+                control.ValueChanged += on_value_changed
 
-            def on_text_changed(sender, e):
-                item.SetValue(1, str(control.Text))
+            elif valueobj.value_type == str:
+                control = Eto.Forms.TextBox()
+                control.Text = value
 
-            control.TextChanged += on_text_changed
+                def on_text_changed(sender, e):
+                    item.SetValue(1, str(control.Text))
 
-        elif isinstance(value, (Color, tuple, list)):
-            if isinstance(value, (tuple, list)):
-                value = Color(*value)
-            control = Eto.Forms.ColorPicker()
-            control.Value = Eto.Drawing.Color.FromArgb(*value.rgb255)
+                control.TextChanged += on_text_changed
 
-            def on_value_changed(sender, e):
-                color = Eto.Drawing.Color(control.Value)
-                item.SetValue(1, Color(color.R, color.G, color.B))
+            elif valueobj.value_type == Color:
+                control = Eto.Forms.ColorPicker()
+                control.Value = Eto.Drawing.Color.FromArgb(*value.rgb255)
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    color = Eto.Drawing.Color(control.Value)
+                    item.SetValue(1, Color(color.R, color.G, color.B))
+
+                control.ValueChanged += on_value_changed
+
+            else:
+                control = Eto.Forms.Label(str(valueobj))
 
         else:
             control = Eto.Forms.Label()
@@ -82,7 +88,9 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
     def __init__(
         self, settings, title="Settings", width=500, height=500, use_tab=False
     ):
-        self._settings = None
+
+        assert isinstance(settings, Settings), "The settings must be of type compas_ui.values.Settings."
+
         self._names = None
         self._values = None
         self.settings = settings
@@ -106,9 +114,9 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
             self.tables = {}
             for key, settings in self.settings.items():
-                if not isinstance(settings, dict):
+                if not isinstance(settings, Settings):
                     raise TypeError(
-                        "When use_tab is True the firt level of the settings value must be all dicts."
+                        "When use_tab is True the firt level of the settings value must be all Settings class."
                     )
                 tab = Eto.Forms.TabPage(Text=key)
                 control.Pages.Add(tab)
@@ -150,17 +158,38 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
         table.Columns.Add(column)
 
+        # group recursively based on the dot notation
+        def group(settings):
+            groups = {}
+            for key, value in settings.items():
+                parts = key.split(".")
+                if len(parts) > 1:
+                    if parts[0] not in groups:
+                        groups[parts[0]] = {}
+                    subkey = ".".join(parts[1:])
+                    groups[parts[0]][subkey] = value
+                else:
+                    groups[key] = value
+
+            for key, value in groups.items():
+                if isinstance(value, dict):
+                    groups[key] = group(value)
+
+            return groups
+
         def add_items(parent, items):
             keys = list(items.keys())
             keys.sort()
             for key in keys:
                 value = items[key]
-                item = Eto.Forms.TreeGridItem(Values=(key, value))
-                if isinstance(value, dict):
+                if isinstance(value, Value):
+                    item = Eto.Forms.TreeGridItem(Values=(key, value.value, value))
+                elif isinstance(value, dict):
+                    item = Eto.Forms.TreeGridItem(Values=(key, None, None))
                     add_items(item.Children, value)
                 parent.Add(item)
 
-        add_items(treecollection, settings)
+        add_items(treecollection, group(settings.value))
         table.DataStore = treecollection
         return table
 
@@ -177,14 +206,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     @property
-    def settings(self):
-        return self._settings
-
-    @settings.setter
-    def settings(self, settings):
-        self._settings = settings.copy()
-
-    @property
     def names(self):
         return self._names
 
@@ -199,10 +220,11 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                 for item in items:
                     key = item.GetValue(0)
                     value = item.GetValue(1)
+                    valueobj = item.GetValue(2)
                     if isinstance(value, dict):
                         set_value(item.Children, setting[key])
                     else:
-                        setting[key] = value
+                        valueobj.set(value)
 
             if not self.use_tab:
                 set_value(self.table.DataStore, self.settings)
@@ -220,3 +242,26 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
+
+
+if __name__ == "__main__":
+    from compas_ui.values import IntValue
+    from compas_ui.values import BoolValue
+    from compas_ui.values import StrValue
+    from compas_ui.values import FloatValue
+    from compas_ui.values import ColorValue
+    from compas_ui.values import Settings
+
+    settings = Settings({
+        "a": IntValue(1),
+        "b": BoolValue(True),
+        "c": ColorValue((1, 0, 0)),
+        "d.x": FloatValue(0.001),
+        "d.y": StrValue("text"),
+        "d.z.i": IntValue(1),
+        "d.z.j": BoolValue(True),
+    })
+
+    form = SettingsForm(settings)
+    if form.show():
+        print(form.settings)

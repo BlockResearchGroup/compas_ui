@@ -70,7 +70,7 @@ class SettingsCell(ObjCell):
             def on_click(sender, e):
                 form = SettingsForm(obj.settings)
                 if form.ShowModal(self.parent):
-                    obj.settings.update(form.settings)
+                    # obj.settings.update(form.settings)
                     self.parent.scene.update()
 
             control = Eto.Forms.Button(Text="Settings")

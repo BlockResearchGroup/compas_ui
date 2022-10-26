@@ -12,6 +12,9 @@ from compas.geometry import Translation
 from compas.geometry import Rotation
 from compas.geometry import transform_points
 from compas.colors import Color
+from compas_ui.values import Settings
+from compas_ui.values import ColorValue
+from compas_ui.values import BoolValue
 
 from .object import Object
 
