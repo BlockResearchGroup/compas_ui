@@ -12,6 +12,9 @@ from compas.geometry import Rotation
 from compas.geometry import transform_points
 
 from .object import Object
+from compas_ui.values import Settings
+from compas_ui.values import ColorValue
+from compas_ui.values import BoolValue
 
 
 class VolMeshObject(Object):
@@ -35,20 +38,22 @@ class VolMeshObject(Object):
 
     """
 
-    SETTINGS = {
-        "color.vertices": (255, 255, 255),
-        "color.edges": (0, 0, 0),
-        "color.faces": (210, 210, 210),
-        "color.cells": (255, 0, 0),
-        "show.vertices": True,
-        "show.edges": True,
-        "show.faces": True,
-        "show.cells": False,
-        "show.vertexlabels": False,
-        "show.facelabels": False,
-        "show.edgelabels": False,
-        "show.celllabels": False,
-    }
+    SETTINGS = Settings(
+        {
+            "color.vertices": ColorValue((1, 1, 1)),
+            "color.edges": ColorValue((0, 0, 0)),
+            "color.faces": ColorValue((0.5, 0.5, 0.5)),
+            "color.cells": ColorValue((1, 0, 0)),
+            "show.vertices": BoolValue(True),
+            "show.edges": BoolValue(True),
+            "show.faces": BoolValue(True),
+            "show.cells": BoolValue(False),
+            "show.vertexlabels": BoolValue(False),
+            "show.facelabels": BoolValue(False),
+            "show.edgelabels": BoolValue(False),
+            "show.celllabels": BoolValue(False),
+        }
+    )
 
     def __init__(self, *args, **kwargs):
         super(VolMeshObject, self).__init__(*args, **kwargs)
