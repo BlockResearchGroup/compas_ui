@@ -45,20 +45,22 @@ class MeshObject(Object):
     """
 
     # the color settings duplicate the colors settings of the artist
-    SETTINGS = {
-        "color.vertices": Color.from_hex("#0092d2"),
-        "color.edges": Color.from_hex("#0092d2"),
-        "color.faces": Color.from_hex("#0092d2").lightened(50),
-        "show.mesh": True,
-        "show.vertices": False,
-        "show.edges": False,
-        "show.faces": False,
-        "show.vertexlabels": False,
-        "show.facelabels": False,
-        "show.edgelabels": False,
-        "show.vertexnormals": False,
-        "show.facenormals": False,
-    }
+    SETTINGS = Settings(
+        {
+            "color.vertices": ColorValue(Color.from_hex("#0092d2")),
+            "color.edges": ColorValue(Color.from_hex("#0092d2")),
+            "color.faces": ColorValue(Color.from_hex("#0092d2").lightened(50)),
+            "show.mesh": BoolValue(True),
+            "show.vertices": BoolValue(False),
+            "show.edges": BoolValue(False),
+            "show.faces": BoolValue(False),
+            "show.vertexlabels": BoolValue(False),
+            "show.facelabels": BoolValue(False),
+            "show.edgelabels": BoolValue(False),
+            "show.vertexnormals": BoolValue(False),
+            "show.facenormals": BoolValue(False),
+        }
+    )
 
     def __init__(self, *args, **kwargs):
         super(MeshObject, self).__init__(*args, **kwargs)

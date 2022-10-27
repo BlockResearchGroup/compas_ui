@@ -6,6 +6,7 @@ import Rhino
 import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
+import traceback
 import decimal
 from compas.colors import Color
 from compas_ui.values import Settings
@@ -89,8 +90,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         self, settings, title="Settings", width=500, height=500, use_tab=False
     ):
 
-        assert isinstance(settings, Settings), "The settings must be of type compas_ui.values.Settings."
-
         self._names = None
         self._values = None
         self.settings = settings
@@ -108,16 +107,18 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         )
 
         if self.use_tab:
+            assert isinstance(
+                settings, dict
+            ), "Settings must be a dictionary of compas_ui.values.Settings objects."
 
             control = Eto.Forms.TabControl()
             control.TabPosition = Eto.Forms.DockPosition.Top
 
             self.tables = {}
             for key, settings in self.settings.items():
-                if not isinstance(settings, Settings):
-                    raise TypeError(
-                        "When use_tab is True the firt level of the settings value must be all Settings class."
-                    )
+                assert isinstance(
+                    settings, Settings
+                ), "Settings must be a dictionary of compas_ui.values.Settings objects."
                 tab = Eto.Forms.TabPage(Text=key)
                 control.Pages.Add(tab)
                 table = self.map_tree(settings)
@@ -125,6 +126,9 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             layout.AddRow(control)
 
         else:
+            assert isinstance(
+                settings, Settings
+            ), "The settings must type compas_ui.values.Settings objects."
             self.table = self.map_tree(settings)
             layout.AddRow(self.table)
 
@@ -158,25 +162,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
         table.Columns.Add(column)
 
-        # group recursively based on the dot notation
-        def group(settings):
-            groups = {}
-            for key, value in settings.items():
-                parts = key.split(".")
-                if len(parts) > 1:
-                    if parts[0] not in groups:
-                        groups[parts[0]] = {}
-                    subkey = ".".join(parts[1:])
-                    groups[parts[0]][subkey] = value
-                else:
-                    groups[key] = value
-
-            for key, value in groups.items():
-                if isinstance(value, dict):
-                    groups[key] = group(value)
-
-            return groups
-
         def add_items(parent, items):
             keys = list(items.keys())
             keys.sort()
@@ -189,7 +174,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                     add_items(item.Children, value)
                 parent.Add(item)
 
-        add_items(treecollection, group(settings.value))
+        add_items(treecollection, settings.grouped_items)
         table.DataStore = treecollection
         return table
 
@@ -221,20 +206,24 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                     key = item.GetValue(0)
                     value = item.GetValue(1)
                     valueobj = item.GetValue(2)
-                    if isinstance(value, dict):
-                        set_value(item.Children, setting[key])
-                    else:
+                    if valueobj:
                         valueobj.set(value)
+                    else:
+                        set_value(item.Children, setting[key])
 
             if not self.use_tab:
-                set_value(self.table.DataStore, self.settings)
+                set_value(self.table.DataStore, self.settings.grouped_items)
             else:
                 for key in self.settings:
-                    set_value(self.tables[key].DataStore, self.settings[key])
+                    set_value(
+                        self.tables[key].DataStore, self.settings[key].grouped_items
+                    )
 
         except Exception as e:
-            print(e)
+            traceback.print_exc()
+            print("ERROR:", e)
             self.Close(False)
+        print("OK")
         self.Close(True)
 
     def on_cancel(self, sender, event):
@@ -242,26 +231,3 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
 
     def show(self):
         return self.ShowModal(Rhino.UI.RhinoEtoApp.MainWindow)
-
-
-if __name__ == "__main__":
-    from compas_ui.values import IntValue
-    from compas_ui.values import BoolValue
-    from compas_ui.values import StrValue
-    from compas_ui.values import FloatValue
-    from compas_ui.values import ColorValue
-    from compas_ui.values import Settings
-
-    settings = Settings({
-        "a": IntValue(1),
-        "b": BoolValue(True),
-        "c": ColorValue((1, 0, 0)),
-        "d.x": FloatValue(0.001),
-        "d.y": StrValue("text"),
-        "d.z.i": IntValue(1),
-        "d.z.j": BoolValue(True),
-    })
-
-    form = SettingsForm(settings)
-    if form.show():
-        print(form.settings)
