@@ -14,6 +14,7 @@ from compas.plugins import pluggable
 from compas.plugins import PluginValidator
 
 from compas_ui.objects import ObjectNotRegistered
+from compas_ui.values import Settings
 
 
 @pluggable(category="ui", selector="collect_all")
@@ -101,7 +102,7 @@ class Object(object):
     ]
     CONTEXT = None
     ITEM_OBJECT = defaultdict(dict)
-    SETTINGS = {}
+    SETTINGS = Settings()
 
     def __new__(cls, *args, **kwargs):
         if not Object.__OBJECTS_REGISTERED:

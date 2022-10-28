@@ -6,8 +6,11 @@ import Rhino
 import Rhino.UI
 import Eto.Drawing
 import Eto.Forms
+import traceback
 import decimal
 from compas.colors import Color
+from compas_ui.values import Settings
+from compas_ui.values import Value
 
 
 class CustomCell(Eto.Forms.CustomCell):
@@ -17,58 +20,62 @@ class CustomCell(Eto.Forms.CustomCell):
     def OnCreateCell(self, args):
         item = args.Item
         value = item.GetValue(1)
+        valueobj = item.GetValue(2)
 
-        if isinstance(value, bool):
-            control = Eto.Forms.CheckBox()
-            control.Checked = value
+        if isinstance(valueobj, Value):
 
-            def on_checked(sender, e):
-                item.SetValue(1, control.Checked)
+            if valueobj.value_type == bool:
+                control = Eto.Forms.CheckBox()
+                control.Checked = value
 
-            control.CheckedChanged += on_checked
+                def on_checked(sender, e):
+                    item.SetValue(1, control.Checked)
 
-        elif isinstance(value, int):
-            control = Eto.Forms.NumericUpDown()
-            control.Value = value
+                control.CheckedChanged += on_checked
 
-            def on_value_changed(sender, e):
-                item.SetValue(1, int(control.Value))
+            elif valueobj.value_type == int:
+                control = Eto.Forms.NumericUpDown()
+                control.Value = value
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    item.SetValue(1, int(control.Value))
 
-        elif isinstance(value, float):
-            control = Eto.Forms.NumericUpDown()
-            control.Value = value
-            precision = str(value)
-            d = decimal.Decimal(precision).as_tuple()
-            control.DecimalPlaces = -d.exponent
-            control.Increment = 10**d.exponent
+                control.ValueChanged += on_value_changed
 
-            def on_value_changed(sender, e):
-                item.SetValue(1, float(control.Value))
+            elif valueobj.value_type == float:
+                control = Eto.Forms.NumericUpDown()
+                control.Value = value
+                precision = str(value)
+                d = decimal.Decimal(precision).as_tuple()
+                control.DecimalPlaces = -d.exponent
+                control.Increment = 10**d.exponent
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    item.SetValue(1, float(control.Value))
 
-        elif isinstance(value, str):
-            control = Eto.Forms.TextBox()
-            control.Text = str(value)
+                control.ValueChanged += on_value_changed
 
-            def on_text_changed(sender, e):
-                item.SetValue(1, str(control.Text))
+            elif valueobj.value_type == str:
+                control = Eto.Forms.TextBox()
+                control.Text = value
 
-            control.TextChanged += on_text_changed
+                def on_text_changed(sender, e):
+                    item.SetValue(1, str(control.Text))
 
-        elif isinstance(value, (Color, tuple, list)):
-            if isinstance(value, (tuple, list)):
-                value = Color(*value)
-            control = Eto.Forms.ColorPicker()
-            control.Value = Eto.Drawing.Color.FromArgb(*value.rgb255)
+                control.TextChanged += on_text_changed
 
-            def on_value_changed(sender, e):
-                color = Eto.Drawing.Color(control.Value)
-                item.SetValue(1, Color(color.R, color.G, color.B))
+            elif valueobj.value_type == Color:
+                control = Eto.Forms.ColorPicker()
+                control.Value = Eto.Drawing.Color.FromArgb(*value.rgb255)
 
-            control.ValueChanged += on_value_changed
+                def on_value_changed(sender, e):
+                    color = Eto.Drawing.Color(control.Value)
+                    item.SetValue(1, Color(color.R, color.G, color.B))
+
+                control.ValueChanged += on_value_changed
+
+            else:
+                control = Eto.Forms.Label(str(valueobj))
 
         else:
             control = Eto.Forms.Label()
@@ -82,7 +89,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
     def __init__(
         self, settings, title="Settings", width=500, height=500, use_tab=False
     ):
-        self._settings = None
+
         self._names = None
         self._values = None
         self.settings = settings
@@ -100,16 +107,18 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         )
 
         if self.use_tab:
+            assert isinstance(
+                settings, dict
+            ), "Settings must be a dictionary of compas_ui.values.Settings objects."
 
             control = Eto.Forms.TabControl()
             control.TabPosition = Eto.Forms.DockPosition.Top
 
             self.tables = {}
             for key, settings in self.settings.items():
-                if not isinstance(settings, dict):
-                    raise TypeError(
-                        "When use_tab is True the firt level of the settings value must be all dicts."
-                    )
+                assert isinstance(
+                    settings, Settings
+                ), "Settings must be a dictionary of compas_ui.values.Settings objects."
                 tab = Eto.Forms.TabPage(Text=key)
                 control.Pages.Add(tab)
                 table = self.map_tree(settings)
@@ -117,6 +126,9 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             layout.AddRow(control)
 
         else:
+            assert isinstance(
+                settings, Settings
+            ), "The settings must type compas_ui.values.Settings objects."
             self.table = self.map_tree(settings)
             layout.AddRow(self.table)
 
@@ -155,12 +167,14 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             keys.sort()
             for key in keys:
                 value = items[key]
-                item = Eto.Forms.TreeGridItem(Values=(key, value))
-                if isinstance(value, dict):
+                if isinstance(value, Value):
+                    item = Eto.Forms.TreeGridItem(Values=(key, value.value, value))
+                elif isinstance(value, dict):
+                    item = Eto.Forms.TreeGridItem(Values=(key, None, None))
                     add_items(item.Children, value)
                 parent.Add(item)
 
-        add_items(treecollection, settings)
+        add_items(treecollection, settings.grouped_items)
         table.DataStore = treecollection
         return table
 
@@ -177,14 +191,6 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         return self.AbortButton
 
     @property
-    def settings(self):
-        return self._settings
-
-    @settings.setter
-    def settings(self, settings):
-        self._settings = settings.copy()
-
-    @property
     def names(self):
         return self._names
 
@@ -199,20 +205,25 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                 for item in items:
                     key = item.GetValue(0)
                     value = item.GetValue(1)
-                    if isinstance(value, dict):
-                        set_value(item.Children, setting[key])
+                    valueobj = item.GetValue(2)
+                    if valueobj:
+                        valueobj.set(value)
                     else:
-                        setting[key] = value
+                        set_value(item.Children, setting[key])
 
             if not self.use_tab:
-                set_value(self.table.DataStore, self.settings)
+                set_value(self.table.DataStore, self.settings.grouped_items)
             else:
                 for key in self.settings:
-                    set_value(self.tables[key].DataStore, self.settings[key])
+                    set_value(
+                        self.tables[key].DataStore, self.settings[key].grouped_items
+                    )
 
         except Exception as e:
-            print(e)
+            traceback.print_exc()
+            print("ERROR:", e)
             self.Close(False)
+        print("OK")
         self.Close(True)
 
     def on_cancel(self, sender, event):

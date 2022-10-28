@@ -12,6 +12,9 @@ from compas.geometry import Rotation
 from compas.geometry import transform_points
 
 from .object import Object
+from compas_ui.values import Settings
+from compas_ui.values import ColorValue
+from compas_ui.values import BoolValue
 
 
 class NetworkObject(Object):
@@ -35,14 +38,16 @@ class NetworkObject(Object):
 
     """
 
-    SETTINGS = {
-        "color.nodes": (255, 255, 255),
-        "color.edges": (0, 0, 0),
-        "show.nodes": True,
-        "show.edges": True,
-        "show.nodelabels": False,
-        "show.edgelabels": False,
-    }
+    SETTINGS = Settings(
+        {
+            "color.nodes": ColorValue((1, 1, 1)),
+            "color.edges": ColorValue((0, 0, 0)),
+            "show.nodes": BoolValue(True),
+            "show.edges": BoolValue(True),
+            "show.nodelabels": BoolValue(False),
+            "show.edgelabels": BoolValue(False),
+        }
+    )
 
     def __init__(self, *args, **kwargs):
         super(NetworkObject, self).__init__(*args, **kwargs)
