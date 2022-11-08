@@ -17,7 +17,6 @@ pytest <7.1
 sphinx_compas_theme >=0.15.18
 matplotlib
 sphinx
-cryptography == 37.0.4
 twine
 wheel
 -e .
