@@ -4,11 +4,12 @@ from __future__ import print_function
 
 import uuid
 from .object import Object
+from compas_ui.values import Settings
 
 
 class CurveObject(Object):
 
-    SETTINGS = {}
+    SETTINGS = Settings()
 
     def __init__(self, *args, **kwargs):
         super(CurveObject, self).__init__(*args, **kwargs)
