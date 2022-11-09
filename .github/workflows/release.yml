@@ -23,11 +23,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    - uses: compas-dev/compas-actions.publish@v2
-      with:
-        pypi_token: ${{ secrets.PYPI }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: compas-dev/compas-actions.publish@v2
+        with:
+          pypi_token: ${{ secrets.PYPI }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
