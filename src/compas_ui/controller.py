@@ -92,9 +92,7 @@ class Controller(object):
             if not V:
                 return
 
-            mesh = RhinoSurface.from_guid(guid).to_compas_quadmesh(
-                nu=U, nv=V, weld=True
-            )
+            mesh = RhinoSurface.from_guid(guid).to_compas_quadmesh(nu=U, nv=V, weld=True)
             mesh.name = "MeshFromSurface"
 
         elif option == "FromMesh":
@@ -200,9 +198,7 @@ class Controller(object):
         if not mode:
             return
 
-        vertex_guid = {
-            vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())
-        }
+        vertex_guid = {vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())}
 
         if mode == "All":
             vertices = list(mesh.vertices())
@@ -219,9 +215,7 @@ class Controller(object):
 
         elif mode == "ByContinuousEdges":
             temp = meshobj.select_edges()
-            vertices = list(
-                set(flatten([mesh.vertices_on_edge_loop(key) for key in temp]))
-            )
+            vertices = list(set(flatten([mesh.vertices_on_edge_loop(key) for key in temp])))
             guids = [vertex_guid[vertex] for vertex in vertices]
             compas_rhino.rs.UnselectAllObjects()
             self.ui.scene.highlight_objects(guids)
@@ -259,9 +253,7 @@ class Controller(object):
             return
 
         edge_guid = {edge: guid for guid, edge in iter(meshobj.guid_edge.items())}
-        edge_guid.update(
-            {(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())}
-        )
+        edge_guid.update({(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())})
 
         if mode == "All":
             edges = list(mesh.edges())

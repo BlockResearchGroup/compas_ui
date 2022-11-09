@@ -240,9 +240,7 @@ class SceneObjectsForm(Eto.Forms.Dialog[bool]):
         self.map_objects()
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
         layout.AddRow(self.table)
         layout.EndVertical()
 

@@ -93,60 +93,42 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         if self.settings["show.vertices"]:
             vertices = list(self.mesh.vertices())
-            guids = self.artist.draw_vertices(
-                vertices=vertices, color=self.settings["color.vertices"]
-            )
+            guids = self.artist.draw_vertices(vertices=vertices, color=self.settings["color.vertices"])
             self.guids += guids
             self.guid_vertex = zip(guids, vertices)
 
             if self.settings["show.vertexlabels"]:
                 text = {vertex: str(vertex) for vertex in vertices}
-                self.guids += self.artist.draw_vertexlabels(
-                    text=text, color=self.settings["color.vertices"]
-                )
+                self.guids += self.artist.draw_vertexlabels(text=text, color=self.settings["color.vertices"])
 
             if self.settings["show.vertexnormals"]:
-                self.guids += self.artist.draw_vertexnormals(
-                    vertices=vertices, color=self.settings["color.vertices"]
-                )
+                self.guids += self.artist.draw_vertexnormals(vertices=vertices, color=self.settings["color.vertices"])
 
         if self.settings["show.edges"]:
             edges = list(self.mesh.edges())
-            guids = self.artist.draw_edges(
-                edges=edges, color=self.settings["color.edges"]
-            )
+            guids = self.artist.draw_edges(edges=edges, color=self.settings["color.edges"])
             self.guids += guids
             self.guid_edge = zip(guids, edges)
 
             if self.settings["show.edgelabels"]:
                 text = {edge: "{}-{}".format(*edge) for edge in edges}
-                self.guids += self.artist.draw_edgelabels(
-                    text=text, color=self.settings["color.edges"]
-                )
+                self.guids += self.artist.draw_edgelabels(text=text, color=self.settings["color.edges"])
 
         if self.settings["show.mesh"]:
-            self.guids += self.artist.draw(
-                color=self.settings["color.faces"], disjoint=True
-            )
+            self.guids += self.artist.draw(color=self.settings["color.faces"], disjoint=True)
 
         elif self.settings["show.faces"]:
             faces = list(self.mesh.faces())
-            guids = self.artist.draw_faces(
-                faces=faces, color=self.settings["color.faces"]
-            )
+            guids = self.artist.draw_faces(faces=faces, color=self.settings["color.faces"])
             self.guids += guids
             self.guid_face = zip(guids, faces)
 
             if self.settings["show.facelabels"]:
                 text = {face: str(face) for face in faces}
-                self.guids += self.artist.draw_facelabels(
-                    text=text, color=self.settings["color.faces"]
-                )
+                self.guids += self.artist.draw_facelabels(text=text, color=self.settings["color.faces"])
 
             if self.settings["show.facenormals"]:
-                self.guids += self.artist.draw_facenormals(
-                    faces=faces, color=self.settings["color.faces"]
-                )
+                self.guids += self.artist.draw_facenormals(faces=faces, color=self.settings["color.faces"])
 
     def select_vertex(self, message="Select one vertex."):
         """Select one vertex of the mesh.
@@ -181,9 +163,7 @@ class RhinoMeshObject(RhinoObject, MeshObject):
 
         """
         guids = compas_rhino.select_points(message=message)
-        vertices = [
-            self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex
-        ]
+        vertices = [self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex]
         return vertices
 
     def select_faces(self, message="Select faces."):
@@ -314,14 +294,8 @@ class RhinoMeshObject(RhinoObject, MeshObject):
         mesh = self.mesh
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
 
-        vertex_p0 = {
-            v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v))
-            for v in mesh.vertices()
-        }
-        vertex_p1 = {
-            v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v))
-            for v in mesh.vertices()
-        }
+        vertex_p0 = {v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v)) for v in mesh.vertices()}
+        vertex_p1 = {v: Rhino.Geometry.Point3d(*mesh.vertex_coordinates(v)) for v in mesh.vertices()}
 
         edges = list(mesh.edges())
 

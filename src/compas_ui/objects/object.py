@@ -52,9 +52,7 @@ def _get_object_cls(data, **kwargs):
 
     if cls is None:
         raise ObjectNotRegistered(
-            "No object is registered for this data type: {} in this context: {}".format(
-                dtype, Object.CONTEXT
-            )
+            "No object is registered for this data type: {} in this context: {}".format(dtype, Object.CONTEXT)
         )
 
     return cls

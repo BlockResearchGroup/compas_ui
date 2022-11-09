@@ -47,14 +47,10 @@ class AttributesForm(Eto.Forms.Dialog[bool]):
         table.CellFormatting += on_cell_formatting
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
         layout.AddRow(table)
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
 

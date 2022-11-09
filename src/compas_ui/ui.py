@@ -435,9 +435,7 @@ class UI(Singleton):
         float | None
 
         """
-        value = compas_rhino.rs.GetReal(
-            message=message, number=default, minimum=minval, maximum=maxval
-        )
+        value = compas_rhino.rs.GetReal(message=message, number=default, minimum=minval, maximum=maxval)
         if value:
             return float(value)
 
@@ -460,9 +458,7 @@ class UI(Singleton):
         int | None
 
         """
-        value = compas_rhino.rs.GetInteger(
-            message=message, number=default, minimum=minval, maximum=maxval
-        )
+        value = compas_rhino.rs.GetInteger(message=message, number=default, minimum=minval, maximum=maxval)
         if value:
             return int(value)
 
@@ -483,8 +479,6 @@ class UI(Singleton):
         str | None
 
         """
-        value = compas_rhino.rs.GetString(
-            message, defaultString=default, strings=options
-        )
+        value = compas_rhino.rs.GetString(message, defaultString=default, strings=options)
         if value:
             return str(value)

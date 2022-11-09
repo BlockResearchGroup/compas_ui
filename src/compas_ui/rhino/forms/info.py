@@ -19,14 +19,10 @@ class InfoForm(Eto.Forms.Dialog[bool]):
         textarea.Text = text
         textarea.ReadOnly = True
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 12, 12, 0), Eto.Drawing.Size(0, 0), True, True)
         layout.AddRow(textarea)
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 12, 12, 18), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 12, 12, 18), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok)
         layout.EndVertical()
         self.Content = layout

@@ -86,9 +86,7 @@ class CustomCell(Eto.Forms.CustomCell):
 
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
-    def __init__(
-        self, settings, title="Settings", width=500, height=500, use_tab=False
-    ):
+    def __init__(self, settings, title="Settings", width=500, height=500, use_tab=False):
 
         self._names = None
         self._values = None
@@ -102,14 +100,10 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
         self.ClientSize = Eto.Drawing.Size(width, height)
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
 
         if self.use_tab:
-            assert isinstance(
-                settings, dict
-            ), "Settings must be a dictionary of compas_ui.values.Settings objects."
+            assert isinstance(settings, dict), "Settings must be a dictionary of compas_ui.values.Settings objects."
 
             control = Eto.Forms.TabControl()
             control.TabPosition = Eto.Forms.DockPosition.Top
@@ -126,16 +120,12 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
             layout.AddRow(control)
 
         else:
-            assert isinstance(
-                settings, Settings
-            ), "The settings must type compas_ui.values.Settings objects."
+            assert isinstance(settings, Settings), "The settings must type compas_ui.values.Settings objects."
             self.table = self.map_tree(settings)
             layout.AddRow(self.table)
 
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
 
@@ -215,9 +205,7 @@ class SettingsForm(Eto.Forms.Dialog[bool]):
                 set_value(self.table.DataStore, self.settings.grouped_items)
             else:
                 for key in self.settings:
-                    set_value(
-                        self.tables[key].DataStore, self.settings[key].grouped_items
-                    )
+                    set_value(self.tables[key].DataStore, self.settings[key].grouped_items)
 
         except Exception as e:
             traceback.print_exc()

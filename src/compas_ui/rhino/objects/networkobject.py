@@ -75,31 +75,23 @@ class RhinoNetworkObject(RhinoObject, NetworkObject):
 
         if self.settings["show.nodes"]:
             nodes = list(self.network.nodes())
-            guids = self.artist.draw_nodes(
-                nodes=nodes, color=self.settings["color.nodes"]
-            )
+            guids = self.artist.draw_nodes(nodes=nodes, color=self.settings["color.nodes"])
             self.guids += guids
             self.guid_node = zip(guids, nodes)
 
             if self.settings["show.nodelabels"]:
                 text = {node: str(node) for node in nodes}
-                self.guids += self.artist.draw_nodelabels(
-                    text=text, color=self.settings["color.nodes"]
-                )
+                self.guids += self.artist.draw_nodelabels(text=text, color=self.settings["color.nodes"])
 
         if self.settings["show.edges"]:
             edges = list(self.network.edges())
-            guids = self.artist.draw_edges(
-                edges=edges, color=self.settings["color.edges"]
-            )
+            guids = self.artist.draw_edges(edges=edges, color=self.settings["color.edges"])
             self.guids += guids
             self.guid_edge = zip(guids, edges)
 
             if self.settings["show.edgelabels"]:
                 text = {edge: "{}-{}".format(*edge) for edge in edges}
-                self.guids += self.artist.draw_edgelabels(
-                    text=text, color=self.settings["color.edges"]
-                )
+                self.guids += self.artist.draw_edgelabels(text=text, color=self.settings["color.edges"])
 
     def select_nodes(self):
         """Select nodes of the network.

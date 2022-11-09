@@ -309,9 +309,7 @@ class Rui(object):
                 icon_guid,
             )
         else:
-            s_macro = TPL_MACRO.format(
-                guid, name, script, tooltip, help_text, button_text, menu_text
-            )
+            s_macro = TPL_MACRO.format(guid, name, script, tooltip, help_text, button_text, menu_text)
         e_macro = ET.fromstring(s_macro)
         self.root_macros.append(e_macro)
         self.macros[name] = e_macro

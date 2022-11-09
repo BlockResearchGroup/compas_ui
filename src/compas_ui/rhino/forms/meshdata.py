@@ -82,14 +82,10 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
         control.Pages.Add(self.facepage.widget)
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 12, 0, 12), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(0, 12, 0, 12), Eto.Drawing.Size(0, 0), True, True)
         layout.AddRow(control)
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
         self.Content = layout
@@ -171,9 +167,7 @@ class Page(object):
 
     @property
     def names(self):
-        return sorted(
-            [name for name in self.defaults.keys() if name not in self.excluded]
-        )
+        return sorted([name for name in self.defaults.keys() if name not in self.excluded])
 
     @property
     def public(self):

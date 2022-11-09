@@ -16,9 +16,7 @@ class Value(Data):
         return "<{}: {}>".format(self.__class__.__name__, self.value)
 
     def _check_type(self, value):
-        assert type(value) == self.value_type, "{} is not of type {}".format(
-            value, self.value_type
-        )
+        assert type(value) == self.value_type, "{} is not of type {}".format(value, self.value_type)
 
     def _check_options(self, value):
         if self.options is not None:

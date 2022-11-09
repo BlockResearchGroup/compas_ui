@@ -19,9 +19,7 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
         self.ClientSize = Eto.Drawing.Size(width, height)
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(10, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(10, 0), True, True)
 
         key_label = Eto.Forms.Label(Text="Key:")
         self.key = Eto.Forms.TextBox()
@@ -32,9 +30,7 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
         layout.AddRow(key_label, self.key, value_label, self.value)
         layout.EndVertical()
 
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(None, self.ok, self.cancel)
         layout.EndVertical()
         self.key_value_pair = None
@@ -60,9 +56,7 @@ class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
         except Exception as e:
             print(e)
         if isinstance(value, (list, dict, tuple)):
-            Eto.Forms.MessageBox.Show(
-                str(type(value)) + "is mutable, use with caution.", "WARNING"
-            )
+            Eto.Forms.MessageBox.Show(str(type(value)) + "is mutable, use with caution.", "WARNING")
         if key == "":
             Eto.Forms.MessageBox.Show("Key cannot be empty.", "ERROR")
             self.Close(False)
@@ -97,9 +91,7 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         self.default_attributes_names = default_attributes_names
 
         layout = Eto.Forms.DynamicLayout()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(0, 0, 0, 0), Eto.Drawing.Size(0, 0), True, True)
 
         self.tab_control = Eto.Forms.TabControl()
         self.tab_control.TabPosition = Eto.Forms.DockPosition.Top
@@ -116,9 +108,7 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
 
         layout.AddRow(self.tab_control)
         layout.EndVertical()
-        layout.BeginVertical(
-            Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False
-        )
+        layout.BeginVertical(Eto.Drawing.Padding(12, 18, 12, 24), Eto.Drawing.Size(6, 0), False, False)
         layout.AddRow(self.add, self.delete, None, self.ok, self.cancel)
         layout.EndVertical()
 
