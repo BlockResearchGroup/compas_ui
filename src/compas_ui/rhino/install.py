@@ -7,9 +7,9 @@ from .install_plugin import get_package_plugins
 
 HERE = os.path.dirname(__file__)
 PLUGINS = [
-    'COMPAS{6c18fcab-3ae5-4b03-b515-d33d8078b977}',
-    'FoFin{18a65b9c-1a08-43ef-a1fd-ef458f0a1fa0}',
-    'IGS2{aa509b0a-64d6-4a3f-a0c3-028565cf3174}'
+    "COMPAS{6c18fcab-3ae5-4b03-b515-d33d8078b977}",
+    "FoFin{18a65b9c-1a08-43ef-a1fd-ef458f0a1fa0}",
+    "IGS2{aa509b0a-64d6-4a3f-a0c3-028565cf3174}",
 ]
 
 

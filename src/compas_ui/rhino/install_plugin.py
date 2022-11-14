@@ -18,6 +18,7 @@ def get_version_from_args():
     args = compas_rhino.INSTALLATION_ARGUMENTS
     return compas_rhino._check_rhino_version(args.version)
 
+
 def get_package_plugins(package_name):
 
     plugin_paths = []
@@ -36,10 +37,8 @@ def get_package_plugins(package_name):
     return plugin_paths
 
 
-
 def install_plugin(plugin, generate_rui=False):
-    """Install a Rhino Python Command Plugin.
-    """
+    """Install a Rhino Python Command Plugin."""
     if not os.path.isdir(plugin):
         raise Exception("Cannot find the plugin: {}".format(plugin))
 
@@ -97,7 +96,7 @@ def install_plugin(plugin, generate_rui=False):
             os.path.join(plugin_dev, plugin_rui),
             os.path.join(python_plugins_path, "..", "..", "UI", plugin_rui),
         )
-    
+
     return "python plugin {} installed".format(plugin_fullname)
 
 
