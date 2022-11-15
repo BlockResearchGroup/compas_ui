@@ -48,7 +48,7 @@ except ImportError:
     pass
 
 
-@pluggable(category="ui")
+@pluggable(category="ui", selector="collect_all")
 def register(ui):
     pass
 
