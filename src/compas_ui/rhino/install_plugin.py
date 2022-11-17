@@ -107,6 +107,9 @@ def clean_up(plugins):
     # Clean up the plugin directory
     symlinks_to_remove = []
     python_plugins_path = compas_rhino._get_rhino_pythonplugins_path(version)
+    if not os.path.exists(python_plugins_path):
+        os.mkdir(python_plugins_path)
+
     for name in os.listdir(python_plugins_path):
         path = os.path.join(python_plugins_path, name)
         if os.path.islink(path):
