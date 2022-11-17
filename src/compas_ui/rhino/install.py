@@ -10,6 +10,10 @@ PLUGINS = [
     "COMPAS{6c18fcab-3ae5-4b03-b515-d33d8078b977}",
     "FoFin{18a65b9c-1a08-43ef-a1fd-ef458f0a1fa0}",
     "IGS2{aa509b0a-64d6-4a3f-a0c3-028565cf3174}",
+    "IGS{3e33b31b-86ac-402c-babf-d3c16962ed33}",
+    "RV2{949ca7a4-7ddf-4939-8a5b-d945d5ac0bc8}",
+    "TNO{7dfe0ab6-2352-405b-a19b-a6017f92b6b4}",
+    "3GS{7ce56e93-79c1-44ac-9716-1a53ca42ac9c}",
 ]
 
 
