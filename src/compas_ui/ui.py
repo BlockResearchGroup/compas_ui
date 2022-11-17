@@ -53,6 +53,26 @@ def register(ui):
     pass
 
 
+@pluggable(category="ui", selector="collect_all")
+def pre_undo(ui):
+    pass
+
+
+@pluggable(category="ui", selector="collect_all")
+def post_undo(ui):
+    pass
+
+
+@pluggable(category="ui", selector="collect_all")
+def pre_redo(ui):
+    pass
+
+
+@pluggable(category="ui", selector="collect_all")
+def post_redo(ui):
+    pass
+
+
 class UI(Singleton):
     """UI singleton.
 
@@ -320,7 +340,9 @@ class UI(Singleton):
         filepath = os.path.join(self._tempdir, filename)
 
         self.scene.clear()
+        pre_undo(self)
         self.state = compas.json_load(filepath)
+        post_undo(self)
         self.scene.update()
 
     def redo(self):
@@ -344,7 +366,9 @@ class UI(Singleton):
         filepath = os.path.join(self._tempdir, filename)
 
         self.scene.clear()
+        pre_redo()
         self.state = compas.json_load(filepath)
+        post_redo()
         self.scene.update()
 
     def save(self):
