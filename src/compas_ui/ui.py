@@ -366,9 +366,9 @@ class UI(Singleton):
         filepath = os.path.join(self._tempdir, filename)
 
         self.scene.clear()
-        pre_redo()
+        pre_redo(self)
         self.state = compas.json_load(filepath)
-        post_redo()
+        post_redo(self)
         self.scene.update()
 
     def save(self):
@@ -432,7 +432,9 @@ class UI(Singleton):
         self.basename = os.path.basename(path)
 
         self.scene.clear()
+        pre_redo(self)
         self.state = compas.json_load(path)
+        post_redo(self)
         self.scene.update()
         self.record()
 
