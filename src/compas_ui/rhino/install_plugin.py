@@ -89,13 +89,20 @@ def install_plugin(plugin, generate_rui=False):
     # print("\nPlugIn {} Installed.".format(plugin_name))
 
     if compas.WINDOWS and generate_rui:
-        plugin_ruipy = os.path.join(plugin_dev, "rui.py")
-        plugin_rui = "{}.rui".format(plugin_name)
-        call(sys.executable + " " + plugin_ruipy, shell=True)
-        copyfile(
-            os.path.join(plugin_dev, plugin_rui),
-            os.path.join(python_plugins_path, "..", "..", "UI", plugin_rui),
-        )
+        # Allow rui generation to fail. It is not critical.
+        try:
+            plugin_ruipy = os.path.join(plugin_dev, "rui.py")
+            plugin_rui = "{}.rui".format(plugin_name)
+            cmd = '"{}" "{}"'.format(sys.executable, plugin_ruipy)
+            call(cmd, shell=True)
+            copyfile(
+                os.path.join(plugin_dev, plugin_rui),
+                os.path.join(python_plugins_path, "..", "..", "UI", plugin_rui),
+            )
+            print("\nPlugIn {} RUI file generated.")
+        except Exception as e:
+            print("\nPlugIn {} RUI file generation failed.".format(plugin_name))
+            print(e)
 
     return "python plugin {} installed".format(plugin_fullname)
 
