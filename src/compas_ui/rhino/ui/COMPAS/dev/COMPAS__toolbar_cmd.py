@@ -62,6 +62,11 @@ def RunCommand(is_interactive):
             "command": "COMPAS_cloud_shutdown",
             "icon": os.path.join(HERE, "assets", "COMPAS_cloud-shutdown.png"),
         },
+        {"type": "separator"},
+        {
+            "command": "COMPAS_settings",
+            "icon": os.path.join(HERE, "assets", "COMPAS_settings.png"),
+        },
     ]
 
     toolbar = ToolbarForm()

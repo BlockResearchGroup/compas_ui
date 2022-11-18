@@ -9,7 +9,7 @@
             "4_compas_redo",
             "5_compas_scene_update",
             "6_compas_scene_clear",
-            "7_compas_scene_settings",
+            "7_compas_settings",
             "8_compas_cloud_start",
             "9_compas_cloud_restart",
             "10_compas_cloud_shutdown",
@@ -141,34 +141,6 @@
                 },
                 {
                     "command": "COMPAS_conda_envs"
-                },
-                {
-                    "type": "separator"
-                },
-                {
-                    "name": "Geometry",
-                    "items": []
-                },
-                {
-                    "name": "DataStructures",
-                    "items": [
-                        {
-                            "name": "Networks",
-                            "items": []
-                        },
-                        {
-                            "name": "Meshes",
-                            "items": [
-                                {
-                                    "command": "COMPAS_mesh_create"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "Volumetric Meshes",
-                            "items": []
-                        }
-                    ]
                 }
             ]
         }
@@ -215,6 +187,12 @@
                 },
                 {
                     "left": "COMPAS_cloud_shutdown"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "left": "COMPAS_settings"
                 }
             ]
         }
