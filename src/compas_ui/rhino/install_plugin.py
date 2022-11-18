@@ -99,9 +99,9 @@ def install_plugin(plugin, generate_rui=False):
                 os.path.join(plugin_dev, plugin_rui),
                 os.path.join(python_plugins_path, "..", "..", "UI", plugin_rui),
             )
-            print("\nPlugIn {} RUI file generated.")
+            print("PlugIn {} RUI file generated.".format(plugin_name))
         except Exception as e:
-            print("\nPlugIn {} RUI file generation failed.".format(plugin_name))
+            print("PlugIn {} RUI file generation failed.".format(plugin_name))
             print(e)
 
     return "python plugin {} installed".format(plugin_fullname)
