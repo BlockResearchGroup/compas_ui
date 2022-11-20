@@ -90,14 +90,13 @@ class MeshObject(Object):
         self._guid = uuid.UUID(state["guid"])
         self.name = state["name"]
         self.settings.update(state["settings"])
-        self.artist.state = state["artists"]
+        self.artist.state = state["artist"]
         self.visible = state["visible"]
-        # parent?
-        # item?
         self.anchor = state["anchor"]
         self.location = state["location"]
         self.scale = state["scale"]
         self.rotation = state["rotation"]
+        # the item and parent are set by the scene
 
     @property
     def mesh(self):
