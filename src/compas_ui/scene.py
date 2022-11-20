@@ -98,17 +98,7 @@ class Scene(Singleton):
                 visible=objstate["visible"],
                 settings=objstate["settings"],
             )
-            obj._guid = uuid.UUID(objstate["guid"])
-
-            # TODO: clean this up later.
-            if "anchor" in objstate:
-                obj.anchor = objstate["anchor"]
-            if "location" in objstate:
-                obj.location = objstate["location"]
-            if "scale" in objstate:
-                obj.scale = objstate["scale"]
-            if "rotation" in objstate:
-                obj.rotation = objstate["rotation"]
+            obj.state = objstate
 
         for objstate in state["objects"]:
             if objstate["parent"]:
