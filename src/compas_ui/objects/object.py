@@ -148,8 +148,7 @@ class Object(object):
         self.settings.update(state["settings"])
         self.artist.state = state["artists"]
         self.visible = state["visible"]
-        # parent?
-        # item?
+        # item and parent are set by the scene
 
     @property
     def children(self):
