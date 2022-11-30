@@ -5,7 +5,7 @@ from compas_ui.objects import Group
 import compas
 
 
-ui = UI({"plugin": {"title": ["Group"]}, "settings": {}})
+ui = UI()
 ui.scene.clear()
 
 mesh1 = Mesh.from_obj(compas.get("faces.obj"))

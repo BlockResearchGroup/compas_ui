@@ -12,6 +12,14 @@ class GroupObject(Object):
         for item in group.items:
             self.add(item)
 
+    def get_child_by_name(self, name):
+        for child in self.children:
+            if child.name == name:
+                return child
+
+    def get_children_by_name(self, name):
+        return [child for child in self.children if child.name == name]
+
     def clear(self):
         for child in self.children:
             self.remove(child)
