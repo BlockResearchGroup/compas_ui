@@ -85,6 +85,7 @@ class Scene(Singleton):
             "data": data,
             "objects": objects,
             "settings": self.settings,
+            "active": str(self.active_object.guid),
         }
 
     @state.setter
@@ -106,6 +107,11 @@ class Scene(Singleton):
                 obj.parent = self.get_by_guid(objstate["parent"])
         self.settings = Scene.SETTINGS.copy()
         self.settings.update(state["settings"])
+        self.active_object = None
+        for obj in self.objects:
+            if str(obj.guid) == state["active"]:
+                self.active_object = obj
+                break
 
     @property
     def active_object(self):
