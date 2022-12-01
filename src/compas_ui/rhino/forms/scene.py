@@ -44,7 +44,7 @@ class ObjNameCell(ObjCell):
 class ObjTypeCell(ObjCell):
     def OnCreateCell(self, args):
         obj = args.Item.GetValue(0)
-        control = Eto.Forms.Label(Text=obj.item.__class__.__name__)
+        control = Eto.Forms.Label(Text=obj.item.__class__.__name__, TextAlignment=Eto.Forms.TextAlignment.Left)
         return control
 
 
@@ -74,6 +74,7 @@ class SettingsCell(ObjCell):
                     self.parent.scene.update()
 
             control = Eto.Forms.Button(Text="Settings")
+            control.BackgroundColor = Eto.Drawing.Colors.Gray
             control.Click += on_click
 
             return control
@@ -91,6 +92,7 @@ class ItemCell(ObjCell):
                     self.parent.scene.update()
 
             control = Eto.Forms.Button(Text="Data")
+            control.BackgroundColor = Eto.Drawing.Colors.Gray
             control.Click += on_click
 
             return control
@@ -107,6 +109,7 @@ class DefaultAttributesCell(ObjCell):
                     self.parent.scene.update()
 
             control = Eto.Forms.Button(Text="Default Attributes")
+            control.BackgroundColor = Eto.Drawing.Colors.Gray
             control.Click += on_click
 
             return control
@@ -124,6 +127,7 @@ class ExportCell(ObjCell):
                 json_dump(obj.item, path)
 
             control = Eto.Forms.Button(Text="Export")
+            control.BackgroundColor = Eto.Drawing.Colors.Gray
             control.Click += on_click
 
             return control
@@ -147,6 +151,7 @@ class RemoveCell(ObjCell):
                 self.parent.map_objects()
 
         control = Eto.Forms.Button(Text="Remove")
+        control.BackgroundColor = Eto.Drawing.Colors.Gray
         control.Click += on_click
 
         return control
