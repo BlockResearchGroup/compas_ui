@@ -85,7 +85,7 @@ class Scene(Singleton):
             "data": data,
             "objects": objects,
             "settings": self.settings,
-            "active": str(self.active_object.guid),
+            "active": str(self.active_object.guid) if self.active_object else None,
         }
 
     @state.setter
