@@ -15,7 +15,7 @@ from sphinx.ext.napoleon.docstring import NumpyDocstring
 project = "COMPAS UI"
 copyright = "ETH Zurich - Block Research Group"
 author = "tom van mele"
-release = "0.9.0"
+release = "0.9.1"
 version = ".".join(release.split(".")[0:2])
 
 master_doc = "index"
