@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_redo"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.redo()
 

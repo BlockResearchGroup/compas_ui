@@ -20,7 +20,6 @@ def get_version_from_args():
 
 
 def get_package_plugins(package_name):
-
     plugin_paths = []
 
     package = import_module(package_name)
@@ -108,7 +107,6 @@ def install_plugin(plugin, generate_rui=False):
 
 
 def clean_up(plugins):
-
     version = get_version_from_args()
 
     # Clean up the plugin directory

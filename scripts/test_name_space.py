@@ -5,15 +5,17 @@ from compas_ui.values import FloatValue
 from compas_ui.values import ColorValue
 from compas_ui.values import Settings
 
-settings = Settings({
-    "a": IntValue(1),
-    "b": BoolValue(True),
-    "c": ColorValue((1, 0, 0)),
-    "d.x": FloatValue(0.001),
-    "d.y": StrValue("text"),
-    "d.z.i": IntValue(1),
-    "d.z.j": BoolValue(True),
-})
+settings = Settings(
+    {
+        "a": IntValue(1),
+        "b": BoolValue(True),
+        "c": ColorValue((1, 0, 0)),
+        "d.x": FloatValue(0.001),
+        "d.y": StrValue("text"),
+        "d.z.i": IntValue(1),
+        "d.z.j": BoolValue(True),
+    }
+)
 
 print(settings.value)
 
@@ -35,7 +37,8 @@ def group(settings):
             groups[key] = group(value)
 
     return groups
-    
+
+
 groups = group(settings.value)
 print(groups)
 

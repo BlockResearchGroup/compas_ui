@@ -27,7 +27,6 @@ class CustomCell(Eto.Forms.CustomCell):
         valueobj = item.GetValue(2)
 
         if isinstance(valueobj, Value):
-
             if valueobj.value_type == bool:
                 control = Eto.Forms.CheckBox()
                 control.Checked = value
@@ -91,7 +90,6 @@ class CustomCell(Eto.Forms.CustomCell):
 
 class SettingsForm(Eto.Forms.Dialog[bool]):
     def __init__(self, settings, title="Settings", width=500, height=500, use_tab=False):
-
         self._names = None
         self._values = None
         self.settings = settings

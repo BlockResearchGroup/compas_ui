@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_mesh_create"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
 
     ui.controller.mesh_create()

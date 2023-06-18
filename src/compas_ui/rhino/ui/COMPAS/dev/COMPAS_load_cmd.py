@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_load"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.load()
     ui.record()

@@ -13,7 +13,6 @@ __commandname__ = "COMPAS_conda_envs"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.conda_envs()
 

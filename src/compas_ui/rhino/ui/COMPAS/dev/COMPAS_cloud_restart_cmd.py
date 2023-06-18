@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_cloud_restart"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.cloud_restart()
 

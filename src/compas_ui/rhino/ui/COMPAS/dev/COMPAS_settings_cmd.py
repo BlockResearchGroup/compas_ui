@@ -7,7 +7,6 @@ __commandname__ = "COMPAS_settings"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
 
     form = SettingsForm(ui.registry, use_tab=True)

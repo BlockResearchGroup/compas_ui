@@ -42,7 +42,6 @@ class MeshDataForm(Eto.Forms.Dialog[bool]):
         excluded_edge_attr=None,
         excluded_face_attr=None,
     ):
-
         self.mesh = mesh
         self.excluded_vertex_attr = excluded_vertex_attr
         self.excluded_edge_attr = excluded_edge_attr

@@ -9,7 +9,6 @@ __commandname__ = "COMPAS_searchpaths"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.rhinopython_searchpaths()
 

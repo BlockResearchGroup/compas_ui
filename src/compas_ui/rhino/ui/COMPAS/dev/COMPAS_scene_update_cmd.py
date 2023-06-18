@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_scene_update"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.scene_update()
 

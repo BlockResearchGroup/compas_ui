@@ -7,7 +7,6 @@ __commandname__ = "COMPAS_scene_clear"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     if (
         Eto.Forms.MessageBox.Show(

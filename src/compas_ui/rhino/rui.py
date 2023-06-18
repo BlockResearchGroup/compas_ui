@@ -425,7 +425,6 @@ class Rui(object):
 
 
 if __name__ == "__main__":
-
     import argparse
 
     parser = argparse.ArgumentParser(description="COMPAS Rhino UI compiler.")

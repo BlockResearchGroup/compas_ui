@@ -11,7 +11,6 @@ import Eto.Forms
 
 class AddDefaultAttributeForm(Eto.Forms.Dialog[bool]):
     def __init__(self, width=300, height=140):
-
         self.Title = "Add Default Attribute"
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
@@ -81,7 +80,6 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
         width=500,
         height=500,
     ):
-
         self.Title = title
         self.Padding = Eto.Drawing.Padding(0)
         self.Resizable = True
@@ -221,7 +219,6 @@ class DefaultAttributesForm(Eto.Forms.Dialog[bool]):
 
 
 if __name__ == "__main__":
-
     from compas.datastructures import Mesh
     import compas
 

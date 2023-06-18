@@ -6,7 +6,6 @@ __commandname__ = "COMPAS_cloud_start"
 
 @UI.error()
 def RunCommand(is_interactive):
-
     ui = UI()
     ui.cloud_start()
 
