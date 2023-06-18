@@ -19,6 +19,10 @@ class CustomCell(Eto.Forms.CustomCell):
 
     def OnCreateCell(self, args):
         item = args.Item
+
+        if item is None:
+            return Eto.Forms.Label()
+
         value = item.GetValue(1)
         valueobj = item.GetValue(2)
 
@@ -75,7 +79,7 @@ class CustomCell(Eto.Forms.CustomCell):
                 control.ValueChanged += on_value_changed
 
             else:
-                control = Eto.Forms.Label(str(valueobj))
+                control = Eto.Forms.Label(Text=str(valueobj))
 
         else:
             control = Eto.Forms.Label()
