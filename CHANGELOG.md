@@ -11,8 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-### Removed
+- Fixed a scene object form bug.
 
+### Removed
 
 ## [0.9.1] 2022-12-01
 
@@ -22,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.9.0] 2022-12-01
 
 ### Added
@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.8.4] 2022-11-18
 
@@ -40,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.8.3] 2022-11-17
 
 ### Added
@@ -48,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.8.2] 2022-11-17
 
@@ -58,7 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.8.1] 2022-11-17
 
 ### Added
@@ -67,7 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.8.0] 2022-11-17
 
 ### Added
@@ -75,7 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.7.1] 2022-11-09
 
@@ -89,7 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Removed `compas_ui.rhino.install.main`.
 
-
 ## [0.7.0] 2022-10-25
 
 ### Added
@@ -101,7 +94,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.6.2] 2022-09-24
 
 ### Added
@@ -109,7 +101,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.6.1] 2022-09-23
 
@@ -119,7 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.6.0] 2022-09-23
 
 ### Added
@@ -127,7 +117,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.5.3] 2022-09-23
 
@@ -137,7 +126,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.5.2] 2022-09-23
 
 ### Added
@@ -146,7 +134,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.5.1] 2022-09-22
 
 ### Added
@@ -154,7 +141,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
 
 ## [0.5.0] 2022-09-21
 
@@ -181,7 +167,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.4.1] 2022-03-23
 
 ### Added
@@ -194,7 +179,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Changed clien size of browser form.
 
 ### Removed
-
 
 ## [0.4.0] 2022-03-22
 
@@ -224,7 +208,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.3.0] 2022-02-25
 
 ### Added
@@ -233,7 +216,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-
 ## [0.2.0] 2022-02-25
 
 ### Added
@@ -241,4 +223,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
-
