@@ -200,6 +200,8 @@ class Controller(object):
 
         vertex_guid = {vertex: guid for guid, vertex in iter(meshobj.guid_vertex.items())}
 
+        vertices = []
+
         if mode == "All":
             vertices = list(mesh.vertices())
 
@@ -254,6 +256,8 @@ class Controller(object):
 
         edge_guid = {edge: guid for guid, edge in iter(meshobj.guid_edge.items())}
         edge_guid.update({(v, u): guid for guid, (u, v) in iter(meshobj.guid_edge.items())})
+
+        edges = []
 
         if mode == "All":
             edges = list(mesh.edges())
