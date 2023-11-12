@@ -123,6 +123,7 @@ class UI(Singleton):
         state["session"] = self.session.data
         state["scene"] = self.scene.state
         state["settings"] = self.settings
+        state["registry"] = self.registry
         return state
 
     @state.setter
@@ -130,6 +131,7 @@ class UI(Singleton):
         self.session.data = state["session"]
         self.scene.state = state["scene"]
         self.settings = state["settings"]
+        self.registry = state["registry"]
 
     # ========================================================================
     # Init
@@ -206,6 +208,48 @@ class UI(Singleton):
         """
         if self.proxy:
             self.proxy.shutdown()
+
+    # ========================================================================
+    # Undo/Redo
+    # ========================================================================
+
+    @staticmethod
+    def rhino_undo(*args, **kwargs):
+        """Decorator to bind Rhino undo redo shortkeys.
+
+        Parameters
+        ----------
+        *args : list
+            ???
+        **kwargs : dict
+            ???
+
+        Returns
+        -------
+        callable
+
+        """
+        from .rhino.undo import rhino_undo
+        return rhino_undo(*args, **kwargs)
+
+    @staticmethod
+    def skip_rhino_undo(*args, **kwargs):
+        """Decorator to skip Rhino undo redo recording.
+
+        Parameters
+        ----------
+        *args : list
+            ???
+        **kwargs : dict
+            ???
+
+        Returns
+        -------
+        callable
+
+        """
+        from .rhino.undo import skip_rhino_undo
+        return skip_rhino_undo(*args, **kwargs)
 
     # ========================================================================
     # Environments
@@ -288,9 +332,9 @@ class UI(Singleton):
 
         """
         form = SceneObjectsForm(self.scene)
-        if form.show():
-            self.scene.update()
-            self.record()
+        form.show()
+        self.scene.update()
+        self.record()
 
     # ========================================================================
     # State

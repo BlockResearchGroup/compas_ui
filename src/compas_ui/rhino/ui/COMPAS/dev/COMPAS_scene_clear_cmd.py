@@ -6,6 +6,7 @@ __commandname__ = "COMPAS_scene_clear"
 
 
 @UI.error()
+@UI.rhino_undo(__commandname__)
 def RunCommand(is_interactive):
     ui = UI()
     if (

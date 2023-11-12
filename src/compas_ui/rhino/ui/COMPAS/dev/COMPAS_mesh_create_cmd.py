@@ -5,11 +5,10 @@ __commandname__ = "COMPAS_mesh_create"
 
 
 @UI.error()
+@UI.rhino_undo(__commandname__)
 def RunCommand(is_interactive):
     ui = UI()
-
     ui.controller.mesh_create()
-    ui.record()
 
 
 if __name__ == "__main__":

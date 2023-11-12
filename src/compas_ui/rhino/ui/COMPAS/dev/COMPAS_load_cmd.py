@@ -5,6 +5,7 @@ __commandname__ = "COMPAS_load"
 
 
 @UI.error()
+@UI.rhino_undo(__commandname__)
 def RunCommand(is_interactive):
     ui = UI()
     ui.load()
